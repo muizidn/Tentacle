@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Carthage/Checkouts/Ogra/Ogra.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Carthage/Checkouts/Argo/Argo.xcodeproj">
    </FileRef>
    <FileRef

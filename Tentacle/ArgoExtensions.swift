@@ -10,6 +10,29 @@ import Argo
 import Foundation
 import Result
 
+public protocol Encodable {
+    func encode() -> JSON
+}
+
+extension JSON {
+    func JSONObject() -> Any {
+        switch self {
+        case .null:
+            return NSNull()
+        case .string(let value):
+            return value
+        case .number(let value):
+            return value
+        case .array(let array):
+            return array.map { $0.JSONObject() }
+        case .bool(let value):
+            return value
+        case .object(let object):
+            return object.map { $0.value.JSONObject() } as Any
+        }
+    }
+}
+
 internal func decode<T: Decodable>(_ object: Any) -> Result<T, DecodeError> where T == T.DecodedType {
     let decoded: Decoded<T> = decode(object)
     switch decoded {

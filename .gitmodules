@@ -13,6 +13,3 @@
 [submodule "Carthage/Checkouts/Runes"]
 	path = Carthage/Checkouts/Runes
 	url = https://github.com/thoughtbot/Runes.git
-[submodule "Carthage/Checkouts/Ogra"]
-	path = Carthage/Checkouts/Ogra
-	url = https://github.com/palleas/Ogra.git

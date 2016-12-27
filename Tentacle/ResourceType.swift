@@ -7,7 +7,6 @@
 //
 
 import Argo
-import Ogra
 
 /// A Resource from the GitHub API.
 public protocol ResourceType: Decodable, Hashable {

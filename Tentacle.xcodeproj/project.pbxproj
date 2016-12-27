@@ -142,13 +142,11 @@
 		928DF22E1E0E6A8100E6DE35 /* FileResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928DF21B1E0E68D300E6DE35 /* FileResponseTests.swift */; };
 		928DF2351E0E95B600E6DE35 /* Argo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF22F1E0E95B600E6DE35 /* Argo.framework */; };
 		928DF2361E0E95B600E6DE35 /* Curry.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF2301E0E95B600E6DE35 /* Curry.framework */; };
-		928DF2371E0E95B600E6DE35 /* Ogra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF2311E0E95B600E6DE35 /* Ogra.framework */; };
 		928DF2381E0E95B600E6DE35 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF2321E0E95B600E6DE35 /* ReactiveSwift.framework */; };
 		928DF2391E0E95B600E6DE35 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF2331E0E95B600E6DE35 /* Result.framework */; };
 		928DF23A1E0E95B600E6DE35 /* Runes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF2341E0E95B600E6DE35 /* Runes.framework */; };
 		928DF23E1E1117D600E6DE35 /* Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928DF23D1E1117D600E6DE35 /* Sha.swift */; };
 		928DF23F1E11187C00E6DE35 /* Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928DF23D1E1117D600E6DE35 /* Sha.swift */; };
-		928DF2561E11B2D400E6DE35 /* Ogra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 928DF2551E11B2D400E6DE35 /* Ogra.framework */; };
 		BE0F40A01C89098E00E3B11A /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0F409F1C89098E00E3B11A /* Fixture.swift */; };
 		BE0F40A21C8909EB00E3B11A /* ReleaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0F40A11C8909EB00E3B11A /* ReleaseTests.swift */; };
 		BE0F40A41C89135D00E3B11A /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0F40A31C89135D00E3B11A /* Decodable.swift */; };
@@ -274,12 +272,10 @@
 		928DF2261E0E6A1200E6DE35 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = "../../../Library/Developer/Xcode/DerivedData/Tentacle-bqioixzqvwloakfnodqjigugjqbv/Build/Products/Debug-iphonesimulator/Runes.framework"; sourceTree = "<group>"; };
 		928DF22F1E0E95B600E6DE35 /* Argo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Argo.framework; path = Carthage/Checkouts/Argo/build/Debug/Argo.framework; sourceTree = SOURCE_ROOT; };
 		928DF2301E0E95B600E6DE35 /* Curry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Curry.framework; path = "../../../Library/Developer/Xcode/DerivedData/Tentacle-bqioixzqvwloakfnodqjigugjqbv/Build/Products/Debug/Curry.framework"; sourceTree = "<group>"; };
-		928DF2311E0E95B600E6DE35 /* Ogra.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogra.framework; path = Carthage/Checkouts/Ogra/build/Debug/Ogra.framework; sourceTree = SOURCE_ROOT; };
 		928DF2321E0E95B600E6DE35 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Checkouts/ReactiveSwift/build/Debug/ReactiveSwift.framework; sourceTree = SOURCE_ROOT; };
 		928DF2331E0E95B600E6DE35 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = "../../../Library/Developer/Xcode/DerivedData/Tentacle-bqioixzqvwloakfnodqjigugjqbv/Build/Products/Debug/Result.framework"; sourceTree = "<group>"; };
 		928DF2341E0E95B600E6DE35 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = "../../../Library/Developer/Xcode/DerivedData/Tentacle-bqioixzqvwloakfnodqjigugjqbv/Build/Products/Debug/Runes.framework"; sourceTree = "<group>"; };
 		928DF23D1E1117D600E6DE35 /* Sha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sha.swift; sourceTree = "<group>"; };
-		928DF2551E11B2D400E6DE35 /* Ogra.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogra.framework; path = "Carthage/Checkouts/Ogra/build/Debug-iphoneos/Ogra.framework"; sourceTree = SOURCE_ROOT; };
 		BE0F409F1C89098E00E3B11A /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Fixture.swift; path = Tests/Fixture.swift; sourceTree = SOURCE_ROOT; };
 		BE0F40A11C8909EB00E3B11A /* ReleaseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseTests.swift; sourceTree = "<group>"; };
 		BE0F40A31C89135D00E3B11A /* Decodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
@@ -316,7 +312,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				928DF2561E11B2D400E6DE35 /* Ogra.framework in Frameworks */,
 				928DF2271E0E6A1200E6DE35 /* Argo.framework in Frameworks */,
 				928DF2281E0E6A1200E6DE35 /* Curry.framework in Frameworks */,
 				928DF22A1E0E6A1200E6DE35 /* ReactiveSwift.framework in Frameworks */,
@@ -339,7 +334,6 @@
 			files = (
 				928DF2351E0E95B600E6DE35 /* Argo.framework in Frameworks */,
 				928DF2361E0E95B600E6DE35 /* Curry.framework in Frameworks */,
-				928DF2371E0E95B600E6DE35 /* Ogra.framework in Frameworks */,
 				928DF2381E0E95B600E6DE35 /* ReactiveSwift.framework in Frameworks */,
 				928DF2391E0E95B600E6DE35 /* Result.framework in Frameworks */,
 				928DF23A1E0E95B600E6DE35 /* Runes.framework in Frameworks */,
@@ -496,10 +490,8 @@
 		BE88E8271C88C7E90034A112 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				928DF2551E11B2D400E6DE35 /* Ogra.framework */,
 				928DF22F1E0E95B600E6DE35 /* Argo.framework */,
 				928DF2301E0E95B600E6DE35 /* Curry.framework */,
-				928DF2311E0E95B600E6DE35 /* Ogra.framework */,
 				928DF2321E0E95B600E6DE35 /* ReactiveSwift.framework */,
 				928DF2331E0E95B600E6DE35 /* Result.framework */,
 				928DF2341E0E95B600E6DE35 /* Runes.framework */,

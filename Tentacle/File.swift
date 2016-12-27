@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Ogra
 import Argo
 import Runes
 import Curry
@@ -46,9 +45,8 @@ extension File: RequestType {
 
     public func encode() -> JSON {
         var payload: [String: JSON] = [
-            "message": self.message.encode(),
-            "content": self.content.base64EncodedString().encode(),
-            "branch": self.branch?.encode() ?? .null
+            "message": .string(message),
+            "content": .string(content.base64EncodedString())
         ]
 
         if let author = author {
@@ -57,6 +55,10 @@ extension File: RequestType {
 
         if let committer = committer {
             payload["committer"] = committer.encode()
+        }
+
+        if let branch = branch {
+            payload["branch"] = .string(branch)
         }
 
         return JSON.object(payload)

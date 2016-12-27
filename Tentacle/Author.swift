@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Ogra
 import Argo
 
 public struct Author {
@@ -25,9 +24,9 @@ public struct Author {
 extension Author: Encodable {
     public func encode() -> JSON {
         return JSON.object([
-            "name": self.name.encode(),
-            "email": self.email.encode()
-            ])
+            "name": .string(name),
+            "email": .string(email)
+        ])
     }
 }
 
