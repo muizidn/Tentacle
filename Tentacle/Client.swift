@@ -348,10 +348,15 @@ public final class Client {
     /// Fetch an endpoint from the API.
     private func fetch(_ endpoint: Endpoint, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
         let url = URL(server, endpoint, page: page, pageSize: pageSize)
-        let request = URLRequest.create(url, credentials)
+
+        return fetch(URLRequest.create(url, credentials))
+    }
+
+    /// Sends an URLRequest and map response to JSON
+    private func fetch(_ urlRequest: URLRequest) -> SignalProducer<(Response, Any), Error> {
         return urlSession
             .reactive
-            .data(with: request)
+            .data(with: urlRequest)
             .mapError { Error.networkError($0.error) }
             .flatMap(.concat) { data, response -> SignalProducer<(Response, Any), Error> in
                 let response = response as! HTTPURLResponse
@@ -369,14 +374,14 @@ public final class Client {
                                 .mapError(Error.jsonDecodingError)
                                 .flatMap { error in
                                     .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
-                                }
+                            }
                         }
                         return .success(JSON)
                     }
                     .map { JSON in
                         return (Response(headerFields: headers), JSON)
-                    }
-            }
+                }
+        }
     }
     
     /// Fetch an object from the API.
@@ -417,41 +422,14 @@ public final class Client {
     internal func send<Request: RequestType>(_ request: Request, to endpoint: Endpoint) -> SignalProducer<(Response, Request.Response), Error> where Request.Response == Request.Response.DecodedType {
         let urlRequest = URLRequest.create(URL(server, endpoint), request, credentials)
 
-        return urlSession
-            .reactive
-            .data(with: urlRequest)
-            .mapError(Error.networkError)
-            .flatMap(.concat) { data, response -> SignalProducer<(Response, Request.Response), Error> in
-                let response = response as! HTTPURLResponse
-                let headers = response.allHeaderFields as! [String:String]
-
-                return SignalProducer.attempt {
-                    return JSONSerialization
-                        .deserializeJSON(data)
-                        .mapError { Error.jsonDeserializationError($0.error) }
-                }
-                .attemptMap { JSON -> Result<Any, Client.Error> in
-                    if response.statusCode == 404 {
-                        return .failure(.doesNotExist)
+        return fetch(urlRequest)
+            .attemptMap { response, JSON in
+                return decode(JSON)
+                    .map { resource in
+                        (response, resource)
                     }
-                    if response.statusCode >= 400 && response.statusCode < 600 {
-                        return decode(JSON)
-                            .mapError(Error.jsonDecodingError)
-                            .flatMap { error in
-                                .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
-                        }
-                    }
-                    return .success(JSON)
-
-                }
-                .attemptMap { j in
-                    return decode(j)
-                        .mapError(Error.jsonDecodingError)
-                }
-                .map {
-                    return (Response(headerFields: headers), $0)
-                }
-            }
+                    .mapError(Error.jsonDecodingError)
+        }
     }
 }
 
