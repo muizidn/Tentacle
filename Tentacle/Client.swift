@@ -55,9 +55,9 @@ extension URLRequest {
         return request
     }
 
-    internal static func create<Request: RequestType>(_ url: URL, _ request: Request, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+    internal static func create<Request: RequestType>(_ url: URL, _ request: Request, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
         var URLRequest = create(url, credentials, contentType: contentType)
-        URLRequest.httpMethod = request.method.rawValue
+        URLRequest.httpMethod = method.rawValue
 
         let object = request.encode().JSONObject()
         if let payload = try? JSONSerialization.data(withJSONObject: object, options: []) {
@@ -99,7 +99,7 @@ extension URLSession {
 	}
 }
 
-public enum HTTPMethod: String {
+enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
@@ -342,7 +342,7 @@ public final class Client {
     }
 
     public func create(file: File, atPath path: String, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path))
+        return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path), using: .put)
     }
 
     /// Fetch an endpoint from the API.
@@ -419,8 +419,8 @@ public final class Client {
             }
     }
 
-    internal func send<Request: RequestType>(_ request: Request, to endpoint: Endpoint) -> SignalProducer<(Response, Request.Response), Error> where Request.Response == Request.Response.DecodedType {
-        let urlRequest = URLRequest.create(URL(server, endpoint), request, credentials)
+    internal func send<Request: RequestType>(_ request: Request, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, Request.Response), Error> where Request.Response == Request.Response.DecodedType {
+        let urlRequest = URLRequest.create(URL(server, endpoint), request, method, credentials)
 
         return fetch(urlRequest)
             .attemptMap { response, JSON in

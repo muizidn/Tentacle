@@ -15,6 +15,4 @@ public protocol ResourceType: Decodable, Hashable {
 
 public protocol RequestType: Encodable, Hashable {
     associatedtype Response: Decodable
-
-    var method: HTTPMethod { get }
 }

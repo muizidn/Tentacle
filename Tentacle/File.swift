@@ -39,10 +39,6 @@ extension File: RequestType {
         return message.hashValue
     }
 
-    public var method: HTTPMethod {
-        return .put
-    }
-
     public func encode() -> JSON {
         var payload: [String: JSON] = [
             "message": .string(message),
