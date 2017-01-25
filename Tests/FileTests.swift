@@ -2,7 +2,7 @@
 //  FileTests.swift
 //  Tentacle
 //
-//  Created by POUCLET, Romain (MTL) on 2017-01-25.
+//  Created by Romain Pouclet on 2017-01-25.
 //  Copyright © 2017 Matt Diephouse. All rights reserved.
 //
 

@@ -149,6 +149,8 @@
 		928DF23F1E11187C00E6DE35 /* Sha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928DF23D1E1117D600E6DE35 /* Sha.swift */; };
 		92F0C2BA1E391088004A9889 /* FileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F0C2B91E391088004A9889 /* FileTests.swift */; };
 		92F0C2BB1E39108B004A9889 /* FileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F0C2B91E391088004A9889 /* FileTests.swift */; };
+		92F0C2BD1E391F3F004A9889 /* ArgoExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */; };
+		92F0C2BE1E391F3F004A9889 /* ArgoExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */; };
 		BE0F40A01C89098E00E3B11A /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0F409F1C89098E00E3B11A /* Fixture.swift */; };
 		BE0F40A21C8909EB00E3B11A /* ReleaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0F40A11C8909EB00E3B11A /* ReleaseTests.swift */; };
 		BE0F40A41C89135D00E3B11A /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0F40A31C89135D00E3B11A /* Decodable.swift */; };
@@ -279,6 +281,7 @@
 		928DF2341E0E95B600E6DE35 /* Runes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Runes.framework; path = "../../../Library/Developer/Xcode/DerivedData/Tentacle-bqioixzqvwloakfnodqjigugjqbv/Build/Products/Debug/Runes.framework"; sourceTree = "<group>"; };
 		928DF23D1E1117D600E6DE35 /* Sha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sha.swift; sourceTree = "<group>"; };
 		92F0C2B91E391088004A9889 /* FileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTests.swift; sourceTree = "<group>"; };
+		92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArgoExtensionsTests.swift; sourceTree = "<group>"; };
 		BE0F409F1C89098E00E3B11A /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Fixture.swift; path = Tests/Fixture.swift; sourceTree = SOURCE_ROOT; };
 		BE0F40A11C8909EB00E3B11A /* ReleaseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseTests.swift; sourceTree = "<group>"; };
 		BE0F40A31C89135D00E3B11A /* Decodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
@@ -487,6 +490,7 @@
 				BECB8AA11CBDDF0F005D70A6 /* UserTests.swift */,
 				928DF21B1E0E68D300E6DE35 /* FileResponseTests.swift */,
 				92F0C2B91E391088004A9889 /* FileTests.swift */,
+				92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -838,6 +842,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A1F20F11D3E872800F275F8 /* ColorTests.swift in Sources */,
+				92F0C2BE1E391F3F004A9889 /* ArgoExtensionsTests.swift in Sources */,
 				619081881C8A2DB7001BE2F8 /* Fixture.swift in Sources */,
 				928DF22E1E0E6A8100E6DE35 /* FileResponseTests.swift in Sources */,
 				BE2B6A6D1C8B854F0080BFEB /* ClientTests.swift in Sources */,
@@ -898,6 +903,7 @@
 				7AAB00FD1CF51FC5005A7319 /* IssuesTests.swift in Sources */,
 				BE1E036B1C9AD87F001296C2 /* ResponseTests.swift in Sources */,
 				7A1F20F21D3E873500F275F8 /* Color.swift in Sources */,
+				92F0C2BD1E391F3F004A9889 /* ArgoExtensionsTests.swift in Sources */,
 				BEA86F9D1C9F7E1E0049360B /* RepositoryTests.swift in Sources */,
 				928DF22D1E0E6A8000E6DE35 /* FileResponseTests.swift in Sources */,
 				BEB076601C8A019E00ABD373 /* GitHubErrorTests.swift in Sources */,
