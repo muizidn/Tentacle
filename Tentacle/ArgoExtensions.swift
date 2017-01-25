@@ -28,7 +28,11 @@ extension JSON {
         case .bool(let value):
             return value
         case .object(let object):
-            return object.map { $0.value.JSONObject() } as Any
+            var dict: [String : Any] = [:]
+            for (key, value) in object {
+                dict[key] = value.JSONObject()
+            }
+            return dict as Any
         }
     }
 }
