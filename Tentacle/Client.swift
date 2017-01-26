@@ -11,7 +11,6 @@ import Foundation
 import ReactiveSwift
 import Result
 
-
 extension JSONSerialization {
     internal static func deserializeJSON(_ data: Data) -> Result<Any, AnyError> {
         return Result(try JSONSerialization.jsonObject(with: data))
@@ -55,6 +54,18 @@ extension URLRequest {
         
         return request
     }
+
+    internal static func create<Request: RequestType>(_ url: URL, _ request: Request, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+        var URLRequest = create(url, credentials, contentType: contentType)
+        URLRequest.httpMethod = method.rawValue
+
+        let object = request.encode().JSONObject()
+        if let payload = try? JSONSerialization.data(withJSONObject: object, options: []) {
+            URLRequest.httpBody = payload
+        }
+
+        return URLRequest
+    }
 }
 
 extension URLSession {
@@ -86,6 +97,14 @@ extension URLSession {
 			task.resume()
 		}
 	}
+}
+
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case head = "HEAD"
+    case options = "OPTIONS"
 }
 
 /// A GitHub API Client
@@ -322,13 +341,22 @@ public final class Client {
         return fetchOne(.content(owner: repository.owner, repository: repository.name, path: path))
     }
 
+    public func create(file: File, atPath path: String, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
+        return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path), using: .put)
+    }
+
     /// Fetch an endpoint from the API.
     private func fetch(_ endpoint: Endpoint, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
         let url = URL(server, endpoint, page: page, pageSize: pageSize)
-        let request = URLRequest.create(url, credentials)
+
+        return fetch(URLRequest.create(url, credentials))
+    }
+
+    /// Sends an URLRequest and map response to JSON
+    private func fetch(_ urlRequest: URLRequest) -> SignalProducer<(Response, Any), Error> {
         return urlSession
             .reactive
-            .data(with: request)
+            .data(with: urlRequest)
             .mapError { Error.networkError($0.error) }
             .flatMap(.concat) { data, response -> SignalProducer<(Response, Any), Error> in
                 let response = response as! HTTPURLResponse
@@ -346,14 +374,14 @@ public final class Client {
                                 .mapError(Error.jsonDecodingError)
                                 .flatMap { error in
                                     .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
-                                }
+                            }
                         }
                         return .success(JSON)
                     }
                     .map { JSON in
                         return (Response(headerFields: headers), JSON)
-                    }
-            }
+                }
+        }
     }
     
     /// Fetch an object from the API.
@@ -389,6 +417,19 @@ public final class Client {
                 return SignalProducer(value: (response, JSON))
                     .concat(response.links["next"] == nil ? SignalProducer.empty : self.fetchMany(endpoint, page: nextPage, pageSize: pageSize))
             }
+    }
+
+    internal func send<Request: RequestType>(_ request: Request, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, Request.Response), Error> where Request.Response == Request.Response.DecodedType {
+        let urlRequest = URLRequest.create(URL(server, endpoint), request, method, credentials)
+
+        return fetch(urlRequest)
+            .attemptMap { response, JSON in
+                return decode(JSON)
+                    .map { resource in
+                        (response, resource)
+                    }
+                    .mapError(Error.jsonDecodingError)
+        }
     }
 }
 

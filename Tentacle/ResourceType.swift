@@ -12,3 +12,7 @@ import Argo
 public protocol ResourceType: Decodable, Hashable {
     static func decode(_ json: JSON) -> Decoded<Self>
 }
+
+public protocol RequestType: Encodable, Hashable {
+    associatedtype Response: Decodable
+}

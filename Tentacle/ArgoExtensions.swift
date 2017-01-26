@@ -10,6 +10,33 @@ import Argo
 import Foundation
 import Result
 
+public protocol Encodable {
+    func encode() -> JSON
+}
+
+extension JSON {
+    func JSONObject() -> Any {
+        switch self {
+        case .null:
+            return NSNull()
+        case .string(let value):
+            return value
+        case .number(let value):
+            return value
+        case .array(let array):
+            return array.map { $0.JSONObject() }
+        case .bool(let value):
+            return value
+        case .object(let object):
+            var dict: [String : Any] = [:]
+            for (key, value) in object {
+                dict[key] = value.JSONObject()
+            }
+            return dict as Any
+        }
+    }
+}
+
 internal func decode<T: Decodable>(_ object: Any) -> Result<T, DecodeError> where T == T.DecodedType {
     let decoded: Decoded<T> = decode(object)
     switch decoded {
@@ -91,4 +118,8 @@ internal func toUserType(_ string: String) -> Decoded<User.UserType> {
     } else {
         return .failure(.custom("String \(string) does not represent a valid user type"))
     }
+}
+
+internal func toSHA(_ string: String) -> Decoded<SHA> {
+    return .success(SHA(hash: string))
 }
