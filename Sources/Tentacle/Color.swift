@@ -17,7 +17,7 @@ import Foundation
 #endif
 
 extension Color {
-    convenience init(hex: String) {
+    internal convenience init(hex: String) {
         precondition(hex.characters.count == 6)
 
         let scanner = Scanner(string: hex)

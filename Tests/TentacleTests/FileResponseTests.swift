@@ -13,7 +13,14 @@ import Argo
 class FileResponseTests: XCTestCase {
 
     func testDecodedFileResponse() {
-        let url = Bundle(for: type(of: self)).url(forResource: "create-file-sample-response", withExtension: "data")!
+        #if SWIFT_PACKAGE
+            let url = URL(fileURLWithPath: #file)
+                .deletingLastPathComponent()
+                .appendingPathComponent("Fixtures")
+                .appendingPathComponent("create-file-sample-response.data")
+        #else
+            let url = Bundle(for: type(of: self)).url(forResource: "create-file-sample-response", withExtension: "data")!
+        #endif
         let data = try! Data(contentsOf: url)
         let json = JSON(try! JSONSerialization.jsonObject(with: data, options: []))
 
