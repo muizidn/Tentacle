@@ -187,7 +187,7 @@ public final class Client {
         case publicRepositories
 
         // https://developer.github.com/v3/repos/contents/#get-contents
-        case content(owner: String, repository: String, path: String)
+        case content(owner: String, repository: String, path: String, ref: String?)
 
         internal var path: String {
             switch self {
@@ -213,13 +213,19 @@ public final class Client {
                 return "/orgs/\(organisation)/repos"
             case .publicRepositories:
                 return "/repositories"
-            case let .content(owner, repository, path):
+            case let .content(owner, repository, path, _):
                 return "/repos/\(owner)/\(repository)/contents/\(path)"
             }
         }
         
         internal var queryItems: [URLQueryItem] {
-            return []
+            switch self {
+            case let .content(_, _, _, ref):
+                return [ref]
+                    .flatMap { $0 }
+                    .map { URLQueryItem(name: "ref", value: $0) }
+            default: return []
+            }
         }
     }
     
@@ -337,12 +343,13 @@ public final class Client {
     }
 
     /// Fetch the content for a path in the repository
-    public func content(atPath path: String, in repository: Repository) -> SignalProducer<(Response, Content), Error> {
-        return fetchOne(.content(owner: repository.owner, repository: repository.name, path: path))
+    public func content(atPath path: String, in repository: Repository, at ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
+        return fetchOne(.content(owner: repository.owner, repository: repository.name, path: path, ref: ref))
     }
 
-    public func create(file: File, atPath path: String, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path), using: .put)
+    /// Create a file in a repository
+    public func create(file: File, atPath path: String, in repository: Repository, in branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
+        return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path, ref: branch), using: .put)
     }
 
     /// Fetch an endpoint from the API.
@@ -514,8 +521,8 @@ extension Client.Endpoint: Hashable {
             return organisation.hashValue
         case .publicRepositories:
             return "PublicRepositories".hashValue
-        case let .content(owner, repository, path):
-            return "File".hashValue ^ owner.hashValue ^ repository.hashValue ^ path.hashValue
+        case let .content(owner, repository, path, ref):
+            return "File".hashValue ^ owner.hashValue ^ repository.hashValue ^ path.hashValue ^ (ref?.hashValue ?? 0)
         }
     }
 }
