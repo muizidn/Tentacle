@@ -29,8 +29,6 @@
 		7A1F20EE1D3E862200F275F8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F20EC1D3E85BB00F275F8 /* Color.swift */; };
 		7A1F20F01D3E86D900F275F8 /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F20EF1D3E86D900F275F8 /* ColorTests.swift */; };
 		7A1F20F11D3E872800F275F8 /* ColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F20EF1D3E86D900F275F8 /* ColorTests.swift */; };
-		7A1F20F21D3E873500F275F8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F20EC1D3E85BB00F275F8 /* Color.swift */; };
-		7A1F20F31D3E873600F275F8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1F20EC1D3E85BB00F275F8 /* Color.swift */; };
 		7A27887A1D4920DA007AC936 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2788791D4920DA007AC936 /* Comment.swift */; };
 		7A27887C1D49223B007AC936 /* CommentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27887B1D49223B007AC936 /* CommentsTests.swift */; };
 		7A27887D1D49223B007AC936 /* CommentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27887B1D49223B007AC936 /* CommentsTests.swift */; };
@@ -282,7 +280,7 @@
 		928DF23D1E1117D600E6DE35 /* Sha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sha.swift; sourceTree = "<group>"; };
 		92F0C2B91E391088004A9889 /* FileTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTests.swift; sourceTree = "<group>"; };
 		92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArgoExtensionsTests.swift; sourceTree = "<group>"; };
-		BE0F409F1C89098E00E3B11A /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Fixture.swift; path = Tests/Fixture.swift; sourceTree = SOURCE_ROOT; };
+		BE0F409F1C89098E00E3B11A /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Fixture.swift; path = Tests/TentacleTests/Fixture.swift; sourceTree = SOURCE_ROOT; };
 		BE0F40A11C8909EB00E3B11A /* ReleaseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseTests.swift; sourceTree = "<group>"; };
 		BE0F40A31C89135D00E3B11A /* Decodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
 		BE1E036A1C9AD87F001296C2 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
@@ -466,7 +464,8 @@
 				BECB8A8A1CBDCD17005D70A6 /* User.swift */,
 				928DF23D1E1117D600E6DE35 /* Sha.swift */,
 			);
-			path = Tentacle;
+			name = Tentacle;
+			path = Sources/Tentacle;
 			sourceTree = "<group>";
 		};
 		BE88E8001C88C6B30034A112 /* Tests */ = {
@@ -492,7 +491,8 @@
 				92F0C2B91E391088004A9889 /* FileTests.swift */,
 				92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */,
 			);
-			path = Tests;
+			name = Tests;
+			path = Tests/TentacleTests;
 			sourceTree = "<group>";
 		};
 		BE88E8271C88C7E90034A112 /* Frameworks */ = {
@@ -849,7 +849,6 @@
 				7A27887D1D49223B007AC936 /* CommentsTests.swift in Sources */,
 				BEA86F9B1C9F7C230049360B /* ServerTests.swift in Sources */,
 				7A2F66101CF527EB00463602 /* IssuesTests.swift in Sources */,
-				7A1F20F31D3E873600F275F8 /* Color.swift in Sources */,
 				CD1FE6501DCF36070016639E /* HTTPStub.swift in Sources */,
 				92F0C2BB1E39108B004A9889 /* FileTests.swift in Sources */,
 				BEA86F9E1C9F7E1E0049360B /* RepositoryTests.swift in Sources */,
@@ -902,7 +901,6 @@
 				92F0C2BA1E391088004A9889 /* FileTests.swift in Sources */,
 				7AAB00FD1CF51FC5005A7319 /* IssuesTests.swift in Sources */,
 				BE1E036B1C9AD87F001296C2 /* ResponseTests.swift in Sources */,
-				7A1F20F21D3E873500F275F8 /* Color.swift in Sources */,
 				92F0C2BD1E391F3F004A9889 /* ArgoExtensionsTests.swift in Sources */,
 				BEA86F9D1C9F7E1E0049360B /* RepositoryTests.swift in Sources */,
 				928DF22D1E0E6A8000E6DE35 /* FileResponseTests.swift in Sources */,
@@ -958,7 +956,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Checkouts/Ogra/build/Debug-iphoneos",
 				);
-				INFOPLIST_FILE = Tentacle/Info.plist;
+				INFOPLIST_FILE = Sources/Tentacle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.Tentacle;
@@ -982,7 +980,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Checkouts/Ogra/build/Debug-iphoneos",
 				);
-				INFOPLIST_FILE = Tentacle/Info.plist;
+				INFOPLIST_FILE = Sources/Tentacle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.Tentacle;
@@ -999,7 +997,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/TentacleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.TentacleiOSTests;
@@ -1012,7 +1010,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/TentacleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.TentacleiOSTests;
@@ -1134,7 +1132,7 @@
 					"$(PROJECT_DIR)/Carthage/Checkouts/ReactiveSwift/build/Debug",
 				);
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = Tentacle/Info.plist;
+				INFOPLIST_FILE = Sources/Tentacle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.Tentacle;
@@ -1161,7 +1159,7 @@
 					"$(PROJECT_DIR)/Carthage/Checkouts/ReactiveSwift/build/Debug",
 				);
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = Tentacle/Info.plist;
+				INFOPLIST_FILE = Sources/Tentacle/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.Tentacle;
@@ -1175,7 +1173,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/TentacleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.TentacleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1186,7 +1184,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/TentacleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.diephouse.matt.TentacleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

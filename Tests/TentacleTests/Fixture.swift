@@ -62,9 +62,16 @@ extension FixtureType {
     }
     
     private func fileURL(withExtension ext: String) -> URL {
-        let bundle = Bundle(for: ImportedWithFixture.self)
         let filename = self.filename(withExtension: ext) as NSString
-        return bundle.url(forResource: filename.deletingPathExtension, withExtension: filename.pathExtension)!
+        #if SWIFT_PACKAGE
+            return URL(fileURLWithPath: #file)
+                .deletingLastPathComponent()
+                .appendingPathComponent("Fixtures")
+                .appendingPathComponent(filename as String)
+        #else
+            let bundle = Bundle(for: ImportedWithFixture.self)
+            return bundle.url(forResource: filename.deletingPathExtension, withExtension: filename.pathExtension)!
+        #endif
     }
     
     /// The URL of the fixture's data within the test bundle.

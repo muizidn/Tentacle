@@ -6,6 +6,7 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
+import Foundation
 import Argo
 import Curry
 import Runes

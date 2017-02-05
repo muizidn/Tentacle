@@ -7,6 +7,7 @@
 //
 
 import XCTest
+@testable import Tentacle
 
 class ColorTests: XCTestCase {
 
