@@ -220,11 +220,10 @@ public final class Client {
         
         internal var queryItems: [URLQueryItem] {
             switch self {
-            case let .content(_, _, _, ref):
-                return [ref]
-                    .flatMap { $0 }
-                    .map { URLQueryItem(name: "ref", value: $0) }
-            default: return []
+            case let .content(_, _, _, ref?):
+                return [ URLQueryItem(name: "ref", value: ref) ]
+            default:
+                return []
             }
         }
     }
