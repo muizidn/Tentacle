@@ -344,7 +344,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var endpoint: Client.Endpoint {
-            return .content(owner: owner, repository: repository, path: path)
+            return .content(owner: owner, repository: repository, path: path, ref: nil)
         }
 
         init(_ server: Server, owner: String, repository: String, path: String) {
