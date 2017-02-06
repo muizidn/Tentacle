@@ -343,12 +343,12 @@ public final class Client {
     }
 
     /// Fetch the content for a path in the repository
-    public func content(atPath path: String, in repository: Repository, at ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
+    public func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
         return fetchOne(.content(owner: repository.owner, repository: repository.name, path: path, ref: ref))
     }
 
     /// Create a file in a repository
-    public func create(file: File, atPath path: String, in repository: Repository, in branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
+    public func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
         return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path, ref: branch), using: .put)
     }
 
