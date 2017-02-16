@@ -63,7 +63,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "$(PROJECT_DIR)/Tests/Fixtures"
+            argument = "$(PROJECT_DIR)/Tests/TentacleTests/Fixtures"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
