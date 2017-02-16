@@ -17,9 +17,9 @@ public struct Branch {
     public let name: String
 
     /// Sha of the commit the branch points to
-    public let sha: String
+    public let sha: SHA
 
-    public init(name: String, sha: String) {
+    public init(name: String, sha: SHA) {
         self.name = name
         self.sha = sha
     }
@@ -41,6 +41,6 @@ extension Branch: ResourceType {
 
         return f
             <^> j <| "name"
-            <*> j <| ["commit", "sha"]
+            <*> j <| "commit"
     }
 }
