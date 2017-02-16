@@ -149,7 +149,8 @@ struct Fixture {
         FileForRepository.ReadMeForSampleRepository,
         FileForRepository.SubmoduleInTentacle,
         FileForRepository.DirectoryInSampleRepository,
-        FileForRepository.SymlinkInSampleRepository
+        FileForRepository.SymlinkInSampleRepository,
+        BranchesForRepository.BranchesInReactiveTask
     ]
     
     /// Returns the fixture for the given URL, or nil if no such fixture exists.
@@ -352,6 +353,30 @@ struct Fixture {
             self.owner = owner
             self.repository = repository
             self.path = path
+        }
+
+    }
+
+    struct BranchesForRepository: EndpointFixtureType {
+        static let BranchesInReactiveTask = BranchesForRepository(.dotCom, owner: "Carthage", repository: "ReactiveTask")
+
+        let server: Server
+        let page: UInt? = nil
+        let pageSize: UInt? = nil
+
+        let owner: String
+        let repository: String
+
+        let contentType = Client.APIContentType
+
+        var endpoint: Client.Endpoint {
+            return .branches(owner: owner, repository: repository)
+        }
+
+        init(_ server: Server, owner: String, repository: String) {
+            self.server = server
+            self.owner = owner
+            self.repository = repository
         }
 
     }
