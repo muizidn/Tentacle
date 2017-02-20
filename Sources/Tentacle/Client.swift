@@ -189,6 +189,9 @@ public final class Client {
         // https://developer.github.com/v3/repos/contents/#get-contents
         case content(owner: String, repository: String, path: String, ref: String?)
 
+        // https://developer.github.com/v3/repos/branches/#list-branches
+        case branches(owner: String, repository: String)
+
         internal var path: String {
             switch self {
             case let .releaseByTagName(owner, repo, tag):
@@ -215,6 +218,8 @@ public final class Client {
                 return "/repositories"
             case let .content(owner, repository, path, _):
                 return "/repos/\(owner)/\(repository)/contents/\(path)"
+            case let .branches(owner, repository):
+                return "/repos/\(owner)/\(repository)/branches"
             }
         }
         
@@ -349,6 +354,11 @@ public final class Client {
     /// Create a file in a repository
     public func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
         return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path, ref: branch), using: .put)
+    }
+
+    /// Get branches for a repository
+    public func branches(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Branch]), Error> {
+        return fetchMany(.branches(owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
     }
 
     /// Fetch an endpoint from the API.
@@ -522,6 +532,8 @@ extension Client.Endpoint: Hashable {
             return "PublicRepositories".hashValue
         case let .content(owner, repository, path, ref):
             return "File".hashValue ^ owner.hashValue ^ repository.hashValue ^ path.hashValue ^ (ref?.hashValue ?? 0)
+        case let .branches(owner, repository):
+            return "Branches".hashValue ^ owner.hashValue ^ repository.hashValue
         }
     }
 }
