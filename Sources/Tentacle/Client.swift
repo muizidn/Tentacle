@@ -86,7 +86,7 @@ extension URLSession {
 				} else if let error = error {
 					observer.send(error: AnyError(error))
                 } else {
-                    fatalError("Request neither succeeded nor failed: \(request.url)")
+                    fatalError("Request neither succeeded nor failed: \(String(describing: request.url))")
                 }
 			}
 
