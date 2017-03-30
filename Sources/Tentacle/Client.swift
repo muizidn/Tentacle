@@ -13,7 +13,7 @@ import Result
 
 extension JSONSerialization {
     internal static func deserializeJSON(_ data: Data) -> Result<Any, AnyError> {
-        return Result(try JSONSerialization.jsonObject(with: data))
+        return materialize(try JSONSerialization.jsonObject(with: data))
     }
 }
 
