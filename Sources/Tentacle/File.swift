@@ -32,9 +32,7 @@ public struct File {
     }
 }
 
-extension File: RequestType {
-    public typealias Response = FileResponse
-
+extension File: Encodable, Hashable {
     public var hashValue: Int {
         return message.hashValue
     }
