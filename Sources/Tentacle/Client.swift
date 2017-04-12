@@ -55,11 +55,11 @@ extension URLRequest {
         return request
     }
 
-    internal static func create<Request: RequestType>(_ url: URL, _ request: Request, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+    internal static func create(_ url: URL, _ file: File, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
         var URLRequest = create(url, credentials, contentType: contentType)
         URLRequest.httpMethod = method.rawValue
 
-        let object = request.encode().JSONObject()
+        let object = file.encode().JSONObject()
         if let payload = try? JSONSerialization.data(withJSONObject: object, options: []) {
             URLRequest.httpBody = payload
         }
@@ -435,8 +435,8 @@ public final class Client {
             }
     }
 
-    internal func send<Request: RequestType>(_ request: Request, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, Request.Response), Error> where Request.Response == Request.Response.DecodedType {
-        let urlRequest = URLRequest.create(URL(server, endpoint), request, method, credentials)
+    internal func send(_ file: File, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, FileResponse), Error> {
+        let urlRequest = URLRequest.create(URL(server, endpoint), file, method, credentials)
 
         return fetch(urlRequest)
             .attemptMap { response, JSON in
