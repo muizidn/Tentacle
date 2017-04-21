@@ -150,7 +150,8 @@ struct Fixture {
         FileForRepository.SubmoduleInTentacle,
         FileForRepository.DirectoryInSampleRepository,
         FileForRepository.SymlinkInSampleRepository,
-        BranchesForRepository.BranchesInReactiveTask
+        BranchesForRepository.BranchesInReactiveTask,
+        TreeForRepository.TreeInReactiveTask
     ]
     
     /// Returns the fixture for the given URL, or nil if no such fixture exists.
@@ -379,5 +380,32 @@ struct Fixture {
             self.repository = repository
         }
 
+    }
+
+    struct TreeForRepository: EndpointFixtureType {
+        static let TreeInReactiveTask = TreeForRepository(.dotCom, owner: "Carthage", repository: "ReactiveTask", ref: "15fb9dd92c823b98b584db9599f629f6c816e619", recursive: false)
+
+        let server: Server
+        let page: UInt? = nil
+        let pageSize: UInt? = nil
+
+        let owner: String
+        let repository: String
+        let ref: String
+        let recursive: Bool
+
+        let contentType = Client.APIContentType
+
+        var endpoint: Client.Endpoint {
+            return .tree(owner: owner, repository: repository, ref: ref, recursive: recursive)
+        }
+
+        init(_ server: Server, owner: String, repository: String, ref: String, recursive: Bool) {
+            self.server = server
+            self.owner = owner
+            self.repository = repository
+            self.ref = ref
+            self.recursive = recursive
+        }
     }
 }

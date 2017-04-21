@@ -123,3 +123,19 @@ internal func toUserType(_ string: String) -> Decoded<User.UserType> {
 internal func toSHA(_ string: String) -> Decoded<SHA> {
     return .success(SHA(hash: string))
 }
+
+internal func toTreeEntryType(_ string: String) -> Decoded<Tree.Entry.EntryType> {
+    if let type = Tree.Entry.EntryType(rawValue: string) {
+        return .success(type)
+    } else {
+        return .failure(.custom("String \(string) does not represent a valid tree entry type"))
+    }
+}
+
+internal func toTreeEntryMode(_ string: String) -> Decoded<Tree.Entry.Mode> {
+    if let type = Tree.Entry.Mode(rawValue: string) {
+        return .success(type)
+    } else {
+        return .failure(.custom("String \(string) does not represent a valid tree entry mode"))
+    }
+}

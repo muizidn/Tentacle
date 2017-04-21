@@ -1,0 +1,29 @@
+{
+  "tree" : [
+    {
+      "path" : "project.pbxproj",
+      "size" : 24761,
+      "url" : "https:\/\/api.github.com\/repos\/Carthage\/ReactiveTask\/git\/blobs\/010d3ce1339fc9999366291bce76748f6a6caf34",
+      "type" : "blob",
+      "mode" : "100644",
+      "sha" : "010d3ce1339fc9999366291bce76748f6a6caf34"
+    },
+    {
+      "path" : "project.xcworkspace",
+      "url" : "https:\/\/api.github.com\/repos\/Carthage\/ReactiveTask\/git\/trees\/e2f7a92fe267aac90ed33349d7e49ce338c5657f",
+      "type" : "tree",
+      "mode" : "040000",
+      "sha" : "e2f7a92fe267aac90ed33349d7e49ce338c5657f"
+    },
+    {
+      "path" : "xcshareddata",
+      "url" : "https:\/\/api.github.com\/repos\/Carthage\/ReactiveTask\/git\/trees\/57f355330ec11913b305b53925e442412dea543a",
+      "type" : "tree",
+      "mode" : "040000",
+      "sha" : "57f355330ec11913b305b53925e442412dea543a"
+    }
+  ],
+  "url" : "https:\/\/api.github.com\/repos\/Carthage\/ReactiveTask\/git\/trees\/15fb9dd92c823b98b584db9599f629f6c816e619",
+  "truncated" : false,
+  "sha" : "15fb9dd92c823b98b584db9599f629f6c816e619"
+}
