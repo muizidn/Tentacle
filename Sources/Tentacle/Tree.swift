@@ -32,9 +32,9 @@ public struct Tree: CustomStringConvertible {
 
     public struct Entry {
 
-        public enum EntryType: String {
-            case blob
-            case tree
+        public enum EntryType {
+            case blob(url: URL, size: Int)
+            case tree(url: URL)
             case commit
         }
 
@@ -46,17 +46,14 @@ public struct Tree: CustomStringConvertible {
             case symlink = "120000"
         }
 
+        /// The type of the entry.
+        public let type: EntryType
+
         /// The SHA of the entry.
         public let sha: SHA
 
         /// The repository-relative path of the entry.
         public let path: String
-
-        /// The URL for the entry.
-        public let url: URL
-
-        /// The type of the entry.
-        public let type: EntryType
 
         /// The mode of the entry.
         public let mode: Mode
@@ -89,24 +86,55 @@ extension Tree: ResourceType {
 extension Tree.Entry: ResourceType {
     public static func decode(_ j: JSON) -> Decoded<Tree.Entry> {
         return curry(self.init)
-            <^> (j <| "sha" >>- toSHA)
+            <^> Tree.Entry.EntryType.decode(j)
+            <*> (j <| "sha" >>- toSHA)
             <*> j <| "path"
-            <*> (j <| "url" >>- toURL)
-            <*> (j <| "type" >>- toTreeEntryType)
-            <*> (j <| "mode" >>- toTreeEntryMode)
+            <*> j <| "mode"
     }
 }
 
 extension Tree.Entry: Hashable {
     public static func ==(lhs: Tree.Entry, rhs: Tree.Entry) -> Bool {
         return lhs.sha == rhs.sha
-            && lhs.url == rhs.url
-            && lhs.path == rhs.path
-            && lhs.type == rhs.type
-            && lhs.mode == rhs.mode
     }
 
     public var hashValue: Int {
         return sha.hashValue
     }
 }
+
+func decodeBlob(_ j: JSON) -> Decoded<Tree.Entry.EntryType> {
+    return curry(Tree.Entry.EntryType.blob)
+        <^> j <| "url"
+        <*> j <| "size"
+}
+
+func decodeTree(_ j: JSON) -> Decoded<Tree.Entry.EntryType> {
+    return curry(Tree.Entry.EntryType.tree)
+        <^> j <| "url"
+}
+
+extension Tree.Entry.EntryType: Decodable {
+    public static func decode(_ json: JSON) -> Decoded<Tree.Entry.EntryType> {
+        guard case let .object(payload) = json else {
+            return .failure(.typeMismatch(expected: "object", actual: "\(json)"))
+        }
+
+        guard let type = payload["type"], case let .string(value) = type else {
+            return .failure(.custom("Content type is invalid"))
+        }
+
+        switch value {
+        case "blob":
+            return decodeBlob(json)
+        case "commit":
+            return .success(Tree.Entry.EntryType.commit)
+        case "tree":
+            return decodeTree(json)
+        default:
+            return .failure(.custom("Content type \(value) is invalid"))
+        }
+    }
+}
+
+extension Tree.Entry.Mode: Decodable {}

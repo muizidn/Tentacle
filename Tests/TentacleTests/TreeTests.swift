@@ -6,6 +6,7 @@
 //  Copyright © 2017 Matt Diephouse. All rights reserved.
 //
 
+import Foundation
 import XCTest
 @testable import Tentacle
 
@@ -13,34 +14,46 @@ class TreeTests: XCTestCase {
 
     func testDecodingTrees() {
         let expected = Tree(
-            sha: SHA(hash: "15fb9dd92c823b98b584db9599f629f6c816e619"),
-            url: URL(string: "https://api.github.com/repos/Carthage/ReactiveTask/git/trees/15fb9dd92c823b98b584db9599f629f6c816e619")!,
+            sha: SHA(hash: "0c0dfafa361836e11aedcbb95c1f05d3f654aef0"),
+            url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/git/trees/0c0dfafa361836e11aedcbb95c1f05d3f654aef0")!,
             entries: [
                 Tree.Entry(
-                    sha: SHA(hash: "010d3ce1339fc9999366291bce76748f6a6caf34"),
-                    path: "project.pbxproj",
-                    url: URL(string: "https://api.github.com/repos/Carthage/ReactiveTask/git/blobs/010d3ce1339fc9999366291bce76748f6a6caf34")!,
-                    type: .blob,
+                    type: .tree(
+                        url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/git/trees/5bfad2b3f8e483b6b173d8aaff19597e84626f15")!
+                    ),
+                    sha: SHA(hash: "5bfad2b3f8e483b6b173d8aaff19597e84626f15"),
+                    path: "Directory",
+                    mode: .subdirectory
+                ),
+                Tree.Entry(
+                    type: .blob(
+                        url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/git/blobs/c3eb8708a0a5aaa4f685aab24ef6403fbfd28efc")!,
+                        size: 18
+                    ),
+                    sha: SHA(hash: "c3eb8708a0a5aaa4f685aab24ef6403fbfd28efc"),
+                    path: "README.markdown",
                     mode: .file
                 ),
                 Tree.Entry(
-                    sha: SHA(hash: "e2f7a92fe267aac90ed33349d7e49ce338c5657f"),
-                    path: "project.xcworkspace",
-                    url: URL(string: "https://api.github.com/repos/Carthage/ReactiveTask/git/trees/e2f7a92fe267aac90ed33349d7e49ce338c5657f")!,
-                    type: .tree,
-                    mode: .subdirectory
+                    type: .commit,
+                    sha: SHA(hash: "7a84505a3c553fd8e2879cfa63753b0cd212feb8"),
+                    path: "Tentacle",
+                    mode: .submodule
                 ),
                 Tree.Entry(
-                    sha: SHA(hash: "57f355330ec11913b305b53925e442412dea543a"),
-                    path: "xcshareddata",
-                    url: URL(string: "https://api.github.com/repos/Carthage/ReactiveTask/git/trees/57f355330ec11913b305b53925e442412dea543a")!,
-                    type: .tree,
-                    mode: .subdirectory
+                    type: .blob(
+                        url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/git/blobs/1e3f1fd0bc1f65cf4701c217f4d1fd9a3cd50721")!,
+                        size: 12
+                    ),
+                    sha: SHA(hash: "1e3f1fd0bc1f65cf4701c217f4d1fd9a3cd50721"),
+                    path: "say",
+                    mode: .file
                 )
+
             ],
             isTruncated: false
         )
 
-        XCTAssertEqual(Fixture.TreeForRepository.TreeInReactiveTask.decode()!, expected)
+        XCTAssertEqual(Fixture.TreeForRepository.TreeInSampleRepository.decode()!, expected)
     }
 }

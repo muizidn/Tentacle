@@ -151,7 +151,7 @@ struct Fixture {
         FileForRepository.DirectoryInSampleRepository,
         FileForRepository.SymlinkInSampleRepository,
         BranchesForRepository.BranchesInReactiveTask,
-        TreeForRepository.TreeInReactiveTask
+        TreeForRepository.TreeInSampleRepository
     ]
     
     /// Returns the fixture for the given URL, or nil if no such fixture exists.
@@ -383,7 +383,8 @@ struct Fixture {
     }
 
     struct TreeForRepository: EndpointFixtureType {
-        static let TreeInReactiveTask = TreeForRepository(.dotCom, owner: "Carthage", repository: "ReactiveTask", ref: "15fb9dd92c823b98b584db9599f629f6c816e619", recursive: false)
+        static let TreeInSampleRepository = TreeForRepository(.dotCom, owner: "Palleas-opensource", repository: "Sample-repository",
+                                                          ref: "0c0dfafa361836e11aedcbb95c1f05d3f654aef0", recursive: false)
 
         let server: Server
         let page: UInt? = nil
