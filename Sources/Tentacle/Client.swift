@@ -192,6 +192,9 @@ public final class Client {
         // https://developer.github.com/v3/repos/branches/#list-branches
         case branches(owner: String, repository: String)
 
+        // https://developer.github.com/v3/git/trees/#get-a-tree
+        case tree(owner: String, repository: String, ref: String, recursive: Bool)
+
         internal var path: String {
             switch self {
             case let .releaseByTagName(owner, repo, tag):
@@ -220,6 +223,8 @@ public final class Client {
                 return "/repos/\(owner)/\(repository)/contents/\(path)"
             case let .branches(owner, repository):
                 return "/repos/\(owner)/\(repository)/branches"
+            case let .tree(owner, repository, ref, _):
+                return "repos/\(owner)/\(repository)/git/trees/\(ref)"
             }
         }
         
@@ -227,6 +232,8 @@ public final class Client {
             switch self {
             case let .content(_, _, _, ref?):
                 return [ URLQueryItem(name: "ref", value: ref) ]
+            case .tree(_, _, _, true):
+                return [ URLQueryItem(name: "recursive", value: "1") ]
             default:
                 return []
             }
@@ -359,6 +366,11 @@ public final class Client {
     /// Get branches for a repository
     public func branches(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Branch]), Error> {
         return fetchMany(.branches(owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
+    }
+
+    /// Get trees for a repository reference
+    public func trees(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
+        return fetchOne(.tree(owner: repository.owner, repository: repository.name, ref: ref, recursive: recursive))
     }
 
     /// Fetch an endpoint from the API.
@@ -534,6 +546,8 @@ extension Client.Endpoint: Hashable {
             return "File".hashValue ^ owner.hashValue ^ repository.hashValue ^ path.hashValue ^ (ref?.hashValue ?? 0)
         case let .branches(owner, repository):
             return "Branches".hashValue ^ owner.hashValue ^ repository.hashValue
+        case let .tree(owner, repository, ref, recursive):
+            return "Tree".hashValue ^ owner.hashValue ^ repository.hashValue ^ ref.hashValue ^ recursive.hashValue
         }
     }
 }

@@ -193,6 +193,14 @@
 		BEEE47461C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47441C91BB3A000FFC21 /* ArgoExtensions.swift */; };
 		BEEE474E1C92623E000FFC21 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE474D1C92623E000FFC21 /* Response.swift */; };
 		BEEE474F1C92623E000FFC21 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE474D1C92623E000FFC21 /* Response.swift */; };
+		BF01A25D1EAA5BEC0028ECFC /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01A25C1EAA5BEB0028ECFC /* Tree.swift */; };
+		BF01A25E1EAA5BEC0028ECFC /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01A25C1EAA5BEB0028ECFC /* Tree.swift */; };
+		BF01A2611EAA63100028ECFC /* TreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01A2601EAA63100028ECFC /* TreeTests.swift */; };
+		BF01A2621EAA63100028ECFC /* TreeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01A2601EAA63100028ECFC /* TreeTests.swift */; };
+		BF5691C41EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data in Resources */ = {isa = PBXBuildFile; fileRef = BF5691C21EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data */; };
+		BF5691C51EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data in Resources */ = {isa = PBXBuildFile; fileRef = BF5691C21EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data */; };
+		BF5691C61EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response in Resources */ = {isa = PBXBuildFile; fileRef = BF5691C31EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response */; };
+		BF5691C71EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response in Resources */ = {isa = PBXBuildFile; fileRef = BF5691C31EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response */; };
 		CD1FE64F1DCF36070016639E /* HTTPStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1FE64D1DCF35F60016639E /* HTTPStub.swift */; };
 		CD1FE6501DCF36070016639E /* HTTPStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1FE64D1DCF35F60016639E /* HTTPStub.swift */; };
 		CD83C7BA1DCE379D00BC2608 /* Availability.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD83C7B91DCE379D00BC2608 /* Availability.swift */; };
@@ -322,6 +330,10 @@
 		BEEE47411C91B8DF000FFC21 /* ResourceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceType.swift; sourceTree = "<group>"; };
 		BEEE47441C91BB3A000FFC21 /* ArgoExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArgoExtensions.swift; sourceTree = "<group>"; };
 		BEEE474D1C92623E000FFC21 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		BF01A25C1EAA5BEB0028ECFC /* Tree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
+		BF01A2601EAA63100028ECFC /* TreeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeTests.swift; sourceTree = "<group>"; };
+		BF5691C21EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data"; sourceTree = "<group>"; };
+		BF5691C31EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response"; sourceTree = "<group>"; };
 		CD1FE64D1DCF35F60016639E /* HTTPStub.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStub.swift; sourceTree = "<group>"; };
 		CD83C7B91DCE379D00BC2608 /* Availability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Availability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -422,6 +434,8 @@
 				7A3CC6591E01BC200025E711 /* repos-mdiep-NonExistent-releases-tags-tag.response */,
 				7A3CC65A1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.data */,
 				7A3CC65B1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response */,
+				BF5691C21EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data */,
+				BF5691C31EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -480,6 +494,7 @@
 				BE88E82C1C88C94D0034A112 /* Server.swift */,
 				928DF23D1E1117D600E6DE35 /* Sha.swift */,
 				BE88E7F51C88C6B30034A112 /* Tentacle.h */,
+				BF01A25C1EAA5BEB0028ECFC /* Tree.swift */,
 				BECB8A8A1CBDCD17005D70A6 /* User.swift */,
 			);
 			name = Tentacle;
@@ -510,6 +525,7 @@
 				92F0C2B91E391088004A9889 /* FileTests.swift */,
 				92F0C2BC1E391F3F004A9889 /* ArgoExtensionsTests.swift */,
 				7A8A9D641E5547F50009DA9E /* BranchTests.swift */,
+				BF01A2601EAA63100028ECFC /* TreeTests.swift */,
 			);
 			name = Tests;
 			path = Tests/TentacleTests;
@@ -725,6 +741,7 @@
 				7A3CC68D1E01BC200025E711 /* users-Palleas-Opensource-repos.data in Resources */,
 				7A3CC69F1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.response in Resources */,
 				7A8A9D6A1E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data in Resources */,
+				BF5691C71EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response in Resources */,
 				7A3CC6771E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.response in Resources */,
 				7A3CC6751E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.data in Resources */,
 				7A3CC66F1E01BC200025E711 /* orgs-raccommunity-repos.response in Resources */,
@@ -754,6 +771,7 @@
 				7A8A9D6C1E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.response in Resources */,
 				7A3CC6911E01BC200025E711 /* users-test.data in Resources */,
 				7A3CC68F1E01BC200025E711 /* users-Palleas-Opensource-repos.response in Resources */,
+				BF5691C51EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data in Resources */,
 				7A3CC69B1E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.response in Resources */,
 				7A3CC6851E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.data in Resources */,
 				7A3CC6831E01BC200025E711 /* repos-Palleas-Opensource-Sample-repository-issues-1-comments.response in Resources */,
@@ -780,6 +798,7 @@
 				7A3CC68C1E01BC200025E711 /* users-Palleas-Opensource-repos.data in Resources */,
 				7A3CC69E1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.response in Resources */,
 				7A8A9D691E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data in Resources */,
+				BF5691C61EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response in Resources */,
 				7A3CC6761E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.response in Resources */,
 				7A3CC6741E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.data in Resources */,
 				7A3CC66E1E01BC200025E711 /* orgs-raccommunity-repos.response in Resources */,
@@ -809,6 +828,7 @@
 				7A8A9D6B1E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.response in Resources */,
 				7A3CC6901E01BC200025E711 /* users-test.data in Resources */,
 				7A3CC68E1E01BC200025E711 /* users-Palleas-Opensource-repos.response in Resources */,
+				BF5691C41EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data in Resources */,
 				7A3CC69A1E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.response in Resources */,
 				7A3CC6841E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.data in Resources */,
 				7A3CC6821E01BC200025E711 /* repos-Palleas-Opensource-Sample-repository-issues-1-comments.response in Resources */,
@@ -845,6 +865,7 @@
 				7A27887E1D49223E007AC936 /* Comment.swift in Sources */,
 				7A1F20EE1D3E862200F275F8 /* Color.swift in Sources */,
 				7ABFB4D81D51519B0067B500 /* RepositoryInfo.swift in Sources */,
+				BF01A25E1EAA5BEC0028ECFC /* Tree.swift in Sources */,
 				BEEE474F1C92623E000FFC21 /* Response.swift in Sources */,
 				927848011E0C78EA003B9EE6 /* FileResponse.swift in Sources */,
 				7A2F66121CF5280200463602 /* Label.swift in Sources */,
@@ -879,6 +900,7 @@
 				BEA86F9E1C9F7E1E0049360B /* RepositoryTests.swift in Sources */,
 				6190818B1C8A2DB7001BE2F8 /* (null) in Sources */,
 				619081891C8A2DB7001BE2F8 /* GitHubErrorTests.swift in Sources */,
+				BF01A2621EAA63100028ECFC /* TreeTests.swift in Sources */,
 				7A22EDBD1E47CB8900524539 /* EndpointTests.swift in Sources */,
 				7A072D8F1DED11C900CFE58F /* ContentTests.swift in Sources */,
 				BECB8AA41CBDDF0F005D70A6 /* UserTests.swift in Sources */,
@@ -905,6 +927,7 @@
 				7A27887A1D4920DA007AC936 /* Comment.swift in Sources */,
 				7A1F20ED1D3E85BB00F275F8 /* Color.swift in Sources */,
 				7ABFB4D71D51519B0067B500 /* RepositoryInfo.swift in Sources */,
+				BF01A25D1EAA5BEC0028ECFC /* Tree.swift in Sources */,
 				BEEE474E1C92623E000FFC21 /* Response.swift in Sources */,
 				927848001E0C78DB003B9EE6 /* FileResponse.swift in Sources */,
 				7A1A82581CF3DE4C0076E2DD /* Label.swift in Sources */,
@@ -943,6 +966,7 @@
 				BE2B6A6C1C8B854F0080BFEB /* ClientTests.swift in Sources */,
 				7A072D8E1DED11C900CFE58F /* ContentTests.swift in Sources */,
 				7A1F20F01D3E86D900F275F8 /* ColorTests.swift in Sources */,
+				BF01A2611EAA63100028ECFC /* TreeTests.swift in Sources */,
 				BEA86F9A1C9F7C230049360B /* ServerTests.swift in Sources */,
 				BE0F40A21C8909EB00E3B11A /* ReleaseTests.swift in Sources */,
 			);
