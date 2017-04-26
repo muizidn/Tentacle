@@ -398,7 +398,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var endpoint: Client.Endpoint {
-            return .tree(owner: owner, repository: repository, ref: ref, recursive: recursive)
+            return .tree(owner: owner, repository: repository, recursive: recursive, ref: ref)
         }
 
         init(_ server: Server, owner: String, repository: String, ref: String, recursive: Bool) {

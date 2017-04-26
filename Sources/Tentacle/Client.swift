@@ -55,11 +55,11 @@ extension URLRequest {
         return request
     }
 
-    internal static func create(_ url: URL, _ file: File, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+    internal static func create(_ url: URL, _ body: Encodable, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
         var URLRequest = create(url, credentials, contentType: contentType)
         URLRequest.httpMethod = method.rawValue
 
-        let object = file.encode().JSONObject()
+        let object = body.encode().JSONObject()
         if let payload = try? JSONSerialization.data(withJSONObject: object, options: []) {
             URLRequest.httpBody = payload
         }
@@ -193,7 +193,7 @@ public final class Client {
         case branches(owner: String, repository: String)
 
         // https://developer.github.com/v3/git/trees/#get-a-tree
-        case tree(owner: String, repository: String, ref: String, recursive: Bool)
+        case tree(owner: String, repository: String, recursive: Bool, ref: String?)
 
         internal var path: String {
             switch self {
@@ -223,8 +223,10 @@ public final class Client {
                 return "/repos/\(owner)/\(repository)/contents/\(path)"
             case let .branches(owner, repository):
                 return "/repos/\(owner)/\(repository)/branches"
-            case let .tree(owner, repository, ref, _):
+            case let .tree(owner, repository, _, ref?):
                 return "repos/\(owner)/\(repository)/git/trees/\(ref)"
+            case let .tree(owner, repository, _, _):
+                return "repos/\(owner)/\(repository)/git/trees"
             }
         }
         
@@ -232,7 +234,7 @@ public final class Client {
             switch self {
             case let .content(_, _, _, ref?):
                 return [ URLQueryItem(name: "ref", value: ref) ]
-            case .tree(_, _, _, true):
+            case .tree(_, _, true, _):
                 return [ URLQueryItem(name: "recursive", value: "1") ]
             default:
                 return []
@@ -370,7 +372,13 @@ public final class Client {
 
     /// Get trees for a repository reference
     public func trees(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
-        return fetchOne(.tree(owner: repository.owner, repository: repository.name, ref: ref, recursive: recursive))
+        return fetchOne(.tree(owner: repository.owner, repository: repository.name, recursive: recursive, ref: ref))
+    }
+
+    /// Create a tree in a repository
+    public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
+        let newTree = NewTree(entries: tree, base: base)
+        return send(newTree, to: .tree(owner: repository.owner, repository: repository.name, recursive: false, ref: nil), using: .post)
     }
 
     /// Fetch an endpoint from the API.
@@ -447,8 +455,11 @@ public final class Client {
             }
     }
 
-    internal func send(_ file: File, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, FileResponse), Error> {
-        let urlRequest = URLRequest.create(URL(server, endpoint), file, method, credentials)
+    internal func send
+        <Resource: ResourceType>
+        (_ body: Encodable, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
+    {
+        let urlRequest = URLRequest.create(URL(server, endpoint), body, method, credentials)
 
         return fetch(urlRequest)
             .attemptMap { response, JSON in
@@ -546,8 +557,8 @@ extension Client.Endpoint: Hashable {
             return "File".hashValue ^ owner.hashValue ^ repository.hashValue ^ path.hashValue ^ (ref?.hashValue ?? 0)
         case let .branches(owner, repository):
             return "Branches".hashValue ^ owner.hashValue ^ repository.hashValue
-        case let .tree(owner, repository, ref, recursive):
-            return "Tree".hashValue ^ owner.hashValue ^ repository.hashValue ^ ref.hashValue ^ recursive.hashValue
+        case let .tree(owner, repository, recursive, ref):
+            return "Tree".hashValue ^ owner.hashValue ^ repository.hashValue ^ recursive.hashValue ^ (ref?.hashValue ?? 0)
         }
     }
 }

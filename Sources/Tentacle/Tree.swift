@@ -138,3 +138,55 @@ extension Tree.Entry.EntryType: Decodable {
 }
 
 extension Tree.Entry.Mode: Decodable {}
+
+extension Tree.Entry.EntryType: Encodable {
+    public func encode() -> JSON {
+        switch self {
+        case .blob:
+            return .string("blob")
+        case .tree:
+            return .string("tree")
+        case .commit:
+            return .string("commit")
+        }
+    }
+}
+
+extension Tree.Entry.Mode: Encodable {
+    public func encode() -> JSON {
+        return .string(rawValue)
+    }
+}
+
+extension Tree.Entry: Encodable {
+    public func encode() -> JSON {
+        let payload: [String: JSON] = [
+            "path": .string(path),
+            "mode": mode.encode(),
+            "type": type.encode(),
+            "sha": .string(sha.hash)
+        ]
+
+        return JSON.object(payload)
+    }
+}
+
+internal struct NewTree: Encodable {
+    /// The entries under this tree.
+    internal let entries: [Tree.Entry]
+
+    /// The base for the new tree.
+    internal let base: String?
+
+    internal func encode() -> JSON {
+        var payload: [String: JSON] = [
+            "tree": .array(entries.map{ $0.encode() })
+        ]
+
+        if let base = base {
+            payload["base_tree"] = .string(base)
+        }
+
+        return JSON.object(payload)
+    }
+}
