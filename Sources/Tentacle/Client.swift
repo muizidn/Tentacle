@@ -368,8 +368,8 @@ public final class Client {
         return fetchMany(.branches(owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
     }
 
-    /// Get trees for a repository reference
-    public func trees(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
+    /// Fetch the tree for a repository reference
+    public func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
         return fetchOne(.tree(owner: repository.owner, repository: repository.name, ref: ref, recursive: recursive))
     }
 
