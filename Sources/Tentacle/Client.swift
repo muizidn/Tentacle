@@ -376,7 +376,7 @@ public final class Client {
     }
 
     /// Create a tree in a repository
-    public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
+    public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
         let newTree = NewTree(entries: tree, base: base)
         return send(newTree, to: .tree(owner: repository.owner, repository: repository.name, recursive: false, ref: nil), using: .post)
     }
