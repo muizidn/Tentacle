@@ -180,7 +180,7 @@ internal struct NewTree: Encodable {
 
     internal func encode() -> JSON {
         var payload: [String: JSON] = [
-            "tree": .array(entries.map{ $0.encode() })
+            "tree": .array(entries.map { $0.encode() })
         ]
 
         if let base = base {
