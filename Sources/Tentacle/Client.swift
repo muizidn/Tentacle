@@ -24,14 +24,14 @@ extension URL {
         return components.url!
     }
     
-    internal init(_ server: Server, _ endpoint: Client.Endpoint, page: UInt? = nil, pageSize: UInt? = nil) {
+    internal init(_ server: Server, _ request: Request, page: UInt? = nil, pageSize: UInt? = nil) {
         let queryItems = [ ("page", page), ("per_page", pageSize) ]
             .filter { _, value in value != nil }
             .map { name, value in URLQueryItem(name: name, value: "\(value!)") }
 
         let url = URL(string: server.endpoint)!
-            .appendingPathComponent(endpoint.path)
-            .url(with: endpoint.queryItems)
+            .appendingPathComponent(request.path)
+            .url(with: request.queryItems)
             .url(with: queryItems)
 
         self.init(string: url.absoluteString)!
@@ -55,15 +55,10 @@ extension URLRequest {
         return request
     }
 
-    internal static func create(_ url: URL, _ body: Encodable, _ method: HTTPMethod, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+    internal static func create(_ url: URL, _ body: Data?, _ method: Request.Method, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
         var URLRequest = create(url, credentials, contentType: contentType)
         URLRequest.httpMethod = method.rawValue
-
-        let object = body.encode().JSONObject()
-        if let payload = try? JSONSerialization.data(withJSONObject: object, options: []) {
-            URLRequest.httpBody = payload
-        }
-
+        URLRequest.httpBody = body
         return URLRequest
     }
 }
@@ -99,12 +94,161 @@ extension URLSession {
 	}
 }
 
-enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case head = "HEAD"
-    case options = "OPTIONS"
+internal struct Request {
+    enum Method: String {
+        case get = "GET"
+        case post = "POST"
+        case put = "PUT"
+        case head = "HEAD"
+        case options = "OPTIONS"
+    }
+    
+    var method: Method
+    var path: String
+    var queryItems: [URLQueryItem]
+    var body: Data?
+    
+    init(method: Method = .get, path: String, queryItems: [URLQueryItem] = [], body: Data? = nil) {
+        self.method = method
+        self.path = path
+        self.queryItems = queryItems
+        self.body = body
+    }
+}
+
+extension Request: Hashable {
+    var hashValue: Int {
+        return method.hashValue
+            ^ path.hashValue
+            ^ queryItems.map { $0.hashValue }.reduce(0, ^)
+            ^ (self.body?.hashValue ?? 0)
+    }
+    
+    static func == (lhs: Request, rhs: Request) -> Bool {
+        return lhs.method == rhs.method
+            && lhs.path == rhs.path
+            && lhs.queryItems == rhs.queryItems
+            && lhs.body == rhs.body
+    }
+}
+
+extension Request {
+    static func get(_ path: String, queryItems: [URLQueryItem] = []) -> Request {
+        return Request(method: .get, path: path, queryItems: queryItems)
+    }
+    
+    static func post(_ path: String, body: Encodable? = nil) -> Request {
+        let data: Data?
+        if let object = body?.encode().JSONObject(),
+            let payload = try? JSONSerialization.data(withJSONObject: object) {
+            data = payload
+        } else {
+            data = nil
+        }
+        return Request(method: .post, path: path, body: data)
+    }
+    
+    // https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
+    static func release(forTag tag: String, in repository: Repository) -> Request {
+        return get("/repos/\(repository.owner)/\(repository.name)/releases/tags/\(tag)")
+    }
+    
+    // https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
+    static func releases(in repository: Repository) -> Request {
+        return get("/repos/\(repository.owner)/\(repository.name)/releases")
+    }
+    
+    // https://developer.github.com/v3/users/#get-a-single-user
+    static func user(login: String) -> Request {
+        return get("/users/\(login)")
+    }
+    
+    // https://developer.github.com/v3/issues/#list-issues
+    static func assignedIssues() -> Request {
+        return get("/issues")
+    }
+    
+    // https://developer.github.com/v3/issues/#list-issues-for-a-repository
+    static func issues(in repository: Repository) -> Request {
+        return get("/repos/\(repository.owner)/\(repository.name)/issues")
+    }
+    
+    // https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
+    static func comments(onIssue issue: Int, in repository: Repository) -> Request {
+        return get("/repos/\(repository.owner)/\(repository.name)/issues/\(issue)/comments")
+    }
+    
+    // https://developer.github.com/v3/users/#get-the-authenticated-user
+    static func authenticatedUser() -> Request {
+        return get("/user")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-your-repositories
+    static func repositories() -> Request {
+        return get("/user/repos")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-user-repositories
+    static func repositories(forUser user: String) -> Request {
+        return get("/users/\(user)/repos")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-organization-repositories
+    static func repositories(forOrganization organization: String) -> Request {
+        return get("/orgs/\(organization)/repos")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-all-public-repositories
+    static func publicRepositories() -> Request {
+        return get("/repositories")
+    }
+
+    // https://developer.github.com/v3/repos/contents/#get-contents
+    static func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> Request {
+        let queryItems: [URLQueryItem]
+        if let ref = ref {
+            queryItems = [ URLQueryItem(name: "ref", value: ref) ]
+        } else {
+            queryItems = []
+        }
+        return get("/repos/\(repository.owner)/\(repository.name)/contents/\(path)", queryItems: queryItems)
+    }
+    
+    // https://developer.github.com/v3/repos/contents/#create-a-file
+    static func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> Request {
+        let queryItems: [URLQueryItem]
+        if let branch = branch {
+            queryItems = [ URLQueryItem(name: "branch", value: branch) ]
+        } else {
+            queryItems = []
+        }
+        return Request(
+            method: .put,
+            path: "/repos/\(repository.owner)/\(repository.name)/contents/\(path)",
+            queryItems: queryItems
+        )
+    }
+    
+    // https://developer.github.com/v3/repos/branches/#list-branches
+    static func branches(in repository: Repository) -> Request {
+        return .get("/repos/\(repository.owner)/\(repository.name)/branches")
+    }
+    
+    // https://developer.github.com/v3/git/trees/#get-a-tree
+    static func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> Request {
+        let queryItems: [URLQueryItem]
+        if recursive {
+            queryItems = [ URLQueryItem(name: "recursive", value: "1") ]
+        } else {
+            queryItems = []
+        }
+        return .get("repos/\(repository.owner)/\(repository.name)/git/trees/\(ref)", queryItems: queryItems)
+    }
+    
+    // https://developer.github.com/v3/git/trees/#create-a-tree
+    static func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> Request {
+        return .post("repos/\(repository.owner)/\(repository.name)/git/trees", body: NewTree(entries: tree, base: base))
+    }
 }
 
 /// A GitHub API Client
@@ -147,97 +291,6 @@ public final class Client {
                 let data = "\(username):\(password)".data(using: String.Encoding.utf8)!
                 let encodedString = data.base64EncodedString()
                 return "Basic \(encodedString)"
-            }
-        }
-    }
-    
-    /// A GitHub API endpoint.
-    internal enum Endpoint {
-        // https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
-        case releaseByTagName(owner: String, repository: String, tag: String)
-        
-        // https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
-        case releasesInRepository(owner: String, repository: String)
-        
-        // https://developer.github.com/v3/users/#get-a-single-user
-        case userInfo(login: String)
-
-        // https://developer.github.com/v3/issues/#list-issues
-        case assignedIssues
-
-        // https://developer.github.com/v3/issues/#list-issues-for-a-repository
-        case issuesInRepository(owner: String, repository: String)
-
-        // https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
-        case commentsOnIssue(number: Int, owner: String, repository: String)
-
-        // https://developer.github.com/v3/users/#get-the-authenticated-user
-        case authenticatedUser
-
-        // https://developer.github.com/v3/repos/#list-your-repositories
-        case repositories
-
-        // https://developer.github.com/v3/repos/#list-user-repositories
-        case repositoriesForUser(user: String)
-
-        // https://developer.github.com/v3/repos/#list-organization-repositories
-        case repositoriesForOrganization(organization: String)
-
-        // https://developer.github.com/v3/repos/#list-all-public-repositories
-        case publicRepositories
-
-        // https://developer.github.com/v3/repos/contents/#get-contents
-        case content(owner: String, repository: String, path: String, ref: String?)
-
-        // https://developer.github.com/v3/repos/branches/#list-branches
-        case branches(owner: String, repository: String)
-
-        // https://developer.github.com/v3/git/trees/#get-a-tree
-        case tree(owner: String, repository: String, recursive: Bool, ref: String?)
-
-        internal var path: String {
-            switch self {
-            case let .releaseByTagName(owner, repo, tag):
-                return "/repos/\(owner)/\(repo)/releases/tags/\(tag)"
-            case let .releasesInRepository(owner, repo):
-                return "/repos/\(owner)/\(repo)/releases"
-            case let .userInfo(login):
-                return "/users/\(login)"
-            case .assignedIssues:
-                return "/issues"
-            case let .issuesInRepository(owner, repository):
-                return "/repos/\(owner)/\(repository)/issues"
-            case let .commentsOnIssue(issue, owner, repository):
-                return "/repos/\(owner)/\(repository)/issues/\(issue)/comments"
-            case .authenticatedUser:
-                return "/user"
-            case .repositories:
-                return "/user/repos"
-            case let .repositoriesForUser(user):
-                return "/users/\(user)/repos"
-            case let .repositoriesForOrganization(organisation):
-                return "/orgs/\(organisation)/repos"
-            case .publicRepositories:
-                return "/repositories"
-            case let .content(owner, repository, path, _):
-                return "/repos/\(owner)/\(repository)/contents/\(path)"
-            case let .branches(owner, repository):
-                return "/repos/\(owner)/\(repository)/branches"
-            case let .tree(owner, repository, _, ref?):
-                return "repos/\(owner)/\(repository)/git/trees/\(ref)"
-            case let .tree(owner, repository, _, _):
-                return "repos/\(owner)/\(repository)/git/trees"
-            }
-        }
-        
-        internal var queryItems: [URLQueryItem] {
-            switch self {
-            case let .content(_, _, _, ref?):
-                return [ URLQueryItem(name: "ref", value: ref) ]
-            case .tree(_, _, true, _):
-                return [ URLQueryItem(name: "recursive", value: "1") ]
-            default:
-                return []
             }
         }
     }
@@ -288,7 +341,7 @@ public final class Client {
     /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
     public func releases(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Release]), Error> {
         precondition(repository.server == server)
-        return fetchMany(.releasesInRepository(owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
+        return fetchMany(.releases(in: repository), page: page, pageSize: perPage)
     }
     
     /// Fetch the release corresponding to the given tag in the given repository.
@@ -297,7 +350,7 @@ public final class Client {
     /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
     public func release(forTag tag: String, in repository: Repository) -> SignalProducer<(Response, Release), Error> {
         precondition(repository.server == server)
-        return fetchOne(.releaseByTagName(owner: repository.owner, repository: repository.name, tag: tag))
+        return fetchOne(.release(forTag: tag, in: repository))
     }
     
     /// Downloads the indicated release asset to a temporary file, returning the URL to the file on
@@ -312,78 +365,77 @@ public final class Client {
     
     /// Fetch the user with the given login.
     public func user(login: String) -> SignalProducer<(Response, UserInfo), Error> {
-        return fetchOne(.userInfo(login: login))
+        return fetchOne(.user(login: login))
     }
 
     /// Fetch the currently authenticated user
     public func authenticatedUser() -> SignalProducer<(Response, UserInfo), Error> {
-        return fetchOne(.authenticatedUser)
+        return fetchOne(.authenticatedUser())
     }
 
     public func assignedIssues(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return fetchMany(.assignedIssues, page: page, pageSize: perPage)
+        return fetchMany(.assignedIssues(), page: page, pageSize: perPage)
     }
 
     public func issues(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
         precondition(repository.server == server)
-        return fetchMany(.issuesInRepository(owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
+        return fetchMany(.issues(in: repository), page: page, pageSize: perPage)
     }
 
     /// Fetch the comments posted on an issue
     public func comments(onIssue issue: Int, in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Comment]), Error> {
         precondition(repository.server == server)
-        return fetchMany(.commentsOnIssue(number: issue, owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
+        return fetchMany(.comments(onIssue: issue, in: repository), page: page, pageSize: perPage)
     }
 
     /// Fetch the authenticated user's repositories
     public func repositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositories, page: page, pageSize: perPage)
+        return fetchMany(.repositories(), page: page, pageSize: perPage)
     }
 
     /// Fetch the repositories for a specific user
     public func repositories(forUser user: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositoriesForUser(user: user), page: page, pageSize: perPage)
+        return fetchMany(.repositories(forUser: user), page: page, pageSize: perPage)
     }
 
     /// Fetch the repositories for a specific organisation 
     public func repositories(forOrganization organization: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositoriesForOrganization(organization: organization), page: page, pageSize: perPage)
+        return fetchMany(.repositories(forOrganization: organization), page: page, pageSize: perPage)
     }
 
     /// Fetch the public repositories on Github
     public func publicRepositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.publicRepositories, page: page, pageSize: perPage)
+        return fetchMany(.publicRepositories(), page: page, pageSize: perPage)
     }
 
     /// Fetch the content for a path in the repository
     public func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
-        return fetchOne(.content(owner: repository.owner, repository: repository.name, path: path, ref: ref))
+        return fetchOne(.content(atPath: path, in: repository, atRef: ref))
     }
 
     /// Create a file in a repository
     public func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(file, to: .content(owner: repository.owner, repository: repository.name, path: path, ref: branch), using: .put)
+        return send(.create(file: file, atPath: path, in: repository, inBranch: branch))
     }
 
     /// Get branches for a repository
     public func branches(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Branch]), Error> {
-        return fetchMany(.branches(owner: repository.owner, repository: repository.name), page: page, pageSize: perPage)
+        return fetchMany(.branches(in: repository), page: page, pageSize: perPage)
     }
 
     /// Fetch the tree for a repository reference
     public func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
-        return fetchOne(.tree(owner: repository.owner, repository: repository.name, recursive: recursive, ref: ref))
+        return fetchOne(.tree(in: repository, atRef: ref, recursive: recursive))
     }
 
     /// Create a tree in a repository
     public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
-        let newTree = NewTree(entries: tree, base: base)
-        return send(newTree, to: .tree(owner: repository.owner, repository: repository.name, recursive: false, ref: nil), using: .post)
+        return send(.create(tree: tree, basedOn: base, in: repository))
     }
 
-    /// Fetch an endpoint from the API.
-    private func fetch(_ endpoint: Endpoint, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
-        let url = URL(server, endpoint, page: page, pageSize: pageSize)
+    /// Fetch a request from the API.
+    private func fetch(_ request: Request, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
+        let url = URL(server, request, page: page, pageSize: pageSize)
 
         return fetch(URLRequest.create(url, credentials))
     }
@@ -423,9 +475,9 @@ public final class Client {
     /// Fetch an object from the API.
     internal func fetchOne
         <Resource: ResourceType>
-        (_ endpoint: Endpoint) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
+        (_ request: Request) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
     {
-        return fetch(endpoint, page: nil, pageSize: nil)
+        return fetch(request, page: nil, pageSize: nil)
             .attemptMap { response, JSON in
                 return decode(JSON)
                     .map { resource in
@@ -438,10 +490,10 @@ public final class Client {
     /// Fetch a list of objects from the API.
     internal func fetchMany
         <Resource: ResourceType>
-        (_ endpoint: Endpoint, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource
+        (_ request: Request, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource
     {
         let nextPage = (page ?? 1) + 1
-        return fetch(endpoint, page: page, pageSize: pageSize)
+        return fetch(request, page: page, pageSize: pageSize)
             .attemptMap { response, JSON in
                 return decode(JSON)
                     .map { resource in
@@ -451,15 +503,15 @@ public final class Client {
             }
             .flatMap(.concat) { response, JSON -> SignalProducer<(Response, [Resource]), Error> in
                 return SignalProducer(value: (response, JSON))
-                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.fetchMany(endpoint, page: nextPage, pageSize: pageSize))
+                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.fetchMany(request, page: nextPage, pageSize: pageSize))
             }
     }
 
     internal func send
         <Resource: ResourceType>
-        (_ body: Encodable, to endpoint: Endpoint, using method: HTTPMethod) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
+        (_ request: Request) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
     {
-        let urlRequest = URLRequest.create(URL(server, endpoint), body, method, credentials)
+        let urlRequest = URLRequest.create(URL(server, request), request.body, request.method, credentials)
 
         return fetch(urlRequest)
             .attemptMap { response, JSON in
@@ -511,54 +563,6 @@ extension Client.Error: Hashable {
 
         case .doesNotExist:
             return 4
-        }
-    }
-}
-
-extension Client.Endpoint: Hashable {
-    internal static func ==(lhs: Client.Endpoint, rhs: Client.Endpoint) -> Bool {
-        switch (lhs, rhs) {
-        case let (.releaseByTagName(owner1, repo1, tag1), .releaseByTagName(owner2, repo2, tag2)):
-            return owner1 == owner2 && repo1 == repo2 && tag1 == tag2
-        case let (.releasesInRepository(owner1, repo1), .releasesInRepository(owner2, repo2)):
-            return owner1 == owner2 && repo1 == repo2
-        case let (.userInfo(login1), .userInfo(login2)):
-            return login1 == login2
-        default:
-            return false
-        }
-    }
-
-    internal var hashValue: Int {
-        switch self {
-        case let .releaseByTagName(owner, repo, tag):
-            return owner.hashValue ^ repo.hashValue ^ tag.hashValue
-        case let .releasesInRepository(owner, repo):
-            return owner.hashValue ^ repo.hashValue
-        case let .userInfo(login):
-            return login.hashValue
-        case .assignedIssues:
-            return "AssignedIssues".hashValue
-        case .issuesInRepository(let owner, let repository):
-            return "Issues".hashValue ^ owner.hashValue ^ repository.hashValue
-        case .commentsOnIssue(let issue, let owner, let repository):
-            return issue.hashValue ^ owner.hashValue ^ repository.hashValue
-        case .authenticatedUser:
-            return "authenticated-user".hashValue
-        case .repositories:
-            return "Repositories".hashValue
-        case .repositoriesForUser(let user):
-            return user.hashValue
-        case .repositoriesForOrganization(let organisation):
-            return organisation.hashValue
-        case .publicRepositories:
-            return "PublicRepositories".hashValue
-        case let .content(owner, repository, path, ref):
-            return "File".hashValue ^ owner.hashValue ^ repository.hashValue ^ path.hashValue ^ (ref?.hashValue ?? 0)
-        case let .branches(owner, repository):
-            return "Branches".hashValue ^ owner.hashValue ^ repository.hashValue
-        case let .tree(owner, repository, recursive, ref):
-            return "Tree".hashValue ^ owner.hashValue ^ repository.hashValue ^ recursive.hashValue ^ (ref?.hashValue ?? 0)
         }
     }
 }

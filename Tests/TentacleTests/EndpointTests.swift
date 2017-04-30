@@ -12,10 +12,12 @@ import XCTest
 class EndpointTests: XCTestCase {
     
     func testEndpointProvidesQueryItemsWhenNeeded() {
-        let endpoint: Client.Endpoint = .content(owner: "palleas", repository: "romain-pouclet.com", path: "config.yml", ref: "sample-branch")
+        let repository = Repository(owner: "palleas", name: "romain-pouclet.com")
+        
+        let endpoint = Request.content(atPath: "config.yml", in: repository, atRef: "sample-branch")
         XCTAssertEqual([URLQueryItem(name: "ref", value: "sample-branch")], endpoint.queryItems)
 
-        let endpointWithoutRef: Client.Endpoint = .content(owner: "palleas", repository: "romain-pouclet.com", path: "config.yml", ref: nil)
+        let endpointWithoutRef = Request.content(atPath: "config.yml", in: repository, atRef: nil)
         XCTAssertEqual(0, endpointWithoutRef.queryItems.count)
     }
 
