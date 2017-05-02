@@ -20,7 +20,7 @@ protocol FixtureType {
 
 protocol EndpointFixtureType: FixtureType {
     var server: Server { get }
-    var endpoint: Client.Endpoint { get }
+    var request: Request { get }
     var page: UInt? { get }
     var pageSize: UInt? { get }
 }
@@ -99,7 +99,7 @@ extension FixtureType {
 extension EndpointFixtureType {
     /// The URL of the fixture on the API.
     var url: URL {
-        return URL(self.server, self.endpoint, page: page, pageSize: pageSize)
+        return URL(server, request, page: page, pageSize: pageSize)
     }
     
     /// The JSON from the Endpoint.
@@ -172,8 +172,8 @@ struct Fixture {
         let pageSize: UInt? = nil
         let contentType = Client.APIContentType
         
-        var endpoint: Client.Endpoint {
-            return .releaseByTagName(owner: repository.owner, repository: repository.name, tag: tag)
+        var request: Request {
+            return .release(forTag: tag, in: repository)
         }
         
         init(_ server: Server, owner: String, name: String, tag: String) {
@@ -206,8 +206,8 @@ struct Fixture {
         let pageSize: UInt?
         let contentType = Client.APIContentType
         
-        var endpoint: Client.Endpoint {
-            return .releasesInRepository(owner: repository.owner, repository: repository.name)
+        var request: Request {
+            return .releases(in: repository)
         }
         
         init(_ server: Server, _ owner: String, _ name: String, _ page: UInt, _ pageSize: UInt) {
@@ -229,8 +229,8 @@ struct Fixture {
         let pageSize: UInt? = nil
         let contentType = Client.APIContentType
         
-        var endpoint: Client.Endpoint {
-            return .userInfo(login: login)
+        var request: Request {
+            return .user(login: login)
         }
         
         init(_ server: Server, _ login: String) {
@@ -244,8 +244,8 @@ struct Fixture {
 
         let server: Server
 
-        var endpoint: Client.Endpoint {
-            return .issuesInRepository(owner: owner, repository: repository)
+        var request: Request {
+            return .issues(in: Repository(server: server, owner: owner, name: repository))
         }
 
         let page: UInt? = nil
@@ -275,8 +275,8 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var endpoint: Client.Endpoint {
-            return .commentsOnIssue(number: number, owner: owner, repository: repository)
+        var request: Request {
+            return .comments(onIssue: number, in: Repository(server: server, owner: owner, name: repository))
         }
 
         init(_ server: Server, _ number: Int, _ owner: String, _ repository: String) {
@@ -298,8 +298,8 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var endpoint: Client.Endpoint {
-            return .repositoriesForUser(user: owner)
+        var request: Request {
+            return .repositories(forUser: owner)
         }
 
         init(_ server: Server, _ owner: String) {
@@ -319,8 +319,8 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var endpoint: Client.Endpoint {
-            return .repositoriesForOrganization(organization: organization)
+        var request: Request {
+            return .repositories(forOrganization: organization)
         }
 
         init(_ server: Server, _ organization: String) {
@@ -345,8 +345,8 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var endpoint: Client.Endpoint {
-            return .content(owner: owner, repository: repository, path: path, ref: nil)
+        var request: Request {
+            return .content(atPath: path, in: Repository(server: server, owner: owner, name: repository))
         }
 
         init(_ server: Server, owner: String, repository: String, path: String) {
@@ -370,8 +370,8 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var endpoint: Client.Endpoint {
-            return .branches(owner: owner, repository: repository)
+        var request: Request {
+            return .branches(in: Repository(server: server, owner: owner, name: repository))
         }
 
         init(_ server: Server, owner: String, repository: String) {
@@ -397,8 +397,8 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var endpoint: Client.Endpoint {
-            return .tree(owner: owner, repository: repository, recursive: recursive, ref: ref)
+        var request: Request {
+            return .tree(in: Repository(server: server, owner: owner, name: repository), atRef: ref, recursive: recursive)
         }
 
         init(_ server: Server, owner: String, repository: String, ref: String, recursive: Bool) {
