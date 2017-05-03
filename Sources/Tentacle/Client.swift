@@ -340,7 +340,6 @@ public final class Client {
     ///
     /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
     public func releases(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Release]), Error> {
-        precondition(repository.server == server)
         return fetchMany(.releases(in: repository), page: page, pageSize: perPage)
     }
     
@@ -349,7 +348,6 @@ public final class Client {
     /// If the tag exists, but there's not a correspoding GitHub Release, this method will return a
     /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
     public func release(forTag tag: String, in repository: Repository) -> SignalProducer<(Response, Release), Error> {
-        precondition(repository.server == server)
         return fetchOne(.release(forTag: tag, in: repository))
     }
     
@@ -378,13 +376,11 @@ public final class Client {
     }
 
     public func issues(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        precondition(repository.server == server)
         return fetchMany(.issues(in: repository), page: page, pageSize: perPage)
     }
 
     /// Fetch the comments posted on an issue
     public func comments(onIssue issue: Int, in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Comment]), Error> {
-        precondition(repository.server == server)
         return fetchMany(.comments(onIssue: issue, in: repository), page: page, pageSize: perPage)
     }
 

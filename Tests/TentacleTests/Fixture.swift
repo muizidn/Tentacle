@@ -19,7 +19,6 @@ protocol FixtureType {
 }
 
 protocol EndpointFixtureType: FixtureType {
-    var server: Server { get }
     var request: Request { get }
     var page: UInt? { get }
     var pageSize: UInt? { get }
@@ -99,7 +98,7 @@ extension FixtureType {
 extension EndpointFixtureType {
     /// The URL of the fixture on the API.
     var url: URL {
-        return URL(server, request, page: page, pageSize: pageSize)
+        return URL(.dotCom, request, page: page, pageSize: pageSize)
     }
     
     /// The JSON from the Endpoint.
@@ -240,12 +239,10 @@ struct Fixture {
     }
 
     struct IssuesInRepository: EndpointFixtureType {
-        static let PalleasOpensource = IssuesInRepository(.dotCom, "Palleas-opensource", "Sample-repository")
-
-        let server: Server
+        static let PalleasOpensource = IssuesInRepository("Palleas-opensource", "Sample-repository")
 
         var request: Request {
-            return .issues(in: Repository(server: server, owner: owner, name: repository))
+            return .issues(in: Repository(owner: owner, name: repository))
         }
 
         let page: UInt? = nil
@@ -255,17 +252,15 @@ struct Fixture {
         let owner: String
         let repository: String
 
-        init(_ server: Server, _ owner: String, _ repository: String) {
-            self.server = server
+        init(_ owner: String, _ repository: String) {
             self.owner = owner
             self.repository = repository
         }
     }
 
     struct CommentsOnIssue: EndpointFixtureType {
-        static let CommentsOnIssueInSampleRepository = CommentsOnIssue(.dotCom, 1, "Palleas-Opensource", "Sample-repository")
+        static let CommentsOnIssueInSampleRepository = CommentsOnIssue(1, "Palleas-Opensource", "Sample-repository")
 
-        let server: Server
         let page: UInt? = nil
         let pageSize: UInt? = nil
 
@@ -276,11 +271,10 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .comments(onIssue: number, in: Repository(server: server, owner: owner, name: repository))
+            return .comments(onIssue: number, in: Repository(owner: owner, name: repository))
         }
 
-        init(_ server: Server, _ number: Int, _ owner: String, _ repository: String) {
-            self.server = server
+        init(_ number: Int, _ owner: String, _ repository: String) {
             self.number = number
             self.owner = owner
             self.repository = repository
@@ -288,9 +282,8 @@ struct Fixture {
     }
 
     struct RepositoriesForUser: EndpointFixtureType {
-        static let RepositoriesForPalleasOpensource = RepositoriesForUser(.dotCom, "Palleas-Opensource")
+        static let RepositoriesForPalleasOpensource = RepositoriesForUser("Palleas-Opensource")
         
-        let server: Server
         let page: UInt? = nil
         let pageSize: UInt? = nil
 
@@ -302,16 +295,14 @@ struct Fixture {
             return .repositories(forUser: owner)
         }
 
-        init(_ server: Server, _ owner: String) {
-            self.server = server
+        init(_ owner: String) {
             self.owner = owner
         }
     }
 
     struct RepositoriesForOrganization: EndpointFixtureType {
-        static let RepositoriesForRACCommunity = RepositoriesForOrganization(.dotCom, "raccommunity")
+        static let RepositoriesForRACCommunity = RepositoriesForOrganization("raccommunity")
 
-        let server: Server
         let page: UInt? = nil
         let pageSize: UInt? = nil
 
@@ -323,19 +314,17 @@ struct Fixture {
             return .repositories(forOrganization: organization)
         }
 
-        init(_ server: Server, _ organization: String) {
-            self.server = server
+        init(_ organization: String) {
             self.organization = organization
         }
     }
 
     struct FileForRepository: EndpointFixtureType {
-        static let ReadMeForSampleRepository = FileForRepository(.dotCom, owner: "Palleas-opensource", repository: "Sample-repository", path: "README.md")
-        static let SubmoduleInTentacle = FileForRepository(.dotCom, owner: "mdiep", repository: "Tentacle", path: "Carthage/Checkouts/ReactiveSwift")
-        static let DirectoryInSampleRepository = FileForRepository(.dotCom, owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools")
-        static let SymlinkInSampleRepository = FileForRepository(.dotCom, owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools/say")
+        static let ReadMeForSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "README.md")
+        static let SubmoduleInTentacle = FileForRepository(owner: "mdiep", repository: "Tentacle", path: "Carthage/Checkouts/ReactiveSwift")
+        static let DirectoryInSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools")
+        static let SymlinkInSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools/say")
 
-        let server: Server
         let page: UInt? = nil
         let pageSize: UInt? = nil
 
@@ -346,11 +335,10 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .content(atPath: path, in: Repository(server: server, owner: owner, name: repository))
+            return .content(atPath: path, in: Repository(owner: owner, name: repository))
         }
 
-        init(_ server: Server, owner: String, repository: String, path: String) {
-            self.server = server
+        init(owner: String, repository: String, path: String) {
             self.owner = owner
             self.repository = repository
             self.path = path
@@ -359,9 +347,8 @@ struct Fixture {
     }
 
     struct BranchesForRepository: EndpointFixtureType {
-        static let BranchesInReactiveTask = BranchesForRepository(.dotCom, owner: "Carthage", repository: "ReactiveTask")
+        static let BranchesInReactiveTask = BranchesForRepository(owner: "Carthage", repository: "ReactiveTask")
 
-        let server: Server
         let page: UInt? = nil
         let pageSize: UInt? = nil
 
@@ -371,11 +358,10 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .branches(in: Repository(server: server, owner: owner, name: repository))
+            return .branches(in: Repository(owner: owner, name: repository))
         }
 
-        init(_ server: Server, owner: String, repository: String) {
-            self.server = server
+        init(owner: String, repository: String) {
             self.owner = owner
             self.repository = repository
         }
@@ -383,10 +369,9 @@ struct Fixture {
     }
 
     struct TreeForRepository: EndpointFixtureType {
-        static let TreeInSampleRepository = TreeForRepository(.dotCom, owner: "Palleas-opensource", repository: "Sample-repository",
+        static let TreeInSampleRepository = TreeForRepository(owner: "Palleas-opensource", repository: "Sample-repository",
                                                           ref: "0c0dfafa361836e11aedcbb95c1f05d3f654aef0", recursive: false)
 
-        let server: Server
         let page: UInt? = nil
         let pageSize: UInt? = nil
 
@@ -398,11 +383,10 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .tree(in: Repository(server: server, owner: owner, name: repository), atRef: ref, recursive: recursive)
+            return .tree(in: Repository(owner: owner, name: repository), atRef: ref, recursive: recursive)
         }
 
-        init(_ server: Server, owner: String, repository: String, ref: String, recursive: Bool) {
-            self.server = server
+        init(owner: String, repository: String, ref: String, recursive: Bool) {
             self.owner = owner
             self.repository = repository
             self.ref = ref

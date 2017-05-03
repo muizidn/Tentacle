@@ -41,6 +41,13 @@ public enum Server: CustomStringConvertible {
     public var description: String {
         return "\(url)"
     }
+    
+    /// The URL of the given repository.
+    public func url(for repository: Repository) -> URL {
+        return url
+            .appendingPathComponent(repository.owner)
+            .appendingPathComponent(repository.name)
+    }
 }
 
 extension Server: Hashable {
