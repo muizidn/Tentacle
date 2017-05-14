@@ -11,6 +11,18 @@ import Argo
 import Curry
 import Runes
 
+extension Repository {
+    // https://developer.github.com/v3/repos/contents/#get-contents
+    internal func content(atPath path: String, atRef ref: String? = nil) -> Request {
+        let queryItems: [URLQueryItem]
+        if let ref = ref {
+            queryItems = [ URLQueryItem(name: "ref", value: ref) ]
+        } else {
+            queryItems = []
+        }
+        return Request(method: .get, path: "/repos/\(owner)/\(name)/contents/\(path)", queryItems: queryItems)
+    }
+}
 
 /// Content
 /// https://developer.github.com/v3/repos/contents/

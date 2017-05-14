@@ -11,6 +11,23 @@ import Argo
 import Runes
 import Curry
 
+extension Repository {
+    // https://developer.github.com/v3/repos/contents/#create-a-file
+    internal func create(file: File, atPath path: String, inBranch branch: String? = nil) -> Request {
+        let queryItems: [URLQueryItem]
+        if let branch = branch {
+            queryItems = [ URLQueryItem(name: "branch", value: branch) ]
+        } else {
+            queryItems = []
+        }
+        return Request(
+            method: .put,
+            path: "/repos/\(owner)/\(name)/contents/\(path)",
+            queryItems: queryItems
+        )
+    }
+}
+
 public struct File {
     /// Commit message
     public let message: String

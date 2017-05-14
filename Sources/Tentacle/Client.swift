@@ -137,27 +137,6 @@ extension Request {
         return Request(method: .get, path: path, queryItems: queryItems)
     }
     
-    static func post(_ path: String, body: Encodable? = nil) -> Request {
-        let data: Data?
-        if let object = body?.encode().JSONObject(),
-            let payload = try? JSONSerialization.data(withJSONObject: object) {
-            data = payload
-        } else {
-            data = nil
-        }
-        return Request(method: .post, path: path, body: data)
-    }
-    
-    // https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
-    static func release(forTag tag: String, in repository: Repository) -> Request {
-        return get("/repos/\(repository.owner)/\(repository.name)/releases/tags/\(tag)")
-    }
-    
-    // https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
-    static func releases(in repository: Repository) -> Request {
-        return get("/repos/\(repository.owner)/\(repository.name)/releases")
-    }
-    
     // https://developer.github.com/v3/users/#get-a-single-user
     static func user(login: String) -> Request {
         return get("/users/\(login)")
@@ -166,16 +145,6 @@ extension Request {
     // https://developer.github.com/v3/issues/#list-issues
     static func assignedIssues() -> Request {
         return get("/issues")
-    }
-    
-    // https://developer.github.com/v3/issues/#list-issues-for-a-repository
-    static func issues(in repository: Repository) -> Request {
-        return get("/repos/\(repository.owner)/\(repository.name)/issues")
-    }
-    
-    // https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
-    static func comments(onIssue issue: Int, in repository: Repository) -> Request {
-        return get("/repos/\(repository.owner)/\(repository.name)/issues/\(issue)/comments")
     }
     
     // https://developer.github.com/v3/users/#get-the-authenticated-user
@@ -201,53 +170,6 @@ extension Request {
     // https://developer.github.com/v3/repos/#list-all-public-repositories
     static func publicRepositories() -> Request {
         return get("/repositories")
-    }
-
-    // https://developer.github.com/v3/repos/contents/#get-contents
-    static func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> Request {
-        let queryItems: [URLQueryItem]
-        if let ref = ref {
-            queryItems = [ URLQueryItem(name: "ref", value: ref) ]
-        } else {
-            queryItems = []
-        }
-        return get("/repos/\(repository.owner)/\(repository.name)/contents/\(path)", queryItems: queryItems)
-    }
-    
-    // https://developer.github.com/v3/repos/contents/#create-a-file
-    static func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> Request {
-        let queryItems: [URLQueryItem]
-        if let branch = branch {
-            queryItems = [ URLQueryItem(name: "branch", value: branch) ]
-        } else {
-            queryItems = []
-        }
-        return Request(
-            method: .put,
-            path: "/repos/\(repository.owner)/\(repository.name)/contents/\(path)",
-            queryItems: queryItems
-        )
-    }
-    
-    // https://developer.github.com/v3/repos/branches/#list-branches
-    static func branches(in repository: Repository) -> Request {
-        return .get("/repos/\(repository.owner)/\(repository.name)/branches")
-    }
-    
-    // https://developer.github.com/v3/git/trees/#get-a-tree
-    static func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> Request {
-        let queryItems: [URLQueryItem]
-        if recursive {
-            queryItems = [ URLQueryItem(name: "recursive", value: "1") ]
-        } else {
-            queryItems = []
-        }
-        return .get("repos/\(repository.owner)/\(repository.name)/git/trees/\(ref)", queryItems: queryItems)
-    }
-    
-    // https://developer.github.com/v3/git/trees/#create-a-tree
-    static func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> Request {
-        return .post("repos/\(repository.owner)/\(repository.name)/git/trees", body: NewTree(entries: tree, base: base))
     }
 }
 
@@ -340,7 +262,7 @@ public final class Client {
     ///
     /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
     public func releases(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Release]), Error> {
-        return fetchMany(.releases(in: repository), page: page, pageSize: perPage)
+        return fetchMany(repository.releases, page: page, pageSize: perPage)
     }
     
     /// Fetch the release corresponding to the given tag in the given repository.
@@ -348,7 +270,7 @@ public final class Client {
     /// If the tag exists, but there's not a correspoding GitHub Release, this method will return a
     /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
     public func release(forTag tag: String, in repository: Repository) -> SignalProducer<(Response, Release), Error> {
-        return fetchOne(.release(forTag: tag, in: repository))
+        return fetchOne(repository.release(forTag: tag))
     }
     
     /// Downloads the indicated release asset to a temporary file, returning the URL to the file on
@@ -376,12 +298,12 @@ public final class Client {
     }
 
     public func issues(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return fetchMany(.issues(in: repository), page: page, pageSize: perPage)
+        return fetchMany(repository.issues, page: page, pageSize: perPage)
     }
 
     /// Fetch the comments posted on an issue
     public func comments(onIssue issue: Int, in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Comment]), Error> {
-        return fetchMany(.comments(onIssue: issue, in: repository), page: page, pageSize: perPage)
+        return fetchMany(repository.comments(onIssue: issue), page: page, pageSize: perPage)
     }
 
     /// Fetch the authenticated user's repositories
@@ -406,27 +328,27 @@ public final class Client {
 
     /// Fetch the content for a path in the repository
     public func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
-        return fetchOne(.content(atPath: path, in: repository, atRef: ref))
+        return fetchOne(repository.content(atPath: path, atRef: ref))
     }
 
     /// Create a file in a repository
     public func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(.create(file: file, atPath: path, in: repository, inBranch: branch))
+        return send(repository.create(file: file, atPath: path, inBranch: branch))
     }
 
     /// Get branches for a repository
     public func branches(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Branch]), Error> {
-        return fetchMany(.branches(in: repository), page: page, pageSize: perPage)
+        return fetchMany(repository.branches, page: page, pageSize: perPage)
     }
 
     /// Fetch the tree for a repository reference
     public func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
-        return fetchOne(.tree(in: repository, atRef: ref, recursive: recursive))
+        return fetchOne(repository.tree(atRef: ref, recursive: recursive))
     }
 
     /// Create a tree in a repository
     public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(.create(tree: tree, basedOn: base, in: repository))
+        return send(repository.create(tree: tree, basedOn: base))
     }
 
     /// Fetch a request from the API.

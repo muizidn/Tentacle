@@ -11,6 +11,13 @@ import Argo
 import Curry
 import Runes
 
+extension Repository {
+    // https://developer.github.com/v3/issues/#list-issues-for-a-repository
+    internal var issues: Request {
+        return Request(method: .get, path: "/repos/\(owner)/\(name)/issues")
+    }
+}
+
 /// An Issue on Github
 public struct Issue: CustomStringConvertible {
     public enum State: String {

@@ -11,6 +11,18 @@ import Curry
 import Foundation
 import Runes
 
+extension Repository {
+    // https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
+    internal func release(forTag tag: String) -> Request {
+        return Request(method: .get, path: "/repos/\(owner)/\(name)/releases/tags/\(tag)")
+    }
+    
+    // https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
+    internal var releases: Request {
+        return Request(method: .get, path: "/repos/\(owner)/\(name)/releases")
+    }
+}
+
 /// A Release of a Repository.
 public struct Release: CustomStringConvertible {
     /// An Asset attached to a Release.

@@ -11,6 +11,13 @@ import Curry
 import Argo
 import Runes
 
+extension Repository {
+    // https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
+    internal func comments(onIssue issue: Int) -> Request {
+        return Request(method: .get, path: "/repos/\(owner)/\(name)/issues/\(issue)/comments")
+    }
+}
+
 public struct Comment: CustomStringConvertible {
 
     /// The id of the issue

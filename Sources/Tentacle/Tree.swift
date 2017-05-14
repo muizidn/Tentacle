@@ -11,6 +11,26 @@ import Argo
 import Curry
 import Runes
 
+extension Repository {
+    // https://developer.github.com/v3/git/trees/#get-a-tree
+    internal func tree(atRef ref: String = "HEAD", recursive: Bool = false) -> Request {
+        let queryItems: [URLQueryItem]
+        if recursive {
+            queryItems = [ URLQueryItem(name: "recursive", value: "1") ]
+        } else {
+            queryItems = []
+        }
+        return Request(method: .get, path: "repos/\(owner)/\(name)/git/trees/\(ref)", queryItems: queryItems)
+    }
+    
+    // https://developer.github.com/v3/git/trees/#create-a-tree
+    internal func create(tree: [Tree.Entry], basedOn base: String?) -> Request {
+        let object = NewTree(entries: tree, base: base).encode().JSONObject()
+        let payload = try? JSONSerialization.data(withJSONObject: object)
+        return Request(method: .post, path: "repos/\(owner)/\(name)/git/trees", body: payload)
+    }
+}
+
 public struct Tree: CustomStringConvertible {
 
     /// The SHA of the entry.

@@ -172,7 +172,7 @@ struct Fixture {
         let contentType = Client.APIContentType
         
         var request: Request {
-            return .release(forTag: tag, in: repository)
+            return repository.release(forTag: tag)
         }
         
         init(_ server: Server, owner: String, name: String, tag: String) {
@@ -206,7 +206,7 @@ struct Fixture {
         let contentType = Client.APIContentType
         
         var request: Request {
-            return .releases(in: repository)
+            return repository.releases
         }
         
         init(_ server: Server, _ owner: String, _ name: String, _ page: UInt, _ pageSize: UInt) {
@@ -242,7 +242,7 @@ struct Fixture {
         static let PalleasOpensource = IssuesInRepository("Palleas-opensource", "Sample-repository")
 
         var request: Request {
-            return .issues(in: Repository(owner: owner, name: repository))
+            return Repository(owner: owner, name: repository).issues
         }
 
         let page: UInt? = nil
@@ -271,7 +271,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .comments(onIssue: number, in: Repository(owner: owner, name: repository))
+            return Repository(owner: owner, name: repository).comments(onIssue: number)
         }
 
         init(_ number: Int, _ owner: String, _ repository: String) {
@@ -335,7 +335,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .content(atPath: path, in: Repository(owner: owner, name: repository))
+            return Repository(owner: owner, name: repository).content(atPath: path)
         }
 
         init(owner: String, repository: String, path: String) {
@@ -358,7 +358,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .branches(in: Repository(owner: owner, name: repository))
+            return Repository(owner: owner, name: repository).branches
         }
 
         init(owner: String, repository: String) {
@@ -383,7 +383,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .tree(in: Repository(owner: owner, name: repository), atRef: ref, recursive: recursive)
+            return Repository(owner: owner, name: repository).tree(atRef: ref, recursive: recursive)
         }
 
         init(owner: String, repository: String, ref: String, recursive: Bool) {
