@@ -1,15 +1,15 @@
 {
   "_links" : {
-    "git" : "https:\/\/api.github.com\/repos\/ReactiveCocoa\/ReactiveSwift\/git\/trees\/df08a05210157143d7f06c87feb6f9ad3c7603d6",
-    "html" : "https:\/\/github.com\/ReactiveCocoa\/ReactiveSwift\/tree\/df08a05210157143d7f06c87feb6f9ad3c7603d6",
+    "git" : "https:\/\/api.github.com\/repos\/ReactiveCocoa\/ReactiveSwift\/git\/trees\/c83de32f1adbcef89618cde4222f69a8bcecd7c2",
+    "html" : "https:\/\/github.com\/ReactiveCocoa\/ReactiveSwift\/tree\/c83de32f1adbcef89618cde4222f69a8bcecd7c2",
     "self" : "https:\/\/api.github.com\/repos\/mdiep\/Tentacle\/contents\/Carthage\/Checkouts\/ReactiveSwift?ref=master"
   },
-  "git_url" : "https:\/\/api.github.com\/repos\/ReactiveCocoa\/ReactiveSwift\/git\/trees\/df08a05210157143d7f06c87feb6f9ad3c7603d6",
-  "html_url" : "https:\/\/github.com\/ReactiveCocoa\/ReactiveSwift\/tree\/df08a05210157143d7f06c87feb6f9ad3c7603d6",
+  "git_url" : "https:\/\/api.github.com\/repos\/ReactiveCocoa\/ReactiveSwift\/git\/trees\/c83de32f1adbcef89618cde4222f69a8bcecd7c2",
+  "html_url" : "https:\/\/github.com\/ReactiveCocoa\/ReactiveSwift\/tree\/c83de32f1adbcef89618cde4222f69a8bcecd7c2",
   "download_url" : null,
   "size" : 0,
   "submodule_git_url" : "https:\/\/github.com\/ReactiveCocoa\/ReactiveSwift.git",
-  "sha" : "df08a05210157143d7f06c87feb6f9ad3c7603d6",
+  "sha" : "c83de32f1adbcef89618cde4222f69a8bcecd7c2",
   "path" : "Carthage\/Checkouts\/ReactiveSwift",
   "type" : "submodule",
   "name" : "ReactiveSwift",

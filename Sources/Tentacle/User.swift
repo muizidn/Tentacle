@@ -77,7 +77,7 @@ public struct UserInfo {
     public let email: String?
     
     /// The URL of the user's website if they've set one
-    public let websiteURL: URL?
+    public let websiteURL: String?
     
     /// The user's company if they've set one.
     public let company: String?
@@ -86,7 +86,7 @@ public struct UserInfo {
         return user.description
     }
     
-    public init(user: User, joinedDate: Date, name: String?, email: String?, websiteURL: URL?, company: String?) {
+    public init(user: User, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
         self.user = user
         self.joinedDate = joinedDate
         self.name = name

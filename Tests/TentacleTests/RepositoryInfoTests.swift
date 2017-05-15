@@ -145,7 +145,24 @@ class RepositoryInfoTests: XCTestCase {
                 openIssuesCount: 7,
                 pushedAt: DateFormatter.iso8601.date(from: "2016-12-21T19:32:19Z")!,
                 createdAt: DateFormatter.iso8601.date(from: "2016-12-08T22:08:36Z")!,
-                updatedAt: DateFormatter.iso8601.date(from: "2016-12-21T17:53:43Z")!)
+                updatedAt: DateFormatter.iso8601.date(from: "2016-12-21T17:53:43Z")!),
+            RepositoryInfo(
+                id: "88407587",
+                owner: raccommunity,
+                name: "jazzy",
+                nameWithOwner: "RACCommunity/jazzy",
+                body: "Soulful docs for Swift & Objective-C",
+                url: URL(string: "https://github.com/RACCommunity/jazzy")!,
+                homepage: URL(string: "https://realm.io"),
+                isPrivate: false,
+                isFork: true,
+                forksCount: 0,
+                stargazersCount: 0,
+                watchersCount: 0,
+                openIssuesCount: 1,
+                pushedAt: DateFormatter.iso8601.date(from: "2017-04-16T14:44:51Z")!,
+                createdAt: DateFormatter.iso8601.date(from: "2017-04-16T11:00:24Z")!,
+                updatedAt: DateFormatter.iso8601.date(from: "2017-04-16T11:00:26Z")!)
         ]
 
         let decoded: [RepositoryInfo] = Fixture.RepositoriesForOrganization.RepositoriesForRACCommunity.decode()!

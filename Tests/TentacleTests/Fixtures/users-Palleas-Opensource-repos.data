@@ -5,6 +5,7 @@
     "issues_url" : "https:\/\/api.github.com\/repos\/Palleas-opensource\/Sample-repository\/issues{\/number}",
     "default_branch" : "master",
     "issue_events_url" : "https:\/\/api.github.com\/repos\/Palleas-opensource\/Sample-repository\/issues\/events{\/number}",
+    "has_projects" : true,
     "id" : 59615946,
     "owner" : {
       "id" : 15802020,
@@ -12,7 +13,7 @@
       "received_events_url" : "https:\/\/api.github.com\/users\/Palleas-opensource\/received_events",
       "following_url" : "https:\/\/api.github.com\/users\/Palleas-opensource\/following{\/other_user}",
       "login" : "Palleas-opensource",
-      "avatar_url" : "https:\/\/avatars.githubusercontent.com\/u\/15802020?v=3",
+      "avatar_url" : "https:\/\/avatars0.githubusercontent.com\/u\/15802020?v=3",
       "url" : "https:\/\/api.github.com\/users\/Palleas-opensource",
       "subscriptions_url" : "https:\/\/api.github.com\/users\/Palleas-opensource\/subscriptions",
       "type" : "User",
