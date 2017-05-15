@@ -77,6 +77,8 @@ public struct UserInfo {
     public let email: String?
     
     /// The URL of the user's website if they've set one
+    /// (the type here is a String because Github lets you use
+    /// anything and doesn't validate that you've entered a valid URL)
     public let websiteURL: String?
     
     /// The user's company if they've set one.
