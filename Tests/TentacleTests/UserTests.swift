@@ -17,13 +17,13 @@ class UserTests: XCTestCase {
                 id: "1302",
                 login: "mdiep",
                 url: URL(string: "https://github.com/mdiep")!,
-                avatarURL: URL(string: "https://avatars.githubusercontent.com/u/1302?v=3")!,
+                avatarURL: URL(string: "https://avatars1.githubusercontent.com/u/1302?v=3")!,
                 type: .user
             ),
             joinedDate: Date(timeIntervalSince1970: 1204155107),
             name: "Matt Diephouse",
-            email: "matt@diephouse.com",
-            websiteURL: URL(string: "http://matt.diephouse.com"),
+            email: nil,
+            websiteURL: "http://matt.diephouse.com",
             company: nil
         )
         XCTAssertEqual(Fixture.UserInfo.mdiep.decode(), expected)
@@ -35,13 +35,13 @@ class UserTests: XCTestCase {
                 id: "383316",
                 login: "test",
                 url: URL(string: "https://github.com/test")!,
-                avatarURL: URL(string: "https://avatars.githubusercontent.com/u/383316?v=3")!,
+                avatarURL: URL(string: "https://avatars0.githubusercontent.com/u/383316?v=3")!,
                 type: .user
             ),
             joinedDate: Date(timeIntervalSince1970: 1283337552),
             name: nil,
             email: nil,
-            websiteURL: nil,
+            websiteURL: "",
             company: nil
         )
         XCTAssertEqual(Fixture.UserInfo.test.decode(), expected)
