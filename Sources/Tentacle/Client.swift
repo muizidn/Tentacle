@@ -137,11 +137,6 @@ extension Request {
         return Request(method: .get, path: path, queryItems: queryItems)
     }
     
-    // https://developer.github.com/v3/users/#get-a-single-user
-    static func user(login: String) -> Request {
-        return get("/users/\(login)")
-    }
-    
     // https://developer.github.com/v3/issues/#list-issues
     static func assignedIssues() -> Request {
         return get("/issues")
@@ -155,11 +150,6 @@ extension Request {
     // https://developer.github.com/v3/repos/#list-your-repositories
     static func repositories() -> Request {
         return get("/user/repos")
-    }
-    
-    // https://developer.github.com/v3/repos/#list-user-repositories
-    static func repositories(forUser user: String) -> Request {
-        return get("/users/\(user)/repos")
     }
     
     // https://developer.github.com/v3/repos/#list-organization-repositories
@@ -285,7 +275,7 @@ public final class Client {
     
     /// Fetch the user with the given login.
     public func user(login: String) -> SignalProducer<(Response, UserProfile), Error> {
-        return fetchOne(.user(login: login))
+        return fetchOne(User(login).profile)
     }
 
     /// Fetch the currently authenticated user
@@ -313,7 +303,7 @@ public final class Client {
 
     /// Fetch the repositories for a specific user
     public func repositories(forUser user: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositories(forUser: user), page: page, pageSize: perPage)
+        return fetchMany(User(user).repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the repositories for a specific organisation 

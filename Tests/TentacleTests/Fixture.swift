@@ -229,7 +229,7 @@ struct Fixture {
         let contentType = Client.APIContentType
         
         var request: Request {
-            return .user(login: login)
+            return User(login).profile
         }
         
         init(_ server: Server, _ login: String) {
@@ -292,7 +292,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .repositories(forUser: owner)
+            return User(owner).repositories
         }
 
         init(_ owner: String) {

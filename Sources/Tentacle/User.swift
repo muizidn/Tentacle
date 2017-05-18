@@ -11,6 +11,18 @@ import Argo
 import Curry
 import Runes
 
+extension User {
+    // https://developer.github.com/v3/users/#get-a-single-user
+    internal var profile: Request {
+        return Request(method: .get, path: "/users/\(login)")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-user-repositories
+    internal var repositories: Request {
+        return Request(method: .get, path: "/users/\(login)/repos")
+    }
+}
+
 /// A user on GitHub or GitHub Enterprise.
 public struct User: CustomStringConvertible {
     /// The user's login/username.
