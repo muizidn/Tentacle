@@ -11,7 +11,27 @@ import Argo
 import Curry
 import Runes
 
-/// A User on GitHub.
+/// A user on GitHub or GitHub Enterprise.
+public struct User: CustomStringConvertible {
+    /// The user's login/username.
+    public let login: String
+    
+    public var description: String {
+        return login
+    }
+}
+
+extension User: Hashable {
+    public static func ==(lhs: User, rhs: User) -> Bool {
+        return lhs.login == rhs.login
+    }
+    
+    public var hashValue: Int {
+        return login.hashValue
+    }
+}
+
+/// Information about a user on GitHub.
 public struct UserInfo: CustomStringConvertible {
     public enum UserType: String {
         case user = "User"
