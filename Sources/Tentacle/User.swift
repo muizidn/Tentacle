@@ -63,7 +63,7 @@ extension User: ResourceType {
 }
 
 /// Extended information about a user on GitHub.
-public struct UserInfo {
+public struct UserProfile {
     /// The user that this information refers to.
     public let user: User
     
@@ -98,8 +98,8 @@ public struct UserInfo {
     }
 }
 
-extension UserInfo: Hashable {
-    public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
+extension UserProfile: Hashable {
+    public static func ==(lhs: UserProfile, rhs: UserProfile) -> Bool {
         return lhs.user == rhs.user
             && lhs.joinedDate == rhs.joinedDate
             && lhs.name == rhs.name
@@ -113,8 +113,8 @@ extension UserInfo: Hashable {
     }
 }
 
-extension UserInfo: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<UserInfo> {
+extension UserProfile: ResourceType {
+    public static func decode(_ j: JSON) -> Decoded<UserProfile> {
         return curry(self.init)
             <^> j <| []
             <*> (j <| "created_at" >>- toDate)

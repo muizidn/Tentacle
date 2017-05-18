@@ -46,7 +46,7 @@ extension Client {
     public func downloadAsset(_ asset: Release.Asset) -> SignalProducer<URL, Error> { fatalError() }
 
     @available(*, unavailable, renamed: "user(login:)")
-    public func userWithLogin(_ login: String) -> SignalProducer<(Response, UserInfo), Error> { fatalError() }
+    public func userWithLogin(_ login: String) -> SignalProducer<(Response, UserProfile), Error> { fatalError() }
 
     @available(*, unavailable, renamed: "assignedIssues(page:perPage:)")
     public func assignedIssues(_ page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> { fatalError() }

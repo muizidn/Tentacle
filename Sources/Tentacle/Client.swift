@@ -284,12 +284,12 @@ public final class Client {
     }
     
     /// Fetch the user with the given login.
-    public func user(login: String) -> SignalProducer<(Response, UserInfo), Error> {
+    public func user(login: String) -> SignalProducer<(Response, UserProfile), Error> {
         return fetchOne(.user(login: login))
     }
 
     /// Fetch the currently authenticated user
-    public func authenticatedUser() -> SignalProducer<(Response, UserInfo), Error> {
+    public func authenticatedUser() -> SignalProducer<(Response, UserProfile), Error> {
         return fetchOne(.authenticatedUser())
     }
 

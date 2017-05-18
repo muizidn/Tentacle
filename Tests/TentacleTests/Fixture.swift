@@ -139,8 +139,8 @@ struct Fixture {
         Release.Asset.MDPSplitView_framework_zip,
         Releases.Carthage[0],
         Releases.Carthage[1],
-        UserInfo.mdiep,
-        UserInfo.test,
+        UserProfile.mdiep,
+        UserProfile.test,
         IssuesInRepository.PalleasOpensource,
         CommentsOnIssue.CommentsOnIssueInSampleRepository,
         RepositoriesForUser.RepositoriesForPalleasOpensource,
@@ -217,9 +217,9 @@ struct Fixture {
         }
     }
     
-    struct UserInfo: EndpointFixtureType {
-        static let mdiep = UserInfo(.dotCom, "mdiep")
-        static let test = UserInfo(.dotCom, "test")
+    struct UserProfile: EndpointFixtureType {
+        static let mdiep = UserProfile(.dotCom, "mdiep")
+        static let test = UserProfile(.dotCom, "test")
         
         let server: Server
         let login: String
