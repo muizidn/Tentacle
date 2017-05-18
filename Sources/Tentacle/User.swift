@@ -16,6 +16,10 @@ public struct User: CustomStringConvertible {
     /// The user's login/username.
     public let login: String
     
+    public init(_ login: String) {
+        self.login = login
+    }
+    
     public var description: String {
         return login
     }
@@ -41,8 +45,8 @@ public struct UserInfo: CustomStringConvertible {
     /// The unique ID of the user.
     public let id: String
     
-    /// The user's login/username.
-    public let login: String
+    /// The user this information is about.
+    public let user: User
     
     /// The URL of the user's GitHub page.
     public let url: URL
@@ -54,14 +58,14 @@ public struct UserInfo: CustomStringConvertible {
     public let type: UserType
 
     public var description: String {
-        return login
+        return user.description
     }
 }
 
 extension UserInfo: Hashable {
     public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
         return lhs.id == rhs.id
-            && lhs.login == rhs.login
+            && lhs.user == rhs.user
             && lhs.url == rhs.url
             && lhs.avatarURL == rhs.avatarURL
     }
@@ -75,7 +79,7 @@ extension UserInfo: ResourceType {
     public static func decode(_ j: JSON) -> Decoded<UserInfo> {
         return curry(self.init)
             <^> (j <| "id" >>- toString)
-            <*> j <| "login"
+            <*> (j <| "login").map(User.init)
             <*> j <| "html_url"
             <*> j <| "avatar_url"
             <*> (j <| "type" >>- toUserType)

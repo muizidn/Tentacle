@@ -15,7 +15,7 @@ class CommentsTests: XCTestCase {
     func testDecodedCommentsOnSampleRepositoryIssue() {
         let palleasOpensource = UserInfo(
             id: "15802020",
-            login: "Palleas-opensource",
+            user: User("Palleas-opensource"),
             url: URL(string: "https://github.com/Palleas-opensource")!,
             avatarURL: URL(string: "https://avatars.githubusercontent.com/u/15802020?v=3")!,
             type: .user
@@ -23,7 +23,7 @@ class CommentsTests: XCTestCase {
 
         let palleas = UserInfo(
             id: "48797",
-            login: "Palleas",
+            user: User("Palleas"),
             url: URL(string: "https://github.com/Palleas")!,
             avatarURL: URL(string: "https://avatars.githubusercontent.com/u/15802020?v=3")!,
             type: .user
