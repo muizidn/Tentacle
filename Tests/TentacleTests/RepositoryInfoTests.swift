@@ -13,7 +13,7 @@ import Argo
 class RepositoryInfoTests: XCTestCase {
 
     func testUserRepositoryInfoAreEquals() {
-        let palleasOpensource = User(
+        let palleasOpensource = UserInfo(
             id: "15802020",
             login: "Palleas-opensource",
             url: URL(string: "https://github.com/Palleas-opensource")!,
@@ -48,7 +48,7 @@ class RepositoryInfoTests: XCTestCase {
     }
 
     func testOrganizationRepositoryAreEqual() {
-        let raccommunity = User(
+        let raccommunity = UserInfo(
             id: "18710012",
             login: "RACCommunity",
             url: URL(string: "https://github.com/RACCommunity")!,

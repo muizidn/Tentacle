@@ -44,13 +44,13 @@ public struct Issue: CustomStringConvertible {
     public let body: String
 
     /// The author of the issue
-    public let user: User?
+    public let user: UserInfo?
 
     /// The labels associated to this issue, if any
     public let labels: [Label]
 
     /// The user assigned to this issue, if any
-    public let assignees: [User]
+    public let assignees: [UserInfo]
 
     /// The milestone this issue belongs to, if any
     public let milestone: Milestone?
@@ -77,7 +77,7 @@ public struct Issue: CustomStringConvertible {
         return title
     }
 
-    public init(id: String, url: URL?, number: Int, state: State, title: String, body: String, user: User, labels: [Label], assignees: [User], milestone: Milestone?, isLocked: Bool, commentCount: Int, pullRequest: PullRequest?, closedAt: Date?, createdAt: Date, updatedAt: Date) {
+    public init(id: String, url: URL?, number: Int, state: State, title: String, body: String, user: UserInfo, labels: [Label], assignees: [UserInfo], milestone: Milestone?, isLocked: Bool, commentCount: Int, pullRequest: PullRequest?, closedAt: Date?, createdAt: Date, updatedAt: Date) {
         self.id = id
         self.url = url
         self.number = number

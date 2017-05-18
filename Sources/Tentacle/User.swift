@@ -12,7 +12,7 @@ import Curry
 import Runes
 
 /// A User on GitHub.
-public struct User: CustomStringConvertible {
+public struct UserInfo: CustomStringConvertible {
     public enum UserType: String {
         case user = "User"
         case organization = "Organization"
@@ -38,8 +38,8 @@ public struct User: CustomStringConvertible {
     }
 }
 
-extension User: Hashable {
-    public static func ==(lhs: User, rhs: User) -> Bool {
+extension UserInfo: Hashable {
+    public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
         return lhs.id == rhs.id
             && lhs.login == rhs.login
             && lhs.url == rhs.url
@@ -51,8 +51,8 @@ extension User: Hashable {
     }
 }
 
-extension User: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<User> {
+extension UserInfo: ResourceType {
+    public static func decode(_ j: JSON) -> Decoded<UserInfo> {
         return curry(self.init)
             <^> (j <| "id" >>- toString)
             <*> j <| "login"
@@ -65,7 +65,7 @@ extension User: ResourceType {
 /// Extended information about a user on GitHub.
 public struct UserProfile {
     /// The user that this information refers to.
-    public let user: User
+    public let user: UserInfo
     
     /// The date that the user joined GitHub.
     public let joinedDate: Date
@@ -88,7 +88,7 @@ public struct UserProfile {
         return user.description
     }
     
-    public init(user: User, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
+    public init(user: UserInfo, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
         self.user = user
         self.joinedDate = joinedDate
         self.name = name

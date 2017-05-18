@@ -33,7 +33,7 @@ public struct Milestone: CustomStringConvertible {
     public let body: String
 
     /// The user who created the milestone
-    public let creator: User
+    public let creator: UserInfo
 
     /// The number of the open issues in the milestone
     public let openIssueCount: Int

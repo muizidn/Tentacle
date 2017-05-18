@@ -13,7 +13,7 @@ import XCTest
 class IssuesTests: XCTestCase {
     
     func testDecodedPalleasOpensourceIssues() {
-        let palleasOpensource = User(
+        let palleasOpensource = UserInfo(
             id: "15802020",
             login: "Palleas-opensource",
             url: URL(string: "https://github.com/Palleas-opensource")!,

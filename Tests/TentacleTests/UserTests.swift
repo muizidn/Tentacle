@@ -13,7 +13,7 @@ import XCTest
 class UserTests: XCTestCase {
     func testDecodeMdiep() {
         let expected = UserProfile(
-            user: User(
+            user: UserInfo(
                 id: "1302",
                 login: "mdiep",
                 url: URL(string: "https://github.com/mdiep")!,
@@ -31,7 +31,7 @@ class UserTests: XCTestCase {
     
     func testDecodeTest() {
         let expected = UserProfile(
-            user: User(
+            user: UserInfo(
                 id: "383316",
                 login: "test",
                 url: URL(string: "https://github.com/test")!,
