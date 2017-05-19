@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal struct Request {
+internal struct Request<Value> {
     enum Method: String {
         case get = "GET"
         case post = "POST"

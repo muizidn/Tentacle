@@ -24,7 +24,7 @@ extension URL {
         return components.url!
     }
     
-    internal init(_ server: Server, _ request: Request, page: UInt? = nil, pageSize: UInt? = nil) {
+    internal init<Value>(_ server: Server, _ request: Request<Value>, page: UInt? = nil, pageSize: UInt? = nil) {
         let queryItems = [ ("page", page), ("per_page", pageSize) ]
             .filter { _, value in value != nil }
             .map { name, value in URLQueryItem(name: name, value: "\(value!)") }
@@ -55,7 +55,7 @@ extension URLRequest {
         return request
     }
 
-    internal static func create(_ url: URL, _ body: Data?, _ method: Request.Method, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+    internal static func create<Value>(_ url: URL, _ body: Data?, _ method: Request<Value>.Method, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
         var URLRequest = create(url, credentials, contentType: contentType)
         URLRequest.httpMethod = method.rawValue
         URLRequest.httpBody = body
@@ -273,7 +273,7 @@ public final class Client {
     }
 
     /// Fetch a request from the API.
-    private func fetch(_ request: Request, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
+    private func fetch<Value>(_ request: Request<Value>, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
         let url = URL(server, request, page: page, pageSize: pageSize)
 
         return fetch(URLRequest.create(url, credentials))
@@ -314,7 +314,7 @@ public final class Client {
     /// Fetch an object from the API.
     internal func fetchOne
         <Resource: ResourceType>
-        (_ request: Request) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
+        (_ request: Request<Resource>) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
     {
         return fetch(request, page: nil, pageSize: nil)
             .attemptMap { response, JSON in
@@ -329,7 +329,7 @@ public final class Client {
     /// Fetch a list of objects from the API.
     internal func fetchMany
         <Resource: ResourceType>
-        (_ request: Request, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource
+        (_ request: Request<[Resource]>, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource
     {
         let nextPage = (page ?? 1) + 1
         return fetch(request, page: page, pageSize: pageSize)
@@ -348,7 +348,7 @@ public final class Client {
 
     internal func send
         <Resource: ResourceType>
-        (_ request: Request) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
+        (_ request: Request<Resource>) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
     {
         let urlRequest = URLRequest.create(URL(server, request), request.body, request.method, credentials)
 

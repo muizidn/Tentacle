@@ -19,7 +19,8 @@ protocol FixtureType {
 }
 
 protocol EndpointFixtureType: FixtureType {
-    var request: Request { get }
+    associatedtype Value
+    var request: Request<Value> { get }
     var page: UInt? { get }
     var pageSize: UInt? { get }
 }
@@ -171,7 +172,7 @@ struct Fixture {
         let pageSize: UInt? = nil
         let contentType = Client.APIContentType
         
-        var request: Request {
+        var request: Request<Tentacle.Release> {
             return repository.release(forTag: tag)
         }
         
@@ -205,7 +206,7 @@ struct Fixture {
         let pageSize: UInt?
         let contentType = Client.APIContentType
         
-        var request: Request {
+        var request: Request<[Tentacle.Release]> {
             return repository.releases
         }
         
@@ -228,7 +229,7 @@ struct Fixture {
         let pageSize: UInt? = nil
         let contentType = Client.APIContentType
         
-        var request: Request {
+        var request: Request<Tentacle.UserProfile> {
             return User(login).profile
         }
         
@@ -241,7 +242,7 @@ struct Fixture {
     struct IssuesInRepository: EndpointFixtureType {
         static let PalleasOpensource = IssuesInRepository("Palleas-opensource", "Sample-repository")
 
-        var request: Request {
+        var request: Request<[Tentacle.Issue]> {
             return Repository(owner: owner, name: repository).issues
         }
 
@@ -270,7 +271,7 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var request: Request {
+        var request: Request<[Tentacle.Comment]> {
             return Repository(owner: owner, name: repository).comments(onIssue: number)
         }
 
@@ -291,7 +292,7 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var request: Request {
+        var request: Request<[Tentacle.RepositoryInfo]> {
             return User(owner).repositories
         }
 
@@ -310,7 +311,7 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var request: Request {
+        var request: Request<[Tentacle.RepositoryInfo]> {
             return Organization(organization).repositories
         }
 
@@ -334,7 +335,7 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var request: Request {
+        var request: Request<Content> {
             return Repository(owner: owner, name: repository).content(atPath: path)
         }
 
@@ -357,7 +358,7 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var request: Request {
+        var request: Request<[Branch]> {
             return Repository(owner: owner, name: repository).branches
         }
 
@@ -382,7 +383,7 @@ struct Fixture {
 
         let contentType = Client.APIContentType
 
-        var request: Request {
+        var request: Request<Tree> {
             return Repository(owner: owner, name: repository).tree(atRef: ref, recursive: recursive)
         }
 

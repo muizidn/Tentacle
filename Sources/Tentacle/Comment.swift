@@ -13,7 +13,7 @@ import Runes
 
 extension Repository {
     // https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
-    internal func comments(onIssue issue: Int) -> Request {
+    internal func comments(onIssue issue: Int) -> Request<[Comment]> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/issues/\(issue)/comments")
     }
 }

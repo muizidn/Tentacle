@@ -10,7 +10,7 @@ import Foundation
 
 extension Organization {
     // https://developer.github.com/v3/repos/#list-organization-repositories
-    internal var repositories: Request {
+    internal var repositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/orgs/\(name)/repos")
     }
 }
