@@ -11,8 +11,44 @@ import Argo
 import Curry
 import Runes
 
-/// A User on GitHub.
+extension User {
+    // https://developer.github.com/v3/users/#get-a-single-user
+    internal var profile: Request {
+        return Request(method: .get, path: "/users/\(login)")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-user-repositories
+    internal var repositories: Request {
+        return Request(method: .get, path: "/users/\(login)/repos")
+    }
+}
+
+/// A user on GitHub or GitHub Enterprise.
 public struct User: CustomStringConvertible {
+    /// The user's login/username.
+    public let login: String
+    
+    public init(_ login: String) {
+        self.login = login
+    }
+    
+    public var description: String {
+        return login
+    }
+}
+
+extension User: Hashable {
+    public static func ==(lhs: User, rhs: User) -> Bool {
+        return lhs.login == rhs.login
+    }
+    
+    public var hashValue: Int {
+        return login.hashValue
+    }
+}
+
+/// Information about a user on GitHub.
+public struct UserInfo: CustomStringConvertible {
     public enum UserType: String {
         case user = "User"
         case organization = "Organization"
@@ -21,8 +57,8 @@ public struct User: CustomStringConvertible {
     /// The unique ID of the user.
     public let id: String
     
-    /// The user's login/username.
-    public let login: String
+    /// The user this information is about.
+    public let user: User
     
     /// The URL of the user's GitHub page.
     public let url: URL
@@ -34,14 +70,14 @@ public struct User: CustomStringConvertible {
     public let type: UserType
 
     public var description: String {
-        return login
+        return user.description
     }
 }
 
-extension User: Hashable {
-    public static func ==(lhs: User, rhs: User) -> Bool {
+extension UserInfo: Hashable {
+    public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
         return lhs.id == rhs.id
-            && lhs.login == rhs.login
+            && lhs.user == rhs.user
             && lhs.url == rhs.url
             && lhs.avatarURL == rhs.avatarURL
     }
@@ -51,11 +87,11 @@ extension User: Hashable {
     }
 }
 
-extension User: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<User> {
+extension UserInfo: ResourceType {
+    public static func decode(_ j: JSON) -> Decoded<UserInfo> {
         return curry(self.init)
             <^> (j <| "id" >>- toString)
-            <*> j <| "login"
+            <*> (j <| "login").map(User.init)
             <*> j <| "html_url"
             <*> j <| "avatar_url"
             <*> (j <| "type" >>- toUserType)
@@ -63,9 +99,9 @@ extension User: ResourceType {
 }
 
 /// Extended information about a user on GitHub.
-public struct UserInfo {
+public struct UserProfile {
     /// The user that this information refers to.
-    public let user: User
+    public let user: UserInfo
     
     /// The date that the user joined GitHub.
     public let joinedDate: Date
@@ -88,7 +124,7 @@ public struct UserInfo {
         return user.description
     }
     
-    public init(user: User, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
+    public init(user: UserInfo, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
         self.user = user
         self.joinedDate = joinedDate
         self.name = name
@@ -98,8 +134,8 @@ public struct UserInfo {
     }
 }
 
-extension UserInfo: Hashable {
-    public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
+extension UserProfile: Hashable {
+    public static func ==(lhs: UserProfile, rhs: UserProfile) -> Bool {
         return lhs.user == rhs.user
             && lhs.joinedDate == rhs.joinedDate
             && lhs.name == rhs.name
@@ -113,8 +149,8 @@ extension UserInfo: Hashable {
     }
 }
 
-extension UserInfo: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<UserInfo> {
+extension UserProfile: ResourceType {
+    public static func decode(_ j: JSON) -> Decoded<UserProfile> {
         return curry(self.init)
             <^> j <| []
             <*> (j <| "created_at" >>- toDate)

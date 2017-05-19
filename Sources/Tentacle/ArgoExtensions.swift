@@ -112,8 +112,8 @@ internal func toColor(_ string: String) -> Decoded<Color> {
     return .success(Color(hex: string))
 }
 
-internal func toUserType(_ string: String) -> Decoded<User.UserType> {
-    if let type = User.UserType(rawValue: string) {
+internal func toUserType(_ string: String) -> Decoded<UserInfo.UserType> {
+    if let type = UserInfo.UserType(rawValue: string) {
         return .success(type)
     } else {
         return .failure(.custom("String \(string) does not represent a valid user type"))

@@ -31,7 +31,7 @@ public struct Comment: CustomStringConvertible {
     /// The body of the comment
     public let body: String
     /// The author of this comment
-    public let author: User
+    public let author: UserInfo
     
     public var description: String {
         return body

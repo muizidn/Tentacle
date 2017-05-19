@@ -13,9 +13,9 @@ import Argo
 class RepositoryInfoTests: XCTestCase {
 
     func testUserRepositoryInfoAreEquals() {
-        let palleasOpensource = User(
+        let palleasOpensource = UserInfo(
             id: "15802020",
-            login: "Palleas-opensource",
+            user: User("Palleas-opensource"),
             url: URL(string: "https://github.com/Palleas-opensource")!,
             avatarURL: URL(string: "https://avatars.githubusercontent.com/u/15802020?v=3")!,
             type: .user
@@ -48,9 +48,9 @@ class RepositoryInfoTests: XCTestCase {
     }
 
     func testOrganizationRepositoryAreEqual() {
-        let raccommunity = User(
+        let raccommunity = UserInfo(
             id: "18710012",
-            login: "RACCommunity",
+            user: User("RACCommunity"),
             url: URL(string: "https://github.com/RACCommunity")!,
             avatarURL: URL(string: "https://avatars.githubusercontent.com/u/18710012?v=3")!,
             type: .organization

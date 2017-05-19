@@ -12,10 +12,10 @@ import XCTest
 
 class UserTests: XCTestCase {
     func testDecodeMdiep() {
-        let expected = UserInfo(
-            user: User(
+        let expected = UserProfile(
+            user: UserInfo(
                 id: "1302",
-                login: "mdiep",
+                user: User("mdiep"),
                 url: URL(string: "https://github.com/mdiep")!,
                 avatarURL: URL(string: "https://avatars1.githubusercontent.com/u/1302?v=3")!,
                 type: .user
@@ -26,14 +26,14 @@ class UserTests: XCTestCase {
             websiteURL: "http://matt.diephouse.com",
             company: nil
         )
-        XCTAssertEqual(Fixture.UserInfo.mdiep.decode(), expected)
+        XCTAssertEqual(Fixture.UserProfile.mdiep.decode(), expected)
     }
     
     func testDecodeTest() {
-        let expected = UserInfo(
-            user: User(
+        let expected = UserProfile(
+            user: UserInfo(
                 id: "383316",
-                login: "test",
+                user: User("test"),
                 url: URL(string: "https://github.com/test")!,
                 avatarURL: URL(string: "https://avatars0.githubusercontent.com/u/383316?v=3")!,
                 type: .user
@@ -44,6 +44,6 @@ class UserTests: XCTestCase {
             websiteURL: "",
             company: nil
         )
-        XCTAssertEqual(Fixture.UserInfo.test.decode(), expected)
+        XCTAssertEqual(Fixture.UserProfile.test.decode(), expected)
     }
 }
