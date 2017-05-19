@@ -8,6 +8,13 @@
 
 import Foundation
 
+extension Organization {
+    // https://developer.github.com/v3/repos/#list-organization-repositories
+    internal var repositories: Request {
+        return Request(method: .get, path: "/orgs/\(name)/repos")
+    }
+}
+
 /// An organization on GitHub or GitHub Enterprise.
 public struct Organization: CustomStringConvertible {
     /// The organization's name.

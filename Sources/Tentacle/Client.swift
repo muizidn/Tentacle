@@ -152,11 +152,6 @@ extension Request {
         return get("/user/repos")
     }
     
-    // https://developer.github.com/v3/repos/#list-organization-repositories
-    static func repositories(forOrganization organization: String) -> Request {
-        return get("/orgs/\(organization)/repos")
-    }
-    
     // https://developer.github.com/v3/repos/#list-all-public-repositories
     static func publicRepositories() -> Request {
         return get("/repositories")
@@ -308,7 +303,7 @@ public final class Client {
 
     /// Fetch the repositories for a specific organisation 
     public func repositories(forOrganization organization: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositories(forOrganization: organization), page: page, pageSize: perPage)
+        return fetchMany(Organization(organization).repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the public repositories on Github
