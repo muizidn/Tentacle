@@ -12,6 +12,28 @@ import Curry
 import Runes
 
 extension User {
+    // https://developer.github.com/v3/issues/#list-issues
+    static internal var assignedIssues: Request {
+        return Request(method: .get, path: "/issues")
+    }
+    
+    // https://developer.github.com/v3/users/#get-the-authenticated-user
+    static internal var profile: Request {
+        return Request(method: .get, path: "/user")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-all-public-repositories
+    static internal var publicRepositories: Request {
+        return Request(method: .get, path: "/repositories")
+    }
+    
+    // https://developer.github.com/v3/repos/#list-your-repositories
+    static internal var repositories: Request {
+        return Request(method: .get, path: "/user/repos")
+    }
+}
+
+extension User {
     // https://developer.github.com/v3/users/#get-a-single-user
     internal var profile: Request {
         return Request(method: .get, path: "/users/\(login)")
