@@ -132,37 +132,6 @@ extension Request: Hashable {
     }
 }
 
-extension Request {
-    static func get(_ path: String, queryItems: [URLQueryItem] = []) -> Request {
-        return Request(method: .get, path: path, queryItems: queryItems)
-    }
-    
-    // https://developer.github.com/v3/issues/#list-issues
-    static func assignedIssues() -> Request {
-        return get("/issues")
-    }
-    
-    // https://developer.github.com/v3/users/#get-the-authenticated-user
-    static func authenticatedUser() -> Request {
-        return get("/user")
-    }
-    
-    // https://developer.github.com/v3/repos/#list-your-repositories
-    static func repositories() -> Request {
-        return get("/user/repos")
-    }
-    
-    // https://developer.github.com/v3/repos/#list-organization-repositories
-    static func repositories(forOrganization organization: String) -> Request {
-        return get("/orgs/\(organization)/repos")
-    }
-    
-    // https://developer.github.com/v3/repos/#list-all-public-repositories
-    static func publicRepositories() -> Request {
-        return get("/repositories")
-    }
-}
-
 /// A GitHub API Client
 public final class Client {
     /// The type of content to request from the GitHub API.
@@ -280,11 +249,11 @@ public final class Client {
 
     /// Fetch the currently authenticated user
     public func authenticatedUser() -> SignalProducer<(Response, UserProfile), Error> {
-        return fetchOne(.authenticatedUser())
+        return fetchOne(User.profile)
     }
 
     public func assignedIssues(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return fetchMany(.assignedIssues(), page: page, pageSize: perPage)
+        return fetchMany(User.assignedIssues, page: page, pageSize: perPage)
     }
 
     public func issues(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
@@ -298,7 +267,7 @@ public final class Client {
 
     /// Fetch the authenticated user's repositories
     public func repositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositories(), page: page, pageSize: perPage)
+        return fetchMany(User.repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the repositories for a specific user
@@ -308,12 +277,12 @@ public final class Client {
 
     /// Fetch the repositories for a specific organisation 
     public func repositories(forOrganization organization: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.repositories(forOrganization: organization), page: page, pageSize: perPage)
+        return fetchMany(Organization(organization).repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the public repositories on Github
     public func publicRepositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(.publicRepositories(), page: page, pageSize: perPage)
+        return fetchMany(User.publicRepositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the content for a path in the repository

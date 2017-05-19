@@ -311,7 +311,7 @@ struct Fixture {
         let contentType = Client.APIContentType
 
         var request: Request {
-            return .repositories(forOrganization: organization)
+            return Organization(organization).repositories
         }
 
         init(_ organization: String) {
