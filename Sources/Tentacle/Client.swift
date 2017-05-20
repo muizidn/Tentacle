@@ -55,7 +55,7 @@ extension URLRequest {
         return request
     }
 
-    internal static func create<Value>(_ url: URL, _ body: Data?, _ method: Request<Value>.Method, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
+    internal static func create(_ url: URL, _ body: Data?, _ method: Method, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
         var URLRequest = create(url, credentials, contentType: contentType)
         URLRequest.httpMethod = method.rawValue
         URLRequest.httpBody = body

@@ -8,15 +8,15 @@
 
 import Foundation
 
+internal enum Method: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case head = "HEAD"
+    case options = "OPTIONS"
+}
+
 internal struct Request<Value> {
-    enum Method: String {
-        case get = "GET"
-        case post = "POST"
-        case put = "PUT"
-        case head = "HEAD"
-        case options = "OPTIONS"
-    }
-    
     var method: Method
     var path: String
     var queryItems: [URLQueryItem]
