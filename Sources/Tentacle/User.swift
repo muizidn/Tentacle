@@ -13,34 +13,34 @@ import Runes
 
 extension User {
     // https://developer.github.com/v3/issues/#list-issues
-    static internal var assignedIssues: Request {
+    static internal var assignedIssues: Request<[Issue]> {
         return Request(method: .get, path: "/issues")
     }
     
     // https://developer.github.com/v3/users/#get-the-authenticated-user
-    static internal var profile: Request {
+    static internal var profile: Request<UserProfile> {
         return Request(method: .get, path: "/user")
     }
     
     // https://developer.github.com/v3/repos/#list-all-public-repositories
-    static internal var publicRepositories: Request {
+    static internal var publicRepositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/repositories")
     }
     
     // https://developer.github.com/v3/repos/#list-your-repositories
-    static internal var repositories: Request {
+    static internal var repositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/user/repos")
     }
 }
 
 extension User {
     // https://developer.github.com/v3/users/#get-a-single-user
-    internal var profile: Request {
+    internal var profile: Request<UserProfile> {
         return Request(method: .get, path: "/users/\(login)")
     }
     
     // https://developer.github.com/v3/repos/#list-user-repositories
-    internal var repositories: Request {
+    internal var repositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/users/\(login)/repos")
     }
 }

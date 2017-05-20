@@ -13,7 +13,7 @@ import Runes
 
 extension Repository {
     // https://developer.github.com/v3/git/trees/#get-a-tree
-    internal func tree(atRef ref: String = "HEAD", recursive: Bool = false) -> Request {
+    internal func tree(atRef ref: String = "HEAD", recursive: Bool = false) -> Request<Tree> {
         let queryItems: [URLQueryItem]
         if recursive {
             queryItems = [ URLQueryItem(name: "recursive", value: "1") ]
@@ -24,7 +24,7 @@ extension Repository {
     }
     
     // https://developer.github.com/v3/git/trees/#create-a-tree
-    internal func create(tree: [Tree.Entry], basedOn base: String?) -> Request {
+    internal func create(tree: [Tree.Entry], basedOn base: String?) -> Request<FileResponse> {
         let object = NewTree(entries: tree, base: base).encode().JSONObject()
         let payload = try? JSONSerialization.data(withJSONObject: object)
         return Request(method: .post, path: "repos/\(owner)/\(name)/git/trees", body: payload)

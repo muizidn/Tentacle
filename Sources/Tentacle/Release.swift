@@ -13,12 +13,12 @@ import Runes
 
 extension Repository {
     // https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
-    internal func release(forTag tag: String) -> Request {
+    internal func release(forTag tag: String) -> Request<Release> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/releases/tags/\(tag)")
     }
     
     // https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
-    internal var releases: Request {
+    internal var releases: Request<[Release]> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/releases")
     }
 }

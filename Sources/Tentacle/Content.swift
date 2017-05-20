@@ -13,7 +13,7 @@ import Runes
 
 extension Repository {
     // https://developer.github.com/v3/repos/contents/#get-contents
-    internal func content(atPath path: String, atRef ref: String? = nil) -> Request {
+    internal func content(atPath path: String, atRef ref: String? = nil) -> Request<Content> {
         let queryItems: [URLQueryItem]
         if let ref = ref {
             queryItems = [ URLQueryItem(name: "ref", value: ref) ]

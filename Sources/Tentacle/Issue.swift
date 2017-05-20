@@ -13,7 +13,7 @@ import Runes
 
 extension Repository {
     // https://developer.github.com/v3/issues/#list-issues-for-a-repository
-    internal var issues: Request {
+    internal var issues: Request<[Issue]> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/issues")
     }
 }
