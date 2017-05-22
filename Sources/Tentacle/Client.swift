@@ -38,31 +38,6 @@ extension URL {
     }
 }
 
-extension URLRequest {
-    internal static func create(_ url: URL, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
-        var request = URLRequest(url: url)
-        
-        request.setValue(contentType, forHTTPHeaderField: "Accept")
-        
-        if let userAgent = Client.userAgent {
-            request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
-        }
-        
-        if let credentials = credentials {
-            request.setValue(credentials.authorizationHeader, forHTTPHeaderField: "Authorization")
-        }
-        
-        return request
-    }
-
-    internal static func create(_ url: URL, _ body: Data?, _ method: Method, _ credentials: Client.Credentials?, contentType: String? = Client.APIContentType) -> URLRequest {
-        var URLRequest = create(url, credentials, contentType: contentType)
-        URLRequest.httpMethod = method.rawValue
-        URLRequest.httpBody = body
-        return URLRequest
-    }
-}
-
 extension URLSession {
 	/// Returns a producer that will download a file using the given request. The file will be
 	/// deleted after the producer terminates.
@@ -183,7 +158,7 @@ public final class Client {
     ///
     /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
     public func releases(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Release]), Error> {
-        return fetchMany(repository.releases, page: page, pageSize: perPage)
+        return execute(repository.releases, page: page, pageSize: perPage)
     }
     
     /// Fetch the release corresponding to the given tag in the given repository.
@@ -191,7 +166,7 @@ public final class Client {
     /// If the tag exists, but there's not a correspoding GitHub Release, this method will return a
     /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
     public func release(forTag tag: String, in repository: Repository) -> SignalProducer<(Response, Release), Error> {
-        return fetchOne(repository.release(forTag: tag))
+        return execute(repository.release(forTag: tag))
     }
     
     /// Downloads the indicated release asset to a temporary file, returning the URL to the file on
@@ -200,90 +175,109 @@ public final class Client {
     /// The downloaded file will be deleted after the URL has been sent upon the signal.
     public func download(asset: Release.Asset) -> SignalProducer<URL, Error> {
         return urlSession
-            .downloadFile(URLRequest.create(asset.apiURL, credentials, contentType: Client.DownloadContentType))
+            .downloadFile(urlRequest(for: asset.apiURL, contentType: Client.DownloadContentType))
             .mapError { Error.networkError($0.error) }
     }
     
     /// Fetch the user with the given login.
     public func user(login: String) -> SignalProducer<(Response, UserProfile), Error> {
-        return fetchOne(User(login).profile)
+        return execute(User(login).profile)
     }
 
     /// Fetch the currently authenticated user
     public func authenticatedUser() -> SignalProducer<(Response, UserProfile), Error> {
-        return fetchOne(User.profile)
+        return execute(User.profile)
     }
 
     public func assignedIssues(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return fetchMany(User.assignedIssues, page: page, pageSize: perPage)
+        return execute(User.assignedIssues, page: page, pageSize: perPage)
     }
 
     public func issues(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return fetchMany(repository.issues, page: page, pageSize: perPage)
+        return execute(repository.issues, page: page, pageSize: perPage)
     }
 
     /// Fetch the comments posted on an issue
     public func comments(onIssue issue: Int, in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Comment]), Error> {
-        return fetchMany(repository.comments(onIssue: issue), page: page, pageSize: perPage)
+        return execute(repository.comments(onIssue: issue), page: page, pageSize: perPage)
     }
 
     /// Fetch the authenticated user's repositories
     public func repositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(User.repositories, page: page, pageSize: perPage)
+        return execute(User.repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the repositories for a specific user
     public func repositories(forUser user: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(User(user).repositories, page: page, pageSize: perPage)
+        return execute(User(user).repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the repositories for a specific organisation 
     public func repositories(forOrganization organization: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(Organization(organization).repositories, page: page, pageSize: perPage)
+        return execute(Organization(organization).repositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the public repositories on Github
     public func publicRepositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return fetchMany(User.publicRepositories, page: page, pageSize: perPage)
+        return execute(User.publicRepositories, page: page, pageSize: perPage)
     }
 
     /// Fetch the content for a path in the repository
     public func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
-        return fetchOne(repository.content(atPath: path, atRef: ref))
+        return execute(repository.content(atPath: path, atRef: ref))
     }
 
     /// Create a file in a repository
     public func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(repository.create(file: file, atPath: path, inBranch: branch))
+        return execute(repository.create(file: file, atPath: path, inBranch: branch))
     }
 
     /// Get branches for a repository
     public func branches(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Branch]), Error> {
-        return fetchMany(repository.branches, page: page, pageSize: perPage)
+        return execute(repository.branches, page: page, pageSize: perPage)
     }
 
     /// Fetch the tree for a repository reference
     public func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
-        return fetchOne(repository.tree(atRef: ref, recursive: recursive))
+        return execute(repository.tree(atRef: ref, recursive: recursive))
     }
 
     /// Create a tree in a repository
     public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
-        return send(repository.create(tree: tree, basedOn: base))
+        return execute(repository.create(tree: tree, basedOn: base))
+    }
+    
+    /// Create a `URLRequest` for the given URL with the given content type.
+    private func urlRequest(for url: URL, contentType: String?) -> URLRequest {
+        var result = URLRequest(url: url)
+        
+        result.setValue(contentType, forHTTPHeaderField: "Accept")
+        
+        if let userAgent = Client.userAgent {
+            result.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        }
+        
+        if let credentials = credentials {
+            result.setValue(credentials.authorizationHeader, forHTTPHeaderField: "Authorization")
+        }
+        
+        return result
+    }
+    
+    /// Create a `URLRequest` for the given `Request`.
+    private func urlRequest<Value>(for request: Request<Value>, page: UInt? = nil, perPage: UInt? = nil) -> URLRequest {
+        let url = URL(server, request, page: page, pageSize: perPage)
+        var result = urlRequest(for: url, contentType: Client.APIContentType)
+        result.httpMethod = request.method.rawValue
+        result.httpBody = request.body
+        return result
     }
 
     /// Fetch a request from the API.
-    private func fetch<Value>(_ request: Request<Value>, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
-        let url = URL(server, request, page: page, pageSize: pageSize)
-
-        return fetch(URLRequest.create(url, credentials))
-    }
-
-    /// Sends an URLRequest and map response to JSON
-    private func fetch(_ urlRequest: URLRequest) -> SignalProducer<(Response, Any), Error> {
+    private func execute<Value>(_ request: Request<Value>, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
         return urlSession
             .reactive
-            .data(with: urlRequest)
+            .data(with: urlRequest(for: request, page: page, perPage: pageSize))
             .mapError { Error.networkError($0.error) }
             .flatMap(.concat) { data, response -> SignalProducer<(Response, Any), Error> in
                 let response = response as! HTTPURLResponse
@@ -312,11 +306,10 @@ public final class Client {
     }
     
     /// Fetch an object from the API.
-    internal func fetchOne
-        <Resource: ResourceType>
-        (_ request: Request<Resource>) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
-    {
-        return fetch(request, page: nil, pageSize: nil)
+    internal func execute<Resource: ResourceType>(
+        _ request: Request<Resource>
+    ) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource {
+        return execute(request, page: nil, pageSize: nil)
             .attemptMap { response, JSON in
                 return decode(JSON)
                     .map { resource in
@@ -327,39 +320,24 @@ public final class Client {
     }
     
     /// Fetch a list of objects from the API.
-    internal func fetchMany
-        <Resource: ResourceType>
-        (_ request: Request<[Resource]>, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource
-    {
+    internal func execute<Resource: ResourceType>(
+        _ request: Request<[Resource]>,
+        page: UInt?,
+        pageSize: UInt?
+    ) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource {
         let nextPage = (page ?? 1) + 1
-        return fetch(request, page: page, pageSize: pageSize)
-            .attemptMap { response, JSON in
-                return decode(JSON)
+        return execute(request, page: page, pageSize: pageSize)
+            .attemptMap { (response: Response, json: Any) in
+                return decode(json)
                     .map { resource in
                         (response, resource)
                     }
                     .mapError(Error.jsonDecodingError)
             }
-            .flatMap(.concat) { response, JSON -> SignalProducer<(Response, [Resource]), Error> in
-                return SignalProducer(value: (response, JSON))
-                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.fetchMany(request, page: nextPage, pageSize: pageSize))
+            .flatMap(.concat) { response, json -> SignalProducer<(Response, [Resource]), Error> in
+                return SignalProducer(value: (response, json))
+                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.execute(request, page: nextPage, pageSize: pageSize))
             }
-    }
-
-    internal func send
-        <Resource: ResourceType>
-        (_ request: Request<Resource>) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource
-    {
-        let urlRequest = URLRequest.create(URL(server, request), request.body, request.method, credentials)
-
-        return fetch(urlRequest)
-            .attemptMap { response, JSON in
-                return decode(JSON)
-                    .map { resource in
-                        (response, resource)
-                    }
-                    .mapError(Error.jsonDecodingError)
-        }
     }
 }
 
