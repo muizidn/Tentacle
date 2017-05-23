@@ -22,7 +22,7 @@ protocol EndpointFixtureType: FixtureType {
     associatedtype Value
     var request: Request<Value> { get }
     var page: UInt? { get }
-    var pageSize: UInt? { get }
+    var perPage: UInt? { get }
 }
 
 extension FixtureType {
@@ -99,7 +99,7 @@ extension FixtureType {
 extension EndpointFixtureType {
     /// The URL of the fixture on the API.
     var url: URL {
-        return URL(.dotCom, request, page: page, pageSize: pageSize)
+        return URL(.dotCom, request, page: page, perPage: perPage)
     }
     
     /// The JSON from the Endpoint.
@@ -169,7 +169,7 @@ struct Fixture {
         let repository: Repository
         let tag: String
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
         let contentType = Client.APIContentType
         
         var request: Request<Tentacle.Release> {
@@ -203,18 +203,18 @@ struct Fixture {
         let server: Server
         let repository: Repository
         let page: UInt?
-        let pageSize: UInt?
+        let perPage: UInt?
         let contentType = Client.APIContentType
         
         var request: Request<[Tentacle.Release]> {
             return repository.releases
         }
         
-        init(_ server: Server, _ owner: String, _ name: String, _ page: UInt, _ pageSize: UInt) {
+        init(_ server: Server, _ owner: String, _ name: String, _ page: UInt, _ perPage: UInt) {
             self.server = server
             repository = Repository(owner: owner, name: name)
             self.page = page
-            self.pageSize = pageSize
+            self.perPage = perPage
         }
     }
     
@@ -226,7 +226,7 @@ struct Fixture {
         let login: String
         
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
         let contentType = Client.APIContentType
         
         var request: Request<Tentacle.UserProfile> {
@@ -247,7 +247,7 @@ struct Fixture {
         }
 
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
         let contentType = Client.APIContentType
 
         let owner: String
@@ -263,7 +263,7 @@ struct Fixture {
         static let CommentsOnIssueInSampleRepository = CommentsOnIssue(1, "Palleas-Opensource", "Sample-repository")
 
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
 
         let number: Int
         let owner: String
@@ -286,7 +286,7 @@ struct Fixture {
         static let RepositoriesForPalleasOpensource = RepositoriesForUser("Palleas-Opensource")
         
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
 
         let owner: String
 
@@ -305,7 +305,7 @@ struct Fixture {
         static let RepositoriesForRACCommunity = RepositoriesForOrganization("raccommunity")
 
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
 
         let organization: String
 
@@ -327,7 +327,7 @@ struct Fixture {
         static let SymlinkInSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools/say")
 
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
 
         let owner: String
         let repository: String
@@ -351,7 +351,7 @@ struct Fixture {
         static let BranchesInReactiveTask = BranchesForRepository(owner: "Carthage", repository: "ReactiveTask")
 
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
 
         let owner: String
         let repository: String
@@ -374,7 +374,7 @@ struct Fixture {
                                                           ref: "0c0dfafa361836e11aedcbb95c1f05d3f654aef0", recursive: false)
 
         let page: UInt? = nil
-        let pageSize: UInt? = nil
+        let perPage: UInt? = nil
 
         let owner: String
         let repository: String

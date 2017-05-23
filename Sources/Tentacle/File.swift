@@ -12,8 +12,10 @@ import Runes
 import Curry
 
 extension Repository {
-    // https://developer.github.com/v3/repos/contents/#create-a-file
-    internal func create(file: File, atPath path: String, inBranch branch: String? = nil) -> Request<FileResponse> {
+    /// A request to create a file at a given path in the repository.
+    ///
+    /// https://developer.github.com/v3/repos/contents/#create-a-file
+    public func create(file: File, atPath path: String, inBranch branch: String? = nil) -> Request<FileResponse> {
         let queryItems: [URLQueryItem]
         if let branch = branch {
             queryItems = [ URLQueryItem(name: "branch", value: branch) ]

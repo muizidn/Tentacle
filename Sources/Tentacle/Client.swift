@@ -24,8 +24,8 @@ extension URL {
         return components.url!
     }
     
-    internal init<Value>(_ server: Server, _ request: Request<Value>, page: UInt? = nil, pageSize: UInt? = nil) {
-        let queryItems = [ ("page", page), ("per_page", pageSize) ]
+    internal init<Value>(_ server: Server, _ request: Request<Value>, page: UInt? = nil, perPage: UInt? = nil) {
+        let queryItems = [ ("page", page), ("per_page", perPage) ]
             .filter { _, value in value != nil }
             .map { name, value in URLQueryItem(name: name, value: "\(value!)") }
 
@@ -151,24 +151,6 @@ public final class Client {
         self.urlSession = urlSession
     }
     
-    /// Fetch the releases in the given repository, starting at the given page.
-    ///
-    /// This method will automatically fetch all pages. Each value in the returned signal producer
-    /// will be the response and releases from a single page.
-    ///
-    /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
-    public func releases(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Release]), Error> {
-        return execute(repository.releases, page: page, pageSize: perPage)
-    }
-    
-    /// Fetch the release corresponding to the given tag in the given repository.
-    ///
-    /// If the tag exists, but there's not a correspoding GitHub Release, this method will return a
-    /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
-    public func release(forTag tag: String, in repository: Repository) -> SignalProducer<(Response, Release), Error> {
-        return execute(repository.release(forTag: tag))
-    }
-    
     /// Downloads the indicated release asset to a temporary file, returning the URL to the file on
     /// disk.
     ///
@@ -177,74 +159,6 @@ public final class Client {
         return urlSession
             .downloadFile(urlRequest(for: asset.apiURL, contentType: Client.DownloadContentType))
             .mapError { Error.networkError($0.error) }
-    }
-    
-    /// Fetch the user with the given login.
-    public func user(login: String) -> SignalProducer<(Response, UserProfile), Error> {
-        return execute(User(login).profile)
-    }
-
-    /// Fetch the currently authenticated user
-    public func authenticatedUser() -> SignalProducer<(Response, UserProfile), Error> {
-        return execute(User.profile)
-    }
-
-    public func assignedIssues(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return execute(User.assignedIssues, page: page, pageSize: perPage)
-    }
-
-    public func issues(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Issue]), Error> {
-        return execute(repository.issues, page: page, pageSize: perPage)
-    }
-
-    /// Fetch the comments posted on an issue
-    public func comments(onIssue issue: Int, in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Comment]), Error> {
-        return execute(repository.comments(onIssue: issue), page: page, pageSize: perPage)
-    }
-
-    /// Fetch the authenticated user's repositories
-    public func repositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return execute(User.repositories, page: page, pageSize: perPage)
-    }
-
-    /// Fetch the repositories for a specific user
-    public func repositories(forUser user: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return execute(User(user).repositories, page: page, pageSize: perPage)
-    }
-
-    /// Fetch the repositories for a specific organisation 
-    public func repositories(forOrganization organization: String, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return execute(Organization(organization).repositories, page: page, pageSize: perPage)
-    }
-
-    /// Fetch the public repositories on Github
-    public func publicRepositories(page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [RepositoryInfo]), Error> {
-        return execute(User.publicRepositories, page: page, pageSize: perPage)
-    }
-
-    /// Fetch the content for a path in the repository
-    public func content(atPath path: String, in repository: Repository, atRef ref: String? = nil) -> SignalProducer<(Response, Content), Error> {
-        return execute(repository.content(atPath: path, atRef: ref))
-    }
-
-    /// Create a file in a repository
-    public func create(file: File, atPath path: String, in repository: Repository, inBranch branch: String? = nil) -> SignalProducer<(Response, FileResponse), Error> {
-        return execute(repository.create(file: file, atPath: path, inBranch: branch))
-    }
-
-    /// Get branches for a repository
-    public func branches(in repository: Repository, page: UInt = 1, perPage: UInt = 30) -> SignalProducer<(Response, [Branch]), Error> {
-        return execute(repository.branches, page: page, pageSize: perPage)
-    }
-
-    /// Fetch the tree for a repository reference
-    public func tree(in repository: Repository, atRef ref: String = "HEAD", recursive: Bool = false) -> SignalProducer<(Response, Tree), Error> {
-        return execute(repository.tree(atRef: ref, recursive: recursive))
-    }
-
-    /// Create a tree in a repository
-    public func create(tree: [Tree.Entry], basedOn base: String?, in repository: Repository) -> SignalProducer<(Response, FileResponse), Error> {
-        return execute(repository.create(tree: tree, basedOn: base))
     }
     
     /// Create a `URLRequest` for the given URL with the given content type.
@@ -266,7 +180,7 @@ public final class Client {
     
     /// Create a `URLRequest` for the given `Request`.
     private func urlRequest<Value>(for request: Request<Value>, page: UInt? = nil, perPage: UInt? = nil) -> URLRequest {
-        let url = URL(server, request, page: page, pageSize: perPage)
+        let url = URL(server, request, page: page, perPage: perPage)
         var result = urlRequest(for: url, contentType: Client.APIContentType)
         result.httpMethod = request.method.rawValue
         result.httpBody = request.body
@@ -274,10 +188,10 @@ public final class Client {
     }
 
     /// Fetch a request from the API.
-    private func execute<Value>(_ request: Request<Value>, page: UInt?, pageSize: UInt?) -> SignalProducer<(Response, Any), Error> {
+    private func execute<Value>(_ request: Request<Value>, page: UInt?, perPage: UInt?) -> SignalProducer<(Response, Any), Error> {
         return urlSession
             .reactive
-            .data(with: urlRequest(for: request, page: page, perPage: pageSize))
+            .data(with: urlRequest(for: request, page: page, perPage: perPage))
             .mapError { Error.networkError($0.error) }
             .flatMap(.concat) { data, response -> SignalProducer<(Response, Any), Error> in
                 let response = response as! HTTPURLResponse
@@ -306,10 +220,10 @@ public final class Client {
     }
     
     /// Fetch an object from the API.
-    internal func execute<Resource: ResourceType>(
+    public func execute<Resource: ResourceType>(
         _ request: Request<Resource>
     ) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource {
-        return execute(request, page: nil, pageSize: nil)
+        return execute(request, page: nil, perPage: nil)
             .attemptMap { response, JSON in
                 return decode(JSON)
                     .map { resource in
@@ -320,13 +234,16 @@ public final class Client {
     }
     
     /// Fetch a list of objects from the API.
-    internal func execute<Resource: ResourceType>(
+    ///
+    /// This method will automatically fetch all pages. Each value in the returned signal producer
+    /// will be the response and releases from a single page.
+    public func execute<Resource: ResourceType>(
         _ request: Request<[Resource]>,
-        page: UInt?,
-        pageSize: UInt?
+        page: UInt? = 1,
+        perPage: UInt? = 30
     ) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource {
         let nextPage = (page ?? 1) + 1
-        return execute(request, page: page, pageSize: pageSize)
+        return execute(request, page: page, perPage: perPage)
             .attemptMap { (response: Response, json: Any) in
                 return decode(json)
                     .map { resource in
@@ -336,7 +253,7 @@ public final class Client {
             }
             .flatMap(.concat) { response, json -> SignalProducer<(Response, [Resource]), Error> in
                 return SignalProducer(value: (response, json))
-                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.execute(request, page: nextPage, pageSize: pageSize))
+                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.execute(request, page: nextPage, perPage: perPage))
             }
     }
 }
