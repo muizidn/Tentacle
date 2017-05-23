@@ -12,13 +12,20 @@ import Foundation
 import Runes
 
 extension Repository {
-    // https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
-    internal func release(forTag tag: String) -> Request<Release> {
+    /// A request for the release corresponding to the given tag.
+    ///
+    /// If the tag exists, but there's not a correspoding GitHub Release, this will result in a
+    /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
+    ///
+    /// https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
+    public func release(forTag tag: String) -> Request<Release> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/releases/tags/\(tag)")
     }
     
-    // https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
-    internal var releases: Request<[Release]> {
+    /// A request for the releases in the repository.
+    ///
+    /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
+    public var releases: Request<[Release]> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/releases")
     }
 }

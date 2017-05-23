@@ -2,15 +2,17 @@
 A Swift framework for the GitHub API
 
 ```swift
-let client = Client(.dotCom, token: "…")
+let client  = Client(.dotCom, token: "…")
+let repo    = Repository(owner: "ReactiveCocoa", name: "ReactiveCocoa")
+let request = repo.release(forTag: "tag-name")
 client
-    .release(forTag: "tag-name", in: Repository(owner: "ReactiveCocoa", name: "ReactiveCocoa"))
+    .execute(request)
     .startWithResult { result in
         switch result {
         case let .success(response, release):
             print("Downloaded release: \(release)")
         case let .failure(error):
-            print("An error occured: \(error)")
+            print("An error occurred: \(error)")
         }
     }
 ```

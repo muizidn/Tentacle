@@ -12,8 +12,10 @@ import Runes
 import Curry
 
 extension Repository {
-    // https://developer.github.com/v3/repos/branches/#list-branches
-    internal var branches: Request<[Branch]> {
+    /// A request for the branches in the repository.
+    ///
+    /// https://developer.github.com/v3/repos/branches/#list-branches
+    public var branches: Request<[Branch]> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/branches")
     }
 }

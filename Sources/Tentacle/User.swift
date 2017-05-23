@@ -12,35 +12,47 @@ import Curry
 import Runes
 
 extension User {
-    // https://developer.github.com/v3/issues/#list-issues
-    static internal var assignedIssues: Request<[Issue]> {
+    /// A request for issues assigned to the authenticated user.
+    ///
+    /// https://developer.github.com/v3/issues/#list-issues
+    static public var assignedIssues: Request<[Issue]> {
         return Request(method: .get, path: "/issues")
     }
     
-    // https://developer.github.com/v3/users/#get-the-authenticated-user
-    static internal var profile: Request<UserProfile> {
+    /// A request for the authenticated user's profile.
+    ///
+    /// https://developer.github.com/v3/users/#get-the-authenticated-user
+    static public var profile: Request<UserProfile> {
         return Request(method: .get, path: "/user")
     }
     
-    // https://developer.github.com/v3/repos/#list-all-public-repositories
-    static internal var publicRepositories: Request<[RepositoryInfo]> {
+    /// A request for the authenticated user's public repositories.
+    ///
+    /// https://developer.github.com/v3/repos/#list-all-public-repositories
+    static public var publicRepositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/repositories")
     }
     
-    // https://developer.github.com/v3/repos/#list-your-repositories
-    static internal var repositories: Request<[RepositoryInfo]> {
+    /// A request for the authenticated user's repositories.
+    ///
+    /// https://developer.github.com/v3/repos/#list-your-repositories
+    static public var repositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/user/repos")
     }
 }
 
 extension User {
-    // https://developer.github.com/v3/users/#get-a-single-user
-    internal var profile: Request<UserProfile> {
+    /// A request for the user's profile.
+    ///
+    /// https://developer.github.com/v3/users/#get-a-single-user
+    public var profile: Request<UserProfile> {
         return Request(method: .get, path: "/users/\(login)")
     }
     
-    // https://developer.github.com/v3/repos/#list-user-repositories
-    internal var repositories: Request<[RepositoryInfo]> {
+    /// A request for the user's repositories.
+    ///
+    /// https://developer.github.com/v3/repos/#list-user-repositories
+    public var repositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/users/\(login)/repos")
     }
 }

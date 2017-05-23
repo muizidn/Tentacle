@@ -12,8 +12,10 @@ import Curry
 import Runes
 
 extension Repository {
-    // https://developer.github.com/v3/repos/contents/#get-contents
-    internal func content(atPath path: String, atRef ref: String? = nil) -> Request<Content> {
+    /// A request for the content at a given path in the repository.
+    ///
+    /// https://developer.github.com/v3/repos/contents/#get-contents
+    public func content(atPath path: String, atRef ref: String? = nil) -> Request<Content> {
         let queryItems: [URLQueryItem]
         if let ref = ref {
             queryItems = [ URLQueryItem(name: "ref", value: ref) ]

@@ -12,8 +12,10 @@ import Argo
 import Runes
 
 extension Repository {
-    // https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
-    internal func comments(onIssue issue: Int) -> Request<[Comment]> {
+    /// A request for the comments on the given issue.
+    ///
+    /// https://developer.github.com/v3/issues/comments/#list-comments-on-an-issue
+    public func comments(onIssue issue: Int) -> Request<[Comment]> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/issues/\(issue)/comments")
     }
 }

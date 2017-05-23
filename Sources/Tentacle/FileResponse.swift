@@ -14,6 +14,7 @@ import Runes
 public struct FileResponse {
     /// Created file
     public let content: Content
+    
     /// Commit associated with the file that was created
     public let commit: Commit
 }
