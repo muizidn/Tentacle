@@ -248,7 +248,7 @@ public final class Client {
     }
     
     /// Create a `URLRequest` for the given URL with the given content type.
-    private func urlRequest(for url: URL, contentType: String?) -> URLRequest {
+    internal func urlRequest(for url: URL, contentType: String?) -> URLRequest {
         var result = URLRequest(url: url)
         
         result.setValue(contentType, forHTTPHeaderField: "Accept")
