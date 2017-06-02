@@ -116,7 +116,7 @@ class ClientTests: XCTestCase {
     func testReleasesInRepository() {
         let fixtures = Fixture.Releases.Carthage
         ExpectFixtures(
-            client.execute(fixtures[0].repository.releases),
+            client.execute(fixtures[0].request),
             fixtures
         )
     }
@@ -124,7 +124,7 @@ class ClientTests: XCTestCase {
     func testReleasesInRepositoryPage2() {
         let fixtures = Fixture.Releases.Carthage
         ExpectFixtures(
-            client.execute(fixtures[0].repository.releases, page: 2),
+            client.execute(fixtures[0].request, page: 2),
             fixtures.dropFirst()
         )
     }
@@ -132,7 +132,7 @@ class ClientTests: XCTestCase {
     func testReleaseForTagInRepository() {
         let fixture = Fixture.Release.Carthage0_15
         ExpectFixtures(
-            client.execute(fixture.repository.release(forTag: fixture.tag)),
+            client.execute(fixture.request),
             fixture
         )
     }
@@ -140,7 +140,7 @@ class ClientTests: XCTestCase {
     func testReleaseForTagInRepositoryNonExistent() {
         let fixture = Fixture.Release.Nonexistent
         ExpectError(
-            client.execute(fixture.repository.release(forTag: fixture.tag)),
+            client.execute(fixture.request),
             .doesNotExist
         )
     }
@@ -148,7 +148,7 @@ class ClientTests: XCTestCase {
     func testReleaseForTagInRepositoryTagOnly() {
         let fixture = Fixture.Release.TagOnly
         ExpectError(
-            client.execute(fixture.repository.release(forTag: fixture.tag)),
+            client.execute(fixture.request),
             .doesNotExist
         )
     }
@@ -169,6 +169,6 @@ class ClientTests: XCTestCase {
     
     func testUserWithLogin() {
         let fixture = Fixture.UserProfile.mdiep
-        ExpectFixtures(client.execute(User(fixture.login).profile), fixture)
+        ExpectFixtures(client.execute(fixture.request), fixture)
     }
 }
