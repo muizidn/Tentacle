@@ -128,6 +128,24 @@ extension EndpointFixtureType {
     }
 }
 
+extension Request: EndpointFixtureType {
+    internal var contentType: String {
+        return Client.APIContentType
+    }
+    
+    internal var request: Request<Value> {
+        return self
+    }
+    
+    internal var page: UInt? {
+        return nil
+    }
+    
+    internal var perPage: UInt? {
+        return nil
+    }
+}
+
 struct Fixture {
     fileprivate static let DataExtension = "data"
     fileprivate static let ResponseExtension = "response"
@@ -159,29 +177,12 @@ struct Fixture {
         return allFixtures.first { $0.url == url }
     }
     
-    struct Release: EndpointFixtureType {
-        static let Carthage0_15 = Release(.dotCom, owner: "Carthage", name: "Carthage", tag: "0.15")
-        static let MDPSplitView1_0_2 = Release(.dotCom, owner: "mdiep", name: "MDPSplitView", tag: "1.0.2")
-        static let Nonexistent = Release(.dotCom, owner: "mdiep", name: "NonExistent", tag: "tag")
-        static let TagOnly = Release(.dotCom, owner: "torvalds", name: "linux", tag: "v4.4")
-        
-        let server: Server
-        let repository: Repository
-        let tag: String
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-        let contentType = Client.APIContentType
-        
-        var request: Request<Tentacle.Release> {
-            return repository.release(forTag: tag)
-        }
-        
-        init(_ server: Server, owner: String, name: String, tag: String) {
-            self.server = server
-            repository = Repository(owner: owner, name: name)
-            self.tag = tag
-        }
-        
+    struct Release {
+        static let Carthage0_15 = Repository(owner: "Carthage", name: "Carthage").release(forTag: "0.15")
+        static let MDPSplitView1_0_2 = Repository(owner: "mdiep", name: "MDPSplitView").release(forTag: "1.0.2")
+        static let Nonexistent = Repository(owner: "mdiep", name: "NonExistent").release(forTag: "tag")
+        static let TagOnly = Repository(owner: "torvalds", name: "linux").release(forTag: "v4.4")
+
         struct Asset: FixtureType {
             static let MDPSplitView_framework_zip = Asset("https://api.github.com/repos/mdiep/MDPSplitView/releases/assets/433845")
             
@@ -196,202 +197,56 @@ struct Fixture {
     
     struct Releases: EndpointFixtureType {
         static let Carthage = [
-            Releases(.dotCom, "Carthage", "Carthage", 1, 30),
-            Releases(.dotCom, "Carthage", "Carthage", 2, 30),
+            Releases(Repository(owner: "Carthage", name: "Carthage").releases, 1, 30),
+            Releases(Repository(owner: "Carthage", name: "Carthage").releases, 2, 30)
         ]
         
-        let server: Server
-        let repository: Repository
+        let request: Request<[Tentacle.Release]>
         let page: UInt?
         let perPage: UInt?
         let contentType = Client.APIContentType
         
-        var request: Request<[Tentacle.Release]> {
-            return repository.releases
-        }
-        
-        init(_ server: Server, _ owner: String, _ name: String, _ page: UInt, _ perPage: UInt) {
-            self.server = server
-            repository = Repository(owner: owner, name: name)
+        init(_ request: Request<[Tentacle.Release]>, _ page: UInt?, _ perPage: UInt?) {
+            self.request = request
             self.page = page
             self.perPage = perPage
         }
     }
     
-    struct UserProfile: EndpointFixtureType {
-        static let mdiep = UserProfile(.dotCom, "mdiep")
-        static let test = UserProfile(.dotCom, "test")
-        
-        let server: Server
-        let login: String
-        
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-        let contentType = Client.APIContentType
-        
-        var request: Request<Tentacle.UserProfile> {
-            return User(login).profile
-        }
-        
-        init(_ server: Server, _ login: String) {
-            self.server = server
-            self.login = login
-        }
+    struct UserProfile {
+        static let mdiep = User("mdiep").profile
+        static let test = User("test").profile
     }
 
-    struct IssuesInRepository: EndpointFixtureType {
-        static let PalleasOpensource = IssuesInRepository("Palleas-opensource", "Sample-repository")
-
-        var request: Request<[Tentacle.Issue]> {
-            return Repository(owner: owner, name: repository).issues
-        }
-
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-        let contentType = Client.APIContentType
-
-        let owner: String
-        let repository: String
-
-        init(_ owner: String, _ repository: String) {
-            self.owner = owner
-            self.repository = repository
-        }
+    struct IssuesInRepository {
+        static let PalleasOpensource = Repository(owner: "Palleas-opensource", name: "Sample-repository").issues
     }
 
-    struct CommentsOnIssue: EndpointFixtureType {
-        static let CommentsOnIssueInSampleRepository = CommentsOnIssue(1, "Palleas-Opensource", "Sample-repository")
-
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-
-        let number: Int
-        let owner: String
-        let repository: String
-
-        let contentType = Client.APIContentType
-
-        var request: Request<[Tentacle.Comment]> {
-            return Repository(owner: owner, name: repository).comments(onIssue: number)
-        }
-
-        init(_ number: Int, _ owner: String, _ repository: String) {
-            self.number = number
-            self.owner = owner
-            self.repository = repository
-        }
+    struct CommentsOnIssue {
+        static let CommentsOnIssueInSampleRepository = Repository(owner: "Palleas-Opensource", name: "Sample-repository").comments(onIssue: 1)
     }
 
-    struct RepositoriesForUser: EndpointFixtureType {
-        static let RepositoriesForPalleasOpensource = RepositoriesForUser("Palleas-Opensource")
-        
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-
-        let owner: String
-
-        let contentType = Client.APIContentType
-
-        var request: Request<[Tentacle.RepositoryInfo]> {
-            return User(owner).repositories
-        }
-
-        init(_ owner: String) {
-            self.owner = owner
-        }
+    struct RepositoriesForUser {
+        static let RepositoriesForPalleasOpensource = User("Palleas-Opensource").repositories
     }
 
-    struct RepositoriesForOrganization: EndpointFixtureType {
-        static let RepositoriesForRACCommunity = RepositoriesForOrganization("raccommunity")
-
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-
-        let organization: String
-
-        let contentType = Client.APIContentType
-
-        var request: Request<[Tentacle.RepositoryInfo]> {
-            return Organization(organization).repositories
-        }
-
-        init(_ organization: String) {
-            self.organization = organization
-        }
+    struct RepositoriesForOrganization {
+        static let RepositoriesForRACCommunity = Organization("raccommunity").repositories
     }
 
-    struct FileForRepository: EndpointFixtureType {
-        static let ReadMeForSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "README.md")
-        static let SubmoduleInTentacle = FileForRepository(owner: "mdiep", repository: "Tentacle", path: "Carthage/Checkouts/ReactiveSwift")
-        static let DirectoryInSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools")
-        static let SymlinkInSampleRepository = FileForRepository(owner: "Palleas-opensource", repository: "Sample-repository", path: "Tools/say")
-
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-
-        let owner: String
-        let repository: String
-        let path: String
-
-        let contentType = Client.APIContentType
-
-        var request: Request<Content> {
-            return Repository(owner: owner, name: repository).content(atPath: path)
-        }
-
-        init(owner: String, repository: String, path: String) {
-            self.owner = owner
-            self.repository = repository
-            self.path = path
-        }
-
+    struct FileForRepository {
+        static let ReadMeForSampleRepository = Repository(owner: "Palleas-opensource", name: "Sample-repository").content(atPath: "README.md")
+        static let SubmoduleInTentacle = Repository(owner: "mdiep", name: "Tentacle").content(atPath: "Carthage/Checkouts/ReactiveSwift")
+        static let DirectoryInSampleRepository = Repository(owner: "Palleas-opensource", name: "Sample-repository").content(atPath: "Tools")
+        static let SymlinkInSampleRepository = Repository(owner: "Palleas-opensource", name: "Sample-repository").content(atPath: "Tools/say")
     }
 
-    struct BranchesForRepository: EndpointFixtureType {
-        static let BranchesInReactiveTask = BranchesForRepository(owner: "Carthage", repository: "ReactiveTask")
-
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-
-        let owner: String
-        let repository: String
-
-        let contentType = Client.APIContentType
-
-        var request: Request<[Branch]> {
-            return Repository(owner: owner, name: repository).branches
-        }
-
-        init(owner: String, repository: String) {
-            self.owner = owner
-            self.repository = repository
-        }
-
+    struct BranchesForRepository {
+        static let BranchesInReactiveTask = Repository(owner: "Carthage", name: "ReactiveTask").branches
     }
 
-    struct TreeForRepository: EndpointFixtureType {
-        static let TreeInSampleRepository = TreeForRepository(owner: "Palleas-opensource", repository: "Sample-repository",
-                                                          ref: "0c0dfafa361836e11aedcbb95c1f05d3f654aef0", recursive: false)
-
-        let page: UInt? = nil
-        let perPage: UInt? = nil
-
-        let owner: String
-        let repository: String
-        let ref: String
-        let recursive: Bool
-
-        let contentType = Client.APIContentType
-
-        var request: Request<Tree> {
-            return Repository(owner: owner, name: repository).tree(atRef: ref, recursive: recursive)
-        }
-
-        init(owner: String, repository: String, ref: String, recursive: Bool) {
-            self.owner = owner
-            self.repository = repository
-            self.ref = ref
-            self.recursive = recursive
-        }
+    struct TreeForRepository {
+        static let TreeInSampleRepository = Repository(owner: "Palleas-opensource", name: "Sample-repository")
+            .tree(atRef: "0c0dfafa361836e11aedcbb95c1f05d3f654aef0", recursive: false)
     }
 }
