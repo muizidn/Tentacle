@@ -108,7 +108,7 @@ extension EndpointFixtureType {
     }
     
     /// Decode the fixture's JSON as an object of the returned type.
-    func decode<Object: Decodable>() -> Object? where Object.DecodedType == Object {
+    func decode<Object: Argo.Decodable>() -> Object? where Object.DecodedType == Object {
         let decoded: Decoded<Object> = Argo.decode(JSON)
         if case let .failure(error) = decoded {
             print("Failure: \(error)")
@@ -118,7 +118,7 @@ extension EndpointFixtureType {
     }
     
     /// Decode the fixture's JSON as an array of objects of the returned type.
-    func decode<Object: Decodable>() -> [Object]? where Object.DecodedType == Object {
+    func decode<Object: Argo.Decodable>() -> [Object]? where Object.DecodedType == Object {
         let decoded: Decoded<[Object]> = Argo.decode(JSON)
         if case let .failure(error) = decoded {
             print("Failure from collection: \(error)")

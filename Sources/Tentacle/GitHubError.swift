@@ -36,7 +36,7 @@ extension GitHubError: Hashable {
     }
 }
 
-extension GitHubError: Decodable {
+extension GitHubError: Argo.Decodable {
     public static func decode(_ j: JSON) -> Decoded<GitHubError> {
         return curry(self.init) <^> j <| "message"
     }

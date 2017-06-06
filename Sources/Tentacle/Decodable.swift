@@ -9,7 +9,7 @@
 import Argo
 import Foundation
 
-extension URL: Decodable {
+extension URL: Argo.Decodable {
     public static func decode(_ json: JSON) -> Decoded<URL> {
         return String.decode(json).flatMap { URLString in
             return .fromOptional(self.init(string: URLString))
