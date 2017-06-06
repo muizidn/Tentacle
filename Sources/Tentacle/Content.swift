@@ -102,7 +102,7 @@ func decodeSubmodule(_ j: JSON) -> Decoded<Content.File.ContentType> {
 }
 
 
-extension Content.File.ContentType: Decodable {
+extension Content.File.ContentType: Argo.Decodable {
     public static func decode(_ json: JSON) -> Decoded<Content.File.ContentType> {
         guard case let .object(payload) = json else {
             return .failure(.typeMismatch(expected: "object", actual: "\(json)"))

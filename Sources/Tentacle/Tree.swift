@@ -138,7 +138,7 @@ func decodeTree(_ j: JSON) -> Decoded<Tree.Entry.EntryType> {
         <^> j <| "url"
 }
 
-extension Tree.Entry.EntryType: Decodable {
+extension Tree.Entry.EntryType: Argo.Decodable {
     public static func decode(_ json: JSON) -> Decoded<Tree.Entry.EntryType> {
         guard case let .object(payload) = json else {
             return .failure(.typeMismatch(expected: "object", actual: "\(json)"))
@@ -161,7 +161,7 @@ extension Tree.Entry.EntryType: Decodable {
     }
 }
 
-extension Tree.Entry.Mode: Decodable {}
+extension Tree.Entry.Mode: Argo.Decodable {}
 
 extension Tree.Entry.EntryType: Encodable {
     public func encode() -> JSON {

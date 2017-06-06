@@ -37,7 +37,7 @@ extension JSON {
     }
 }
 
-internal func decode<T: Decodable>(_ object: Any) -> Result<T, DecodeError> where T == T.DecodedType {
+internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<T, DecodeError> where T == T.DecodedType {
     let decoded: Decoded<T> = decode(object)
     switch decoded {
     case let .success(object):
@@ -47,7 +47,7 @@ internal func decode<T: Decodable>(_ object: Any) -> Result<T, DecodeError> wher
     }
 }
 
-internal func decode<T: Decodable>(_ object: Any) -> Result<[T], DecodeError> where T == T.DecodedType {
+internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<[T], DecodeError> where T == T.DecodedType {
     let decoded: Decoded<[T]> = decode(object)
     switch decoded {
     case let .success(object):
