@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Curry
-import Argo
-import Runes
 
 extension Repository {
     /// A request for the comments on the given issue.
@@ -20,7 +17,7 @@ extension Repository {
     }
 }
 
-public struct Comment: CustomStringConvertible, Identifiable {
+public struct Comment: CustomStringConvertible, Identifiable, ResourceType {
 
     /// The id of the issue
     public let id: ID<Comment>
@@ -34,9 +31,20 @@ public struct Comment: CustomStringConvertible, Identifiable {
     public let body: String
     /// The author of this comment
     public let author: UserInfo
-    
+
     public var description: String {
         return body
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case url = "html_url"
+        case createdAt = "create_at"
+        case updatedAt = "updated_at"
+        case body
+        case author = "user"
+
+
     }
 }
 
@@ -49,19 +57,5 @@ extension Comment: Hashable {
 
     public var hashValue: Int {
         return id.hashValue
-    }
-}
-
-extension Comment: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Comment> {
-        let f = curry(Comment.init)
-
-        return f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> (j <| "html_url" >>- toURL)
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
-            <*> j <| "body"
-            <*> j <| "user"
     }
 }

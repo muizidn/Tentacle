@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct RepositoryInfo: CustomStringConvertible {
+public struct RepositoryInfo: CustomStringConvertible, ResourceType {
     /// The id of the repository
     public let id: String
     
@@ -63,6 +60,25 @@ public struct RepositoryInfo: CustomStringConvertible {
     public var description: String {
         return nameWithOwner
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case owner
+        case name
+        case nameWithOwner = "full_name"
+        case body = "description"
+        case url = "html_url"
+        case homepage
+        case isPrivate = "private"
+        case isFork = "fork"
+        case forksCount = "forks_count"
+        case stargazersCount = "stargazers_count"
+        case watchersCount = "watchers_count"
+        case openIssuesCount = "open_issues_count"
+        case pushedAt = "pushed_at"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
 }
 
 extension RepositoryInfo: Hashable {
@@ -77,28 +93,3 @@ extension RepositoryInfo: Hashable {
     }
 }
 
-extension RepositoryInfo: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<RepositoryInfo> {
-        let f = curry(RepositoryInfo.init)
-
-        let ff = f
-            <^> (j <| "id" >>- toString)
-            <*> j <| "owner"
-            <*> j <| "name"
-            <*> j <| "full_name"
-            <*> j <|? "description"
-        let fff = ff
-            <*> (j <| "html_url" >>- toURL)
-            <*> (j <|? "homepage" >>- toOptionalURL)
-            <*> j <| "private"
-            <*> j <| "fork"
-            <*> j <| "forks_count"
-        return fff
-            <*> j <| "stargazers_count"
-            <*> j <| "watchers_count"
-            <*> j <| "open_issues_count"
-            <*> (j <| "pushed_at" >>- toDate)
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
-    }
-}

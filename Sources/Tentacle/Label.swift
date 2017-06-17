@@ -7,16 +7,24 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct Label: CustomStringConvertible {
+public struct Label: CustomStringConvertible, ResourceType {
     public let name: String
     public let color: Color
 
     public var description: String {
         return name
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.color = Color(hex: try container.decode(String.self, forKey: .color))
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case color
     }
 }
 
@@ -30,11 +38,3 @@ extension Label: Hashable {
     }
 }
 
-extension Label: ResourceType {
-    public static func decode(_ json: JSON) -> Decoded<Label> {
-        let f = curry(Label.init)
-        return f
-            <^> json <| "name"
-            <*> (json <| "color" >>- toColor)
-    }
-}

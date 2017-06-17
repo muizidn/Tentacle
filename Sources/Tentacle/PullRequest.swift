@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct PullRequest: CustomStringConvertible {
+public struct PullRequest: CustomStringConvertible, ResourceType {
     /// The URL to view the Pull Request is an browser
     public let url: URL
 
@@ -24,6 +21,12 @@ public struct PullRequest: CustomStringConvertible {
     public var description: String {
         return url.absoluteString
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case url = "html_url"
+        case diffURL = "diff_url"
+        case patchURL = "patch_url"
+    }
 }
 
 extension PullRequest: Hashable {
@@ -33,15 +36,5 @@ extension PullRequest: Hashable {
 
     public var hashValue: Int {
         return url.hashValue
-    }
-}
-
-extension PullRequest: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<PullRequest> {
-        return curry(self.init)
-            <^> (j <| "html_url" >>- toURL)
-            <*> (j <| "diff_url" >>- toURL)
-            <*> (j <| "patch_url" >>- toURL)
-
     }
 }

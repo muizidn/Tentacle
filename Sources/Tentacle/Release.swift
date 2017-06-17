@@ -6,10 +6,7 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
-import Argo
-import Curry
 import Foundation
-import Runes
 
 extension Repository {
     /// A request for the release corresponding to the given tag.
@@ -21,7 +18,7 @@ extension Repository {
     public func release(forTag tag: String) -> Request<Release> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/releases/tags/\(tag)")
     }
-    
+
     /// A request for the releases in the repository.
     ///
     /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
@@ -31,9 +28,9 @@ extension Repository {
 }
 
 /// A Release of a Repository.
-public struct Release: CustomStringConvertible, Identifiable {
+public struct Release: CustomStringConvertible, ResourceType, Identifiable {
     /// An Asset attached to a Release.
-    public struct Asset: CustomStringConvertible, Identifiable {
+    public struct Asset: CustomStringConvertible, ResourceType {
         /// The unique ID for this release asset.
         public let id: ID<Asset>
 
@@ -45,7 +42,7 @@ public struct Release: CustomStringConvertible, Identifiable {
 
         /// The URL at which the asset can be downloaded directly.
         public let url: URL
-        
+
         /// The URL at which the asset can be downloaded via the API.
         public let apiURL: URL
 
@@ -60,8 +57,16 @@ public struct Release: CustomStringConvertible, Identifiable {
             self.url = url
             self.apiURL = apiURL
         }
+
+        private enum CodingKeys: String, CodingKey {
+            case id
+            case name
+            case contentType = "content_type"
+            case url = "browser_download_url"
+            case apiURL = "url"
+        }
     }
-    
+
     /// The unique ID of the release.
     public let id: ID<Release>
 
@@ -70,23 +75,23 @@ public struct Release: CustomStringConvertible, Identifiable {
 
     /// Whether this release represents a prerelease version.
     public let isPrerelease: Bool
-    
+
     /// The name of the tag upon which this release is based.
     public let tag: String
-    
+
     /// The name of the release.
     public let name: String?
-    
+
     /// The web URL of the release.
     public let url: URL
-    
+
     /// Any assets attached to the release.
     public let assets: [Asset]
-    
+
     public var description: String {
         return "\(url)"
     }
-    
+
     public init(id: ID<Release>, tag: String, url: URL, name: String? = nil, isDraft: Bool = false, isPrerelease: Bool = false, assets: [Asset]) {
         self.id = id
         self.tag = tag
@@ -95,6 +100,16 @@ public struct Release: CustomStringConvertible, Identifiable {
         self.isDraft = isDraft
         self.isPrerelease = isPrerelease
         self.assets = assets
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case isDraft = "draft"
+        case isPrerelease = "prerelease"
+        case tag = "tag_name"
+        case name
+        case url = "html_url"
+        case assets
     }
 }
 
@@ -123,6 +138,7 @@ extension Release: Hashable {
         return id.hashValue
     }
 }
+<<<<<<< HEAD
 
 extension Release.Asset: ResourceType {
     public static func decode(_ j: JSON) -> Decoded<Release.Asset> {
@@ -148,3 +164,5 @@ extension Release: ResourceType {
             <*> j <|| "assets"
     }
 }
+=======
+>>>>>>> Remove Argo dependencies

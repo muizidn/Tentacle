@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
 extension User {
     /// A request for issues assigned to the authenticated user.
@@ -18,21 +15,21 @@ extension User {
     static public var assignedIssues: Request<[Issue]> {
         return Request(method: .get, path: "/issues")
     }
-    
+
     /// A request for the authenticated user's profile.
     ///
     /// https://developer.github.com/v3/users/#get-the-authenticated-user
     static public var profile: Request<UserProfile> {
         return Request(method: .get, path: "/user")
     }
-    
+
     /// A request for the authenticated user's public repositories.
     ///
     /// https://developer.github.com/v3/repos/#list-all-public-repositories
     static public var publicRepositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/repositories")
     }
-    
+
     /// A request for the authenticated user's repositories.
     ///
     /// https://developer.github.com/v3/repos/#list-your-repositories
@@ -48,7 +45,7 @@ extension User {
     public var profile: Request<UserProfile> {
         return Request(method: .get, path: "/users/\(login)")
     }
-    
+
     /// A request for the user's repositories.
     ///
     /// https://developer.github.com/v3/repos/#list-user-repositories
@@ -58,14 +55,14 @@ extension User {
 }
 
 /// A user on GitHub or GitHub Enterprise.
-public struct User: CustomStringConvertible {
+public struct User: CustomStringConvertible, Decodable {
     /// The user's login/username.
     public let login: String
-    
+
     public init(_ login: String) {
         self.login = login
     }
-    
+
     public var description: String {
         return login
     }
@@ -75,28 +72,28 @@ extension User: Hashable {
     public static func ==(lhs: User, rhs: User) -> Bool {
         return lhs.login == rhs.login
     }
-    
+
     public var hashValue: Int {
         return login.hashValue
     }
 }
 
 /// Information about a user on GitHub.
-public struct UserInfo: CustomStringConvertible, Identifiable {
-    public enum UserType: String {
+public struct UserInfo: CustomStringConvertible, ResourceType, Identifiable {
+    public enum UserType: String, Decodable {
         case user = "User"
         case organization = "Organization"
     }
 
     /// The unique ID of the user.
     public let id: ID<UserInfo>
-    
+
     /// The user this information is about.
     public let user: User
-    
+
     /// The URL of the user's GitHub page.
     public let url: URL
-    
+
     /// The URL of the user's avatar.
     public let avatarURL: URL
 
@@ -105,6 +102,14 @@ public struct UserInfo: CustomStringConvertible, Identifiable {
 
     public var description: String {
         return user.description
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case user = "login"
+        case url = "html_url"
+        case avatarURL = "avatar_url"
+        case type
     }
 }
 
@@ -121,43 +126,32 @@ extension UserInfo: Hashable {
     }
 }
 
-extension UserInfo: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<UserInfo> {
-        return curry(self.init)
-            <^> (j <| "id" >>- toIdentifier)
-            <*> (j <| "login").map(User.init)
-            <*> j <| "html_url"
-            <*> j <| "avatar_url"
-            <*> (j <| "type" >>- toUserType)
-    }
-}
-
 /// Extended information about a user on GitHub.
-public struct UserProfile {
+public struct UserProfile: ResourceType {
     /// The user that this information refers to.
     public let user: UserInfo
-    
+
     /// The date that the user joined GitHub.
     public let joinedDate: Date
-    
+
     /// The user's name if they've set one.
     public let name: String?
-    
+
     /// The user's public email address if they've set one.
     public let email: String?
-    
+
     /// The URL of the user's website if they've set one
     /// (the type here is a String because Github lets you use
     /// anything and doesn't validate that you've entered a valid URL)
     public let websiteURL: String?
-    
+
     /// The user's company if they've set one.
     public let company: String?
-    
+
     public var description: String {
         return user.description
     }
-    
+
     public init(user: UserInfo, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
         self.user = user
         self.joinedDate = joinedDate
@@ -165,6 +159,15 @@ public struct UserProfile {
         self.email = email
         self.websiteURL = websiteURL
         self.company = company
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case user
+        case joinedDate = "created_at"
+        case name
+        case email
+        case websiteURL = "blog"
+        case company
     }
 }
 
@@ -183,14 +186,3 @@ extension UserProfile: Hashable {
     }
 }
 
-extension UserProfile: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<UserProfile> {
-        return curry(self.init)
-            <^> j <| []
-            <*> (j <| "created_at" >>- toDate)
-            <*> j <|? "name"
-            <*> j <|? "email"
-            <*> j <|? "blog"
-            <*> j <|? "company"
-    }
-}

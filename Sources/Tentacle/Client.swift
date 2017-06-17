@@ -6,7 +6,6 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
-import Argo
 import Foundation
 import ReactiveSwift
 import Result
@@ -87,7 +86,7 @@ public final class Client {
         case jsonDeserializationError(Swift.Error)
         
         /// An error occurred while decoding JSON.
-        case jsonDecodingError(DecodeError)
+        case jsonDecodingError(DecodingError)
         
         /// A status code, response, and error that was returned from the API.
         case apiError(Int, Response, GitHubError)
@@ -226,7 +225,7 @@ public final class Client {
     /// Fetch an object from the API.
     public func execute<Resource: ResourceType>(
         _ request: Request<Resource>
-    ) -> SignalProducer<(Response, Resource), Error> where Resource.DecodedType == Resource {
+    ) -> SignalProducer<(Response, Resource), Error> {
         return execute(request, page: nil, perPage: nil)
             .attemptMap { response, json in
                 return decode(json)
@@ -245,7 +244,7 @@ public final class Client {
         _ request: Request<[Resource]>,
         page: UInt? = 1,
         perPage: UInt? = 30
-    ) -> SignalProducer<(Response, [Resource]), Error> where Resource.DecodedType == Resource {
+    ) -> SignalProducer<(Response, [Resource]), Error> {
         let nextPage = (page ?? 1) + 1
         return execute(request, page: page, perPage: perPage)
             .attemptMap { (response: Response, json: JSON) in
@@ -272,7 +271,7 @@ extension Client.Error: Hashable {
             return (error1 as NSError) == (error2 as NSError)
 
         case let (.jsonDecodingError(error1), .jsonDecodingError(error2)):
-            return error1 == error2
+            return error1.errorCode == error2.errorCode // FIXME
 
         case let (.apiError(statusCode1, response1, error1), .apiError(statusCode2, response2, error2)):
             return statusCode1 == statusCode2 && response1 == response2 && error1 == error2
@@ -294,7 +293,7 @@ extension Client.Error: Hashable {
             return (error as NSError).hashValue
 
         case let .jsonDecodingError(error):
-            return error.hashValue
+            return error.errorCode.hashValue
 
         case let .apiError(statusCode, response, error):
             return statusCode.hashValue ^ response.hashValue ^ error.hashValue

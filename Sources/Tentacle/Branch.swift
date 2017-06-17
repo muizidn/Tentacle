@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Runes
-import Curry
 
 extension Repository {
     /// A request for the branches in the repository.
@@ -20,7 +17,7 @@ extension Repository {
     }
 }
 
-public struct Branch {
+public struct Branch: ResourceType {
 
     /// Name of the branch
     public let name: String
@@ -44,12 +41,3 @@ extension Branch: Hashable {
     }
 }
 
-extension Branch: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Branch> {
-        let f = curry(Branch.init)
-
-        return f
-            <^> j <| "name"
-            <*> j <| "commit"
-    }
-}

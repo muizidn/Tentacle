@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import Argo
 
-public struct Author {
+public struct Author: ResourceType {
     /// Name of the Author
     let name: String
     /// Email of the Author
@@ -18,15 +17,6 @@ public struct Author {
     public init(name: String, email: String) {
         self.name = name
         self.email = email
-    }
-}
-
-extension Author: Encodable {
-    public func encode() -> JSON {
-        return JSON.object([
-            "name": .string(name),
-            "email": .string(email)
-        ])
     }
 }
 
