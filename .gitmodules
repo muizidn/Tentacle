@@ -4,3 +4,5 @@
 [submodule "Carthage/Checkouts/ReactiveSwift"]
 	path = Carthage/Checkouts/ReactiveSwift
 	url = https://github.com/ReactiveCocoa/ReactiveSwift.git
+[submodule "Carthage/Checkouts/result"]
+	url = https://github.com/antitypical/result.git

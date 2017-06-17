@@ -36,24 +36,18 @@ import Result
 //    }
 //}
 //
-//internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<T, DecodeError> where T == T.DecodedType {
-//    let decoded: Decoded<T> = decode(object)
-//    switch decoded {
-//    case let .success(object):
-//        return .success(object)
-//    case let .failure(error):
-//        return .failure(error)
-//    }
-//}
-//
-//internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<[T], DecodeError> where T == T.DecodedType {
-//    let decoded: Decoded<[T]> = decode(object)
-//    switch decoded {
-//    case let .success(object):
-//        return .success(object)
-//    case let .failure(error):
-//        return .failure(error)
-//    }
+internal func decode<T: Decodable>(_ payload: Data) -> Result<T, DecodingError> {
+    return Result(attempt: { () -> T in
+        let decoder = JSONDecoder()
+        return try decoder.decode(T.self, from: payload)
+    })
+}
+
+//internal func decode<T: Decodable>(_ payload: Data) -> Result<[T], DecodingError> {
+//    return Result(attempt: { () -> [T] in
+//        let decoder = JSONDecoder()
+//        return try decoder.decode([T].self, from: payload)
+//    })
 //}
 //
 //internal func toString(_ number: Int) -> Decoded<String> {
