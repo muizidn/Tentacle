@@ -189,7 +189,7 @@ public final class Client {
     }
 
     /// Fetch a request from the API.
-    private func execute<Value: Decodable>(_ request: Request<Value>, page: UInt?, perPage: UInt?) -> SignalProducer<(Response, Value), Error> {
+    private func execute<Value: Decodable>(_ request: Request<Value>, page: UInt?, perPage: UInt?) -> SignalProducer<(Response, Data), Error> {
         let s = urlSession
             .reactive
             .data(with: urlRequest(for: request, page: page, perPage: perPage))
@@ -237,90 +237,48 @@ public final class Client {
                     .mapError(Error.jsonDecodingError)
             }
 
-            return decode(data)
-                .mapError { Error.jsonDecodingError($0) }
-                .map { (githubResponse, $0) }
+            return .success((githubResponse, data))
         }
-
-//            .attemptMap({ (arg) -> Result<(Response, Value), AnyError> in
-//
-//            })
-//            .attemptMap({ arg -> Result<(Response, Value), Error> in
-//                let (data, response) = arg;
-//                let payload: Result<Value, Error> = decode(data).mapError { Error.jsonDeserializationError($0.error) }
-//            })
-//            .flatMap(.concat, { arg -> SignalProducer<(Response, Value), Error> in
-//                let (data, response) = arg;
-//                return SignalProducer(value: arg)
-//                    .attempt {
-//
-//                }
-//                return SignalProducer
-//            })
-//            .mapError { Error.networkError($0.error) }
-//            .flatMap(.concat) { data, response -> SignalProducer<(Response, Value), Error> in
-//                let response = response as! HTTPURLResponse
-//                let headers = response.allHeaderFields as! [String:String]
-//                return SignalProducer
-//                    .attempt {
-//                        return decode(data).mapError { Error.jsonDeserializationError($0.error) }
-//                    }
-//                    .attemptMap { JSON in
-//                        if response.statusCode == 404 {
-//                            return .failure(.doesNotExist)
-//                        }
-//                        if response.statusCode >= 400 && response.statusCode < 600 {
-//                            return decode(JSON)
-//                                .mapError(Error.jsonDecodingError)
-//                                .flatMap { error in
-//                                    .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
-//                            }
-//                        }
-//                        return .success(JSON)
-//                    }
-//                    .map { JSON in
-//                        return (Response(headerFields: headers), JSON)
-//                }
-//        }
     }
     
-//    /// Fetch an object from the API.
-//    public func execute<Resource: ResourceType>(
-//        _ request: Request<Resource>
-//    ) -> SignalProducer<(Response, Resource), Error> {
-//        return execute(request, page: nil, perPage: nil)
-//            .attemptMap { response, JSON in
-//                return decode(JSON)
-//                    .map { resource in
-//                        (response, resource)
-//                    }
-//                    .mapError(Error.jsonDecodingError)
-//            }
-//    }
+    /// Fetch an object from the API.
+    public func execute<Resource: Decodable>(
+        _ request: Request<Resource>
+    ) -> SignalProducer<(Response, Resource), Error> {
+        let s: SignalProducer<(Response, Data), Error> = execute(request, page: nil, perPage: nil)
+
+        return s.attemptMap({ (arg) -> Result<(Response, Resource), Client.Error> in
+            let (response, data) = arg
+            return decode(data)
+                .map { (response, $0) }
+                .mapError { Error.jsonDecodingError($0) }
+        })
+    }
 
     /// Fetch a list of objects from the API.
     ///
     /// This method will automatically fetch all pages. Each value in the returned signal producer
     /// will be the response and releases from a single page.
-//    public func execute<Resource: ResourceType>(
-//        _ request: Request<[Resource]>,
-//        page: UInt? = 1,
-//        perPage: UInt? = 30
-//    ) -> SignalProducer<(Response, [Resource]), Error> {
-//        let nextPage = (page ?? 1) + 1
-//        return execute(request, page: page, perPage: perPage)
-//            .attemptMap { (response: Response, json: Any) in
-//                return decode(json)
-//                    .map { resource in
-//                        (response, resource)
-//                    }
-//                    .mapError(Error.jsonDecodingError)
-//            }
-//            .flatMap(.concat) { response, json -> SignalProducer<(Response, [Resource]), Error> in
-//                return SignalProducer(value: (response, json))
-//                    .concat(response.links["next"] == nil ? SignalProducer.empty : self.execute(request, page: nextPage, perPage: perPage))
-//            }
-//    }
+    public func execute<Resource: ResourceType>(
+        _ request: Request<[Resource]>,
+        page: UInt? = 1,
+        perPage: UInt? = 30
+    ) -> SignalProducer<(Response, [Resource]), Error> {
+        let nextPage = (page ?? 1) + 1
+        let s: SignalProducer<(Response, Data), Error> = execute(request, page: page, perPage: perPage)
+
+        return s
+            .attemptMap({ (arg) -> Result<(Response, [Resource]), Client.Error> in
+                let (response, data) = arg
+                return decodeList(data)
+                    .map { (response, $0) }
+                    .mapError { Error.jsonDecodingError($0) }
+            })
+            .flatMap(.concat) { (response: Response, objects: [Resource]) -> SignalProducer<(Response, [Resource]), Error> in
+            return SignalProducer(value: (response, objects))
+                .concat(response.links["next"] == nil ? SignalProducer<(Response, [Resource]), Error>.empty : self.execute(request, page: nextPage, perPage: perPage))
+        }
+    }
 }
 
 extension Client.Error: Hashable {

@@ -43,12 +43,12 @@ internal func decode<T: Decodable>(_ payload: Data) -> Result<T, DecodingError> 
     })
 }
 
-//internal func decode<T: Decodable>(_ payload: Data) -> Result<[T], DecodingError> {
-//    return Result(attempt: { () -> [T] in
-//        let decoder = JSONDecoder()
-//        return try decoder.decode([T].self, from: payload)
-//    })
-//}
+internal func decodeList<T: Decodable>(_ payload: Data) -> Result<[T], DecodingError> {
+    return Result(attempt: { () -> [T] in
+        let decoder = JSONDecoder()
+        return try decoder.decode([T].self, from: payload)
+    })
+}
 //
 //internal func toString(_ number: Int) -> Decoded<String> {
 //    return .success(number.description)
