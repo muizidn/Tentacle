@@ -22,6 +22,11 @@ public struct Label: CustomStringConvertible, ResourceType {
         self.color = Color(hex: try container.decode(String.self, forKey: .color))
     }
 
+    public init(name: String, color: Color) {
+        self.name = name
+        self.color = color
+    }
+
     private enum CodingKeys: String, CodingKey {
         case name
         case color

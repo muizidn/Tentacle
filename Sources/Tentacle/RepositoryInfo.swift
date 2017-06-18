@@ -8,9 +8,9 @@
 
 import Foundation
 
-public struct RepositoryInfo: CustomStringConvertible, ResourceType {
+public struct RepositoryInfo: CustomStringConvertible, ResourceType, Identifiable {
     /// The id of the repository
-    public let id: String
+    public let id: ID<RepositoryInfo>
     
     /// The basic informations about the owner of the repository, either an User or an Organization
     public let owner: UserInfo

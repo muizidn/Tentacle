@@ -18,7 +18,7 @@ extension Repository {
 }
 
 /// An Issue on Github
-public struct Issue: CustomStringConvertible, Identifiable, ResourceType {
+public struct Issue: CustomStringConvertible, ResourceType, Identifiable {
     public enum State: String, ResourceType {
         case open = "open"
         case closed = "closed"
@@ -137,31 +137,3 @@ extension Issue: Hashable {
     }
 }
 
-<<<<<<< HEAD
-extension Issue: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Issue> {
-        let f = curry(Issue.init)
-
-        let ff = f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> (j <| "html_url" >>- toURL)
-            <*> j <| "number"
-            <*> (j <| "state" >>- toIssueState)
-            <*> j <| "title"
-        let fff = ff
-            <*> j <| "body"
-            <*> j <| "user"
-            <*> j <|| "labels"
-            <*> j <|| "assignees"
-            <*> j <|? "milestone"
-        return fff
-            <*> j <| "locked"
-            <*> j <| "comments"
-            <*> j <|? "pull_request"
-            <*> (j <|? "closed_at" >>- toOptionalDate)
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
-    }
-}
-=======
->>>>>>> Remove Argo dependencies

@@ -10,6 +10,10 @@ import Foundation
 
 public struct SHA: ResourceType {
     public let hash: String
+
+    private enum CodingKeys: String, CodingKey {
+        case hash = "sha"
+    }
 }
 
 extension SHA {

@@ -131,6 +131,8 @@
 		7ABFB4D81D51519B0067B500 /* RepositoryInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABFB4D61D51519B0067B500 /* RepositoryInfo.swift */; };
 		7ABFB4DD1D5159F50067B500 /* RepositoryInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABFB4DC1D5159F50067B500 /* RepositoryInfoTests.swift */; };
 		7ABFB4DE1D515A350067B500 /* RepositoryInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABFB4DC1D5159F50067B500 /* RepositoryInfoTests.swift */; };
+		7AC92F691EF72F18002ADBB5 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC92F681EF72F18002ADBB5 /* Identifiable.swift */; };
+		7AC92F6A1EF72FA0002ADBB5 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC92F681EF72F18002ADBB5 /* Identifiable.swift */; };
 		927847F71E0B28CF003B9EE6 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927847F61E0B28CF003B9EE6 /* File.swift */; };
 		927847F81E0B28FB003B9EE6 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927847F61E0B28CF003B9EE6 /* File.swift */; };
 		927847FA1E0C74B2003B9EE6 /* Commit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927847F91E0C74B2003B9EE6 /* Commit.swift */; };
@@ -279,6 +281,7 @@
 		7AB1144F1F53463A002795A1 /* Identifiable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		7ABFB4D61D51519B0067B500 /* RepositoryInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepositoryInfo.swift; sourceTree = "<group>"; };
 		7ABFB4DC1D5159F50067B500 /* RepositoryInfoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepositoryInfoTests.swift; sourceTree = "<group>"; };
+		7AC92F681EF72F18002ADBB5 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
 		927847F61E0B28CF003B9EE6 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		927847F91E0C74B2003B9EE6 /* Commit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Commit.swift; sourceTree = "<group>"; };
 		927847FC1E0C78A4003B9EE6 /* Author.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
@@ -481,6 +484,7 @@
 				BE88E7F51C88C6B30034A112 /* Tentacle.h */,
 				BF01A25C1EAA5BEB0028ECFC /* Tree.swift */,
 				BECB8A8A1CBDCD17005D70A6 /* User.swift */,
+				7AC92F681EF72F18002ADBB5 /* Identifiable.swift */,
 			);
 			name = Tentacle;
 			path = Sources/Tentacle;
@@ -855,6 +859,7 @@
 				BECB8A8F1CBDD91D005D70A6 /* FoundationExtensions.swift in Sources */,
 				7A8A9D631E5547C70009DA9E /* Branch.swift in Sources */,
 				61377C7B1C8A2B760081FF24 /* GitHubError.swift in Sources */,
+				7AC92F6A1EF72FA0002ADBB5 /* Identifiable.swift in Sources */,
 				927847F81E0B28FB003B9EE6 /* File.swift in Sources */,
 				61377C7E1C8A2B760081FF24 /* Server.swift in Sources */,
 				BECB8A901CBDD920005D70A6 /* User.swift in Sources */,
@@ -917,6 +922,7 @@
 				BE88E80D1C88C72B0034A112 /* Client.swift in Sources */,
 				7A8A9D621E5546AC0009DA9E /* Branch.swift in Sources */,
 				927847F71E0B28CF003B9EE6 /* File.swift in Sources */,
+				7AC92F691EF72F18002ADBB5 /* Identifiable.swift in Sources */,
 				BECB8A8B1CBDCD17005D70A6 /* User.swift in Sources */,
 				BECB8A8E1CBDD919005D70A6 /* FoundationExtensions.swift in Sources */,
 				BE88E8301C88CDAB0034A112 /* Repository.swift in Sources */,

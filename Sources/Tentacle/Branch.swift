@@ -29,6 +29,11 @@ public struct Branch: ResourceType {
         self.name = name
         self.sha = sha
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case sha = "commit"
+    }
 }
 
 extension Branch: Hashable {

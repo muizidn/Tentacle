@@ -17,7 +17,7 @@ extension Repository {
     }
 }
 
-public struct Comment: CustomStringConvertible, Identifiable, ResourceType {
+public struct Comment: CustomStringConvertible, ResourceType, Identifiable {
 
     /// The id of the issue
     public let id: ID<Comment>
@@ -31,7 +31,7 @@ public struct Comment: CustomStringConvertible, Identifiable, ResourceType {
     public let body: String
     /// The author of this comment
     public let author: UserInfo
-
+    
     public var description: String {
         return body
     }
@@ -59,3 +59,4 @@ extension Comment: Hashable {
         return id.hashValue
     }
 }
+

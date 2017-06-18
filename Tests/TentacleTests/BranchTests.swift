@@ -18,6 +18,7 @@ class BranchTests: XCTestCase {
             Branch(name: "playground", sha: SHA(hash: "131709d54e1157699e44300cb9b9f8d22f2807e7"))
         ]
 
-        XCTAssertEqual(Fixture.BranchesForRepository.BranchesInReactiveTask.decode()!, expected)
+        let fixture: [Branch] = Fixture.BranchesForRepository.BranchesInReactiveTask.decodeList()!
+        XCTAssertEqual(fixture, expected)
     }
 }

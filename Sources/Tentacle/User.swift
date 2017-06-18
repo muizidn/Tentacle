@@ -15,21 +15,21 @@ extension User {
     static public var assignedIssues: Request<[Issue]> {
         return Request(method: .get, path: "/issues")
     }
-
+    
     /// A request for the authenticated user's profile.
     ///
     /// https://developer.github.com/v3/users/#get-the-authenticated-user
     static public var profile: Request<UserProfile> {
         return Request(method: .get, path: "/user")
     }
-
+    
     /// A request for the authenticated user's public repositories.
     ///
     /// https://developer.github.com/v3/repos/#list-all-public-repositories
     static public var publicRepositories: Request<[RepositoryInfo]> {
         return Request(method: .get, path: "/repositories")
     }
-
+    
     /// A request for the authenticated user's repositories.
     ///
     /// https://developer.github.com/v3/repos/#list-your-repositories
@@ -45,7 +45,7 @@ extension User {
     public var profile: Request<UserProfile> {
         return Request(method: .get, path: "/users/\(login)")
     }
-
+    
     /// A request for the user's repositories.
     ///
     /// https://developer.github.com/v3/repos/#list-user-repositories
@@ -58,11 +58,11 @@ extension User {
 public struct User: CustomStringConvertible, Decodable {
     /// The user's login/username.
     public let login: String
-
+    
     public init(_ login: String) {
         self.login = login
     }
-
+    
     public var description: String {
         return login
     }
@@ -72,7 +72,7 @@ extension User: Hashable {
     public static func ==(lhs: User, rhs: User) -> Bool {
         return lhs.login == rhs.login
     }
-
+    
     public var hashValue: Int {
         return login.hashValue
     }
@@ -87,13 +87,13 @@ public struct UserInfo: CustomStringConvertible, ResourceType, Identifiable {
 
     /// The unique ID of the user.
     public let id: ID<UserInfo>
-
+    
     /// The user this information is about.
     public let user: User
-
+    
     /// The URL of the user's GitHub page.
     public let url: URL
-
+    
     /// The URL of the user's avatar.
     public let avatarURL: URL
 
@@ -130,28 +130,28 @@ extension UserInfo: Hashable {
 public struct UserProfile: ResourceType {
     /// The user that this information refers to.
     public let user: UserInfo
-
+    
     /// The date that the user joined GitHub.
     public let joinedDate: Date
-
+    
     /// The user's name if they've set one.
     public let name: String?
-
+    
     /// The user's public email address if they've set one.
     public let email: String?
-
+    
     /// The URL of the user's website if they've set one
     /// (the type here is a String because Github lets you use
     /// anything and doesn't validate that you've entered a valid URL)
     public let websiteURL: String?
-
+    
     /// The user's company if they've set one.
     public let company: String?
-
+    
     public var description: String {
         return user.description
     }
-
+    
     public init(user: UserInfo, joinedDate: Date, name: String?, email: String?, websiteURL: String?, company: String?) {
         self.user = user
         self.joinedDate = joinedDate

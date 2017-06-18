@@ -18,7 +18,7 @@ extension Repository {
     public func release(forTag tag: String) -> Request<Release> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/releases/tags/\(tag)")
     }
-
+    
     /// A request for the releases in the repository.
     ///
     /// https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
@@ -30,7 +30,7 @@ extension Repository {
 /// A Release of a Repository.
 public struct Release: CustomStringConvertible, ResourceType, Identifiable {
     /// An Asset attached to a Release.
-    public struct Asset: CustomStringConvertible, ResourceType {
+    public struct Asset: CustomStringConvertible, ResourceType, Identifiable {
         /// The unique ID for this release asset.
         public let id: ID<Asset>
 
@@ -42,7 +42,7 @@ public struct Release: CustomStringConvertible, ResourceType, Identifiable {
 
         /// The URL at which the asset can be downloaded directly.
         public let url: URL
-
+        
         /// The URL at which the asset can be downloaded via the API.
         public let apiURL: URL
 
@@ -75,23 +75,23 @@ public struct Release: CustomStringConvertible, ResourceType, Identifiable {
 
     /// Whether this release represents a prerelease version.
     public let isPrerelease: Bool
-
+    
     /// The name of the tag upon which this release is based.
     public let tag: String
-
+    
     /// The name of the release.
     public let name: String?
-
+    
     /// The web URL of the release.
     public let url: URL
-
+    
     /// Any assets attached to the release.
     public let assets: [Asset]
-
+    
     public var description: String {
         return "\(url)"
     }
-
+    
     public init(id: ID<Release>, tag: String, url: URL, name: String? = nil, isDraft: Bool = false, isPrerelease: Bool = false, assets: [Asset]) {
         self.id = id
         self.tag = tag
@@ -138,31 +138,3 @@ extension Release: Hashable {
         return id.hashValue
     }
 }
-<<<<<<< HEAD
-
-extension Release.Asset: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Release.Asset> {
-        return curry(self.init)
-            <^> (j <| "id" >>- toIdentifier)
-            <*> j <| "name"
-            <*> j <| "content_type"
-            <*> j <| "browser_download_url"
-            <*> j <| "url"
-    }
-}
-
-extension Release: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Release> {
-        let f = curry(Release.init)
-        return f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> j <| "tag_name"
-            <*> j <| "html_url"
-            <*> j <|? "name"
-            <*> j <| "draft"
-            <*> j <| "prerelease"
-            <*> j <|| "assets"
-    }
-}
-=======
->>>>>>> Remove Argo dependencies
