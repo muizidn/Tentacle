@@ -8,7 +8,6 @@
 
 import Foundation
 import XCTest
-import Argo
 @testable import Tentacle
 
 class TreeTests: XCTestCase {

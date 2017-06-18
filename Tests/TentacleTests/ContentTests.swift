@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import Argo
 @testable import Tentacle
 
 class ContentTests: XCTestCase {

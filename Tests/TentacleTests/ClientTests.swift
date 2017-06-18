@@ -6,7 +6,6 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
-import Argo
 import ReactiveSwift
 import Result
 import Tentacle

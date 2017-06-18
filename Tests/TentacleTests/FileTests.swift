@@ -8,7 +8,6 @@
 
 @testable import Tentacle
 import XCTest
-import Argo
 
 class FileTests: XCTestCase {
     

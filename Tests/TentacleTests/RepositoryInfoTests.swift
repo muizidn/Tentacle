@@ -8,7 +8,6 @@
 
 import XCTest
 @testable import Tentacle
-import Argo
 
 class RepositoryInfoTests: XCTestCase {
 

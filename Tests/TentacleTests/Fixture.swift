@@ -6,7 +6,6 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
-import Argo
 import Foundation
 @testable import Tentacle
 
@@ -103,28 +102,20 @@ extension EndpointFixtureType {
     }
     
     /// The JSON from the Endpoint.
-    var json: Any {
+    var JSON: Any {
         return try! JSONSerialization.jsonObject(with: data)
     }
     
     /// Decode the fixture's JSON as an object of the returned type.
-    func decode<Object: Argo.Decodable>() -> Object? where Object.DecodedType == Object {
-        let decoded: Decoded<Object> = Argo.decode(json)
-        if case let .failure(error) = decoded {
-            print("Failure: \(error)")
-        }
-
-        return decoded.value
+    func decode<Object>() -> Object? {
+        let decoder = JSONDecoder()
+        return try! decoder.decode(Object.self, from: data)
     }
     
     /// Decode the fixture's JSON as an array of objects of the returned type.
-    func decode<Object: Argo.Decodable>() -> [Object]? where Object.DecodedType == Object {
-        let decoded: Decoded<[Object]> = Argo.decode(json)
-        if case let .failure(error) = decoded {
-            print("Failure from collection: \(error)")
-        }
-
-        return decoded.value
+    func decode<Object: Decodable>() -> [Object]? {
+        let decoder = JSONDecoder()
+        return try! decoder.decode([Object].self, from: data)
     }
 }
 
