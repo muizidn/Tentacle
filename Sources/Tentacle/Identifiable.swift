@@ -26,6 +26,12 @@ public struct ID<Of: Identifiable>: Decodable {
 
 }
 
+extension ID: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self.rawValue = value
+    }
+}
+
 extension ID: Hashable {
 
     public var hashValue: Int {
