@@ -102,18 +102,22 @@ func ExpectFixtures
     ExpectResult(producer, .success(fixtures), file: file, line: line)
 }
 
-
 class ClientTests: XCTestCase {
     private let client = Client(.dotCom)
-    
+
     override func setUp() {
         HTTPStub.shared.stubRequests = { request in
-            return Fixture.fixtureForURL(request.url!)!
+            guard let fixture = Fixture.fixtureForURL(request.url!) else {
+                assert(false, "No Fixture found for url \(request.url!)")
+            }
+
+            return fixture
         }
     }
     
     func testReleasesInRepository() {
         let fixtures = Fixture.Releases.Carthage
+
         ExpectFixtures(
             client.execute(fixtures[0].request),
             fixtures

@@ -242,7 +242,7 @@ public final class Client {
     }
     
     /// Fetch an object from the API.
-    public func execute<Resource: Decodable>(
+    public func execute<Resource: ResourceType>(
         _ request: Request<Resource>
     ) -> SignalProducer<(Response, Resource), Error> {
         let s: SignalProducer<(Response, Data), Error> = execute(request, page: nil, perPage: nil)
