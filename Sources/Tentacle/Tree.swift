@@ -60,6 +60,14 @@ public struct Tree: CustomStringConvertible, ResourceType {
         case isTruncated = "truncated"
     }
 
+    public struct SHA: Decodable {
+        public let hash: String
+
+        public init(from decoder: Decoder) throws {
+            self.hash = try decoder.singleValueContainer().decode(String.self)
+        }
+    }
+
     public struct Entry: ResourceType {
 
         public enum EntryType: ResourceType, Encodable {
@@ -130,6 +138,28 @@ public struct Tree: CustomStringConvertible, ResourceType {
 
         /// The mode of the entry.
         public let mode: Mode
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.sha = try container.decode(SHA.self, forKey: .sha)
+            self.path = try container.decode(String.self, forKey: .path)
+            self.mode = try container.decode(Mode.self, forKey: .mode)
+            self.type = try EntryType(from: decoder)
+        }
+
+        public init(type: EntryType, sha: SHA, path: String, mode: Mode) {
+            self.type = type
+            self.sha = sha
+            self.path = path
+            self.mode = mode
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case type
+            case sha
+            case path
+            case mode
+        }
     }
 }
 
@@ -179,6 +209,24 @@ extension Tree.Entry: Hashable {
 
     public var hashValue: Int {
         return sha.hashValue
+    }
+}
+
+extension Tree.SHA: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.hash = value
+    }
+}
+
+extension Tree.SHA: Equatable {
+    public static func ==(lhs: Tree.SHA, rhs: Tree.SHA) -> Bool {
+        return lhs.hash == rhs.hash
+    }
+}
+
+extension Tree.SHA: Hashable {
+    public var hashValue: Int {
+        return hash.hashValue
     }
 }
 

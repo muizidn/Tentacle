@@ -114,6 +114,8 @@
 		7A3CC6A51E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.data in Resources */ = {isa = PBXBuildFile; fileRef = 7A3CC65A1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.data */; };
 		7A3CC6A61E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response in Resources */ = {isa = PBXBuildFile; fileRef = 7A3CC65B1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response */; };
 		7A3CC6A71E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response in Resources */ = {isa = PBXBuildFile; fileRef = 7A3CC65B1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response */; };
+		7A571AD31EF93A43008A171B /* Homepage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A571AD21EF93A43008A171B /* Homepage.swift */; };
+		7A571AD41EF93A43008A171B /* Homepage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A571AD21EF93A43008A171B /* Homepage.swift */; };
 		7A6F94C11DECF5FA006E9BAD /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6F94C01DECF5FA006E9BAD /* Content.swift */; };
 		7A6F94C21DECF93E006E9BAD /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6F94C01DECF5FA006E9BAD /* Content.swift */; };
 		7A8A9D621E5546AC0009DA9E /* Branch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8A9D611E5546AC0009DA9E /* Branch.swift */; };
@@ -272,6 +274,7 @@
 		7A3CC6591E01BC200025E711 /* repos-mdiep-NonExistent-releases-tags-tag.response */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "repos-mdiep-NonExistent-releases-tags-tag.response"; sourceTree = "<group>"; };
 		7A3CC65A1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "repos-torvalds-linux-releases-tags-v4.4.data"; sourceTree = "<group>"; };
 		7A3CC65B1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "repos-torvalds-linux-releases-tags-v4.4.response"; sourceTree = "<group>"; };
+		7A571AD21EF93A43008A171B /* Homepage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Homepage.swift; sourceTree = "<group>"; };
 		7A6F94C01DECF5FA006E9BAD /* Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
 		7A8A9D611E5546AC0009DA9E /* Branch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branch.swift; sourceTree = "<group>"; };
 		7A8A9D641E5547F50009DA9E /* BranchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BranchTests.swift; sourceTree = "<group>"; };
@@ -485,6 +488,7 @@
 				BF01A25C1EAA5BEB0028ECFC /* Tree.swift */,
 				BECB8A8A1CBDCD17005D70A6 /* User.swift */,
 				7AC92F681EF72F18002ADBB5 /* Identifiable.swift */,
+				7A571AD21EF93A43008A171B /* Homepage.swift */,
 			);
 			name = Tentacle;
 			path = Sources/Tentacle;
@@ -837,6 +841,7 @@
 				928DF23F1E11187C00E6DE35 /* Sha.swift in Sources */,
 				BEEE47461C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */,
 				61377C791C8A2B760081FF24 /* Client.swift in Sources */,
+				7A571AD41EF93A43008A171B /* Homepage.swift in Sources */,
 				927847FB1E0C75B1003B9EE6 /* Commit.swift in Sources */,
 				BEEE47431C91B8DF000FFC21 /* ResourceType.swift in Sources */,
 				7A6F94C21DECF93E006E9BAD /* Content.swift in Sources */,
@@ -900,6 +905,7 @@
 				928DF23E1E1117D600E6DE35 /* Sha.swift in Sources */,
 				BEEE47451C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */,
 				BE88E82D1C88C94D0034A112 /* Server.swift in Sources */,
+				7A571AD31EF93A43008A171B /* Homepage.swift in Sources */,
 				927847FA1E0C74B2003B9EE6 /* Commit.swift in Sources */,
 				BEEE47421C91B8DF000FFC21 /* ResourceType.swift in Sources */,
 				7A6F94C11DECF5FA006E9BAD /* Content.swift in Sources */,

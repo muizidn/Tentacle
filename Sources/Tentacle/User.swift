@@ -111,6 +111,23 @@ public struct UserInfo: CustomStringConvertible, ResourceType, Identifiable {
         case avatarURL = "avatar_url"
         case type
     }
+
+    public init(id: ID<UserInfo>, user: User, url: URL, avatarURL: URL, type: UserType) {
+        self.id = id
+        self.user = user
+        self.url = url
+        self.avatarURL = avatarURL
+        self.type = type
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(ID.self, forKey: .id)
+        self.user = try User(from: decoder)
+        self.url = try container.decode(URL.self, forKey: .url)
+        self.avatarURL = try container.decode(URL.self, forKey: .avatarURL)
+        self.type = try container.decode(UserType.self, forKey: .type)
+    }
 }
 
 extension UserInfo: Hashable {
@@ -159,6 +176,17 @@ public struct UserProfile: ResourceType {
         self.email = email
         self.websiteURL = websiteURL
         self.company = company
+    }
+
+    public init(from decoder: Decoder) throws {
+        self.user = try UserInfo(from: decoder)
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.joinedDate = try container.decode(Date.self, forKey: .joinedDate)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        self.email = try container.decodeIfPresent(String.self, forKey: .email)
+        self.websiteURL = try container.decodeIfPresent(String.self, forKey: .websiteURL)
+        self.company = try container.decodeIfPresent(String.self, forKey: .company)
     }
 
     private enum CodingKeys: String, CodingKey {

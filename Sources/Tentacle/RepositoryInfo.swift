@@ -28,7 +28,7 @@ public struct RepositoryInfo: CustomStringConvertible, ResourceType, Identifiabl
     public let url: URL
 
     /// The homepage of the repository
-    public let homepage: URL?
+    public let homepage: Homepage?
 
     /// Contains true if the repository is private
     public let isPrivate: Bool

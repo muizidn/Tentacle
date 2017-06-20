@@ -14,6 +14,7 @@ public struct SHA: ResourceType {
     private enum CodingKeys: String, CodingKey {
         case hash = "sha"
     }
+
 }
 
 extension SHA {

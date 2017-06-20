@@ -11,6 +11,12 @@ import XCTest
 
 class ContentTests: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+
+        HTTPStub.shared.initialize()
+    }
+
     func testDecodedFile() {
         let expected: Content = .file(Content.File(
             content: .file(size: 19, downloadURL: URL(string: "https://raw.githubusercontent.com/Palleas-opensource/Sample-repository/master/README.md")!),
@@ -54,8 +60,9 @@ class ContentTests: XCTestCase {
                 url: URL(string: "https://github.com/Palleas-opensource/Sample-repository/blob/master/Tools/say")!
             )
         ])
+        let directory: Content = Fixture.FileForRepository.DirectoryInSampleRepository.decode()!
 
-        XCTAssertEqual(Fixture.FileForRepository.DirectoryInSampleRepository.decode()!, expected)
+        XCTAssertEqual(directory, expected)
     }
 
     func testDecodedSubmodule() {

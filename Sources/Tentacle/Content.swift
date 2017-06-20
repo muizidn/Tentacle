@@ -61,8 +61,11 @@ public enum Content: ResourceType {
                 switch type {
                 case "file":
                     let size = try container.decode(Int.self, forKey: .size)
-                    let url = try container.decode(URL.self, forKey: .downloadURL)
-                    self = .file(size: size, downloadURL: url)
+                    if let url = try container.decodeIfPresent(URL.self, forKey: .downloadURL) {
+                        self = .file(size: size, downloadURL: url)
+                    } else {
+                        self = .submodule(url: nil)
+                    }
                 case "dir":
                     self = .directory
                 case "submodule":
@@ -108,6 +111,24 @@ public enum Content: ResourceType {
             return name
         }
 
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            self.name = try container.decode(String.self, forKey: .name)
+            self.path = try container.decode(String.self, forKey: .path)
+            self.sha = try container.decode(String.self, forKey: .sha)
+            self.url = try container.decode(URL.self, forKey: .url)
+            self.content = try ContentType(from: decoder)
+        }
+
+        public init(content: ContentType, name: String, path: String, sha: String, url: URL) {
+            self.name = name
+            self.path = path
+            self.sha = sha
+            self.url = url
+            self.content = content
+        }
+
         private enum CodingKeys: String, CodingKey {
             case name
             case path
@@ -122,17 +143,18 @@ public enum Content: ResourceType {
     case directory([File])
 
     public init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
 
-        if let files = try? container.decode([File].self) {
-            self = .directory(files)
-        } else if let file = try? container.decode(File.self) {
+        do {
+            let file = try File(from: decoder)
             self = .file(file)
-        } else {
-            throw DecodingError.dataCorrupted(DecodingError.Context(
-                codingPath: container.codingPath,
-                debugDescription: "Content must be either a file or a collection of file, got \(type(of: container))"
-            ))
+        } catch {
+            var container = try decoder.unkeyedContainer()
+            var files = [File]()
+            while !container.isAtEnd {
+                files.append(try container.decode(File.self))
+            }
+
+            self = .directory(files)
         }
     }
 }

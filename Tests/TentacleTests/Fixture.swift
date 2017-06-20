@@ -109,12 +109,16 @@ extension EndpointFixtureType {
     /// Decode the fixture's JSON as an object of the returned type.
     func decode<Object: Decodable>() -> Object? {
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
+
         return try! decoder.decode(Object.self, from: data)
     }
     
     /// Decode the fixture's JSON as an array of objects of the returned type.
     func decodeList<Object: Decodable>() -> [Object]?{
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
+
         return try! decoder.decode([Object].self, from: data)
     }
 }

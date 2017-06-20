@@ -39,7 +39,7 @@ public struct Comment: CustomStringConvertible, ResourceType, Identifiable {
     private enum CodingKeys: String, CodingKey {
         case id
         case url = "html_url"
-        case createdAt = "create_at"
+        case createdAt = "created_at"
         case updatedAt = "updated_at"
         case body
         case author = "user"
