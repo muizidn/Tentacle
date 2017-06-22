@@ -59,48 +59,44 @@ class TreeTests: XCTestCase {
     }
 
     func testTreeEncoding() {
-//        let newTree = NewTree(entries: entries, base: "5bfad2b3f8e483b6b173d8aaff19597e84626f15")
+        let newTree = NewTree(entries: entries, base: "5bfad2b3f8e483b6b173d8aaff19597e84626f15")
 
-//        let expected: JSON = .object([
-//            "base_tree": .string("5bfad2b3f8e483b6b173d8aaff19597e84626f15"),
-//            "tree": .array([
-//                .object([
-//                    "path": .string("Directory"),
-//                    "mode": .string("040000"),
-//                    "type": .string("tree"),
-//                    "sha": .string("5bfad2b3f8e483b6b173d8aaff19597e84626f15")
-//                ]),
-//                .object([
-//                    "path": .string("README.markdown"),
-//                    "mode": .string("100644"),
-//                    "type": .string("blob"),
-//                    "sha": .string("c3eb8708a0a5aaa4f685aab24ef6403fbfd28efc")
-//                ]),
-//                .object([
-//                    "path": .string("Tentacle"),
-//                    "mode": .string("160000"),
-//                    "type": .string("commit"),
-//                    "sha": .string("7a84505a3c553fd8e2879cfa63753b0cd212feb8")
-//                ]),
-//                .object([
-//                    "path": .string("say"),
-//                    "mode": .string("100644"),
-//                    "type": .string("blob"),
-//                    "sha": .string("1e3f1fd0bc1f65cf4701c217f4d1fd9a3cd50721")
-//                ])
-//            ]),
-//        ])
+        let encoder = JSONEncoder()
+        let encodedTree = try! encoder.encode(newTree)
 
-//        XCTAssertEqual(newTree.encode(), expected)
+        let decoder = JSONDecoder()
+        let decodedTree = try! decoder.decode(NewTree.self, from: encodedTree)
+
+        let expected = NewTree(entries: entries, base: "5bfad2b3f8e483b6b173d8aaff19597e84626f15")
+        XCTAssertEqual(decodedTree, expected)
     }
 
     func testTreeEncodingWithoutBase() {
-//        let newTree = NewTree(entries: [], base: nil)
-//
-//        let expected: JSON = .object([
-//            "tree": .array([]),
-//        ])
-//
-//        XCTAssertEqual(newTree.encode(), expected)
+        let newTree = NewTree(entries: [], base: nil)
+
+        let encoder = JSONEncoder()
+        let encodedTree = try! encoder.encode(newTree)
+
+        let decoder = JSONDecoder()
+        let decodedTree = try! decoder.decode(NewTree.self, from: encodedTree)
+
+        let expected = NewTree(entries: [], base: nil)
+        XCTAssertEqual(decodedTree, expected)
     }
+}
+
+extension NewTree: Equatable {
+    public static func ==(lhs: NewTree, rhs: NewTree) -> Bool {
+        return lhs.base == rhs.base && lhs.entries == rhs.entries
+    }
+}
+
+extension NewTree: Decodable {
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: NewTree.CodingKeys.self)
+        self.entries = try container.decode(Array<Tree.Entry>.self, forKey: .entries)
+        self.base = try container.decodeIfPresent(String.self, forKey: .base)
+    }
+
 }

@@ -60,15 +60,20 @@ public struct Tree: CustomStringConvertible, ResourceType {
         case isTruncated = "truncated"
     }
 
-    public struct SHA: Decodable {
+    public struct SHA: Codable {
         public let hash: String
 
         public init(from decoder: Decoder) throws {
             self.hash = try decoder.singleValueContainer().decode(String.self)
         }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encode(hash)
+        }
     }
 
-    public struct Entry: ResourceType {
+    public struct Entry: ResourceType, Encodable {
 
         public enum EntryType: ResourceType, Encodable {
             case blob(url: URL, size: Int)
@@ -159,6 +164,25 @@ public struct Tree: CustomStringConvertible, ResourceType {
             case sha
             case path
             case mode
+            case url
+            case size
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(type, forKey: .type)
+            try container.encode(path, forKey: .path)
+            try container.encode(sha, forKey: .sha)
+            try container.encode(mode, forKey: .mode)
+
+            switch type {
+            case let .blob(url: url, size: size):
+                try container.encode(url, forKey: .url)
+                try container.encode(size, forKey: .size)
+            case let .tree(url: url):
+                try container.encode(url, forKey: .url)
+            default: break
+            }
         }
     }
 }
@@ -237,7 +261,7 @@ internal struct NewTree: Encodable {
     /// The base for the new tree.
     internal let base: String?
 
-    private enum CodingKeys: String, CodingKey {
+    internal enum CodingKeys: String, CodingKey {
         case entries = "tree"
         case base = "base_tree"
     }
