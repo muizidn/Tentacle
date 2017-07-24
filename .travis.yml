@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8.2
+osx_image: xcode8.3
 branches:
   only:
     - master
@@ -13,12 +13,6 @@ matrix:
       env: XCODE_ACTION="build-for-testing test-without-building"
     - xcode_scheme: Tentacle-iOS
       env: XCODE_ACTION="build-for-testing test-without-building"
-    - xcode_scheme: Tentacle-OSX
-      env: XCODE_ACTION="build-for-testing test-without-building"
-      osx_image: xcode8.3
-    - xcode_scheme: Tentacle-iOS
-      env: XCODE_ACTION="build-for-testing test-without-building"
-      osx_image: xcode8.3
     - xcode_scheme: update-test-fixtures
       env: XCODE_ACTION=build
     - before_script: true
