@@ -190,7 +190,7 @@ public final class Client {
 
     /// Fetch a request from the API.
     private func execute<Value: Decodable>(_ request: Request<Value>, page: UInt?, perPage: UInt?) -> SignalProducer<(Response, Data), Error> {
-        let s = urlSession
+        return urlSession
             .reactive
             .data(with: urlRequest(for: request, page: page, perPage: perPage))
             .mapError { Error.networkError($0.error) }
@@ -237,7 +237,7 @@ public final class Client {
                     .mapError(Error.jsonDecodingError)
             }
 
-            return .success((githubResponse, data))
+                return .success((githubResponse, data))
         }
     }
     
