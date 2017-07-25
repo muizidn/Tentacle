@@ -42,13 +42,13 @@ extension URLSession {
 	/// Returns a producer that will download a file using the given request. The file will be
 	/// deleted after the producer terminates.
 	internal func downloadFile(_ request: URLRequest) -> SignalProducer<URL, AnyError> {
-		return SignalProducer { observer, disposable in
+		return SignalProducer { observer, lifetime in
 			let serialDisposable = SerialDisposable()
-			let handle = disposable.add(serialDisposable)
+			let handle = lifetime += serialDisposable
 
 			let task = self.downloadTask(with: request) { (url, response, error) in
 				// Avoid invoking cancel(), or the download may be deleted.
-				handle.remove()
+				handle?.dispose()
 
 				if let url = url {
 					observer.send(value: url)
@@ -60,7 +60,7 @@ extension URLSession {
                 }
 			}
 
-			serialDisposable.inner = ActionDisposable {
+			serialDisposable.inner = AnyDisposable {
 				task.cancel()
 			}
 
@@ -196,10 +196,14 @@ public final class Client {
             .flatMap(.concat) { data, response -> SignalProducer<(Response, Any), Error> in
                 let response = response as! HTTPURLResponse
                 let headers = response.allHeaderFields as! [String:String]
-                return SignalProducer
-                    .attempt {
-                        return JSONSerialization.deserializeJSON(data).mapError { Error.jsonDeserializationError($0.error) }
-                    }
+
+                // The explicitness is required to pick up
+                // `init(_ action: @escaping () -> Result<Value, Error>)`
+                // over `init(_ action: @escaping () -> Value)`.
+                let producer: SignalProducer<Any, Error> = SignalProducer { () -> Result<Any, Error> in
+                    return JSONSerialization.deserializeJSON(data).mapError { Error.jsonDeserializationError($0.error) }
+                }
+                return producer
                     .attemptMap { JSON in
                         if response.statusCode == 404 {
                             return .failure(.doesNotExist)
