@@ -28,7 +28,7 @@ extension URL {
     internal init<Value>(_ server: Server, _ request: Request<Value>, page: UInt? = nil, perPage: UInt? = nil) {
         let queryItems = [ ("page", page), ("per_page", perPage) ]
             .filter { (_, value) -> Bool in value != nil }
-            .map { arg -> URLQueryItem in let (name, value) = arg; return URLQueryItem(name: name, value: "\(value!)") }
+            .map { (name, value) -> URLQueryItem in URLQueryItem(name: name, value: "\(value!)") }
 
         let url = URL(string: server.endpoint)!
             .appendingPathComponent(request.path)
