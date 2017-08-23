@@ -198,29 +198,20 @@ public final class Client {
                 let response = response as! HTTPURLResponse
                 let headers = response.allHeaderFields as! [String:String]
 
-                // The explicitness is required to pick up
-                // `init(_ action: @escaping () -> Result<Value, Error>)`
-                // over `init(_ action: @escaping () -> Value)`.
-                let producer: SignalProducer<Any, Error> = SignalProducer { () -> Result<Any, Error> in
-                    return JSONSerialization.deserializeJSON(data).mapError { Error.jsonDeserializationError($0.error) }
-                }
-
-                return producer
-                    .attemptMap { JSON in
-                        if response.statusCode == 404 {
-                            return .failure(.doesNotExist)
-                        }
-                        if response.statusCode >= 400 && response.statusCode < 600 {
-                            return decode(data)
-                                .mapError(Error.jsonDecodingError)
-                                .flatMap { error in
-                                    .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
-                            }
-                        }
-                        return .success(data)
+                return SignalProducer<(Response, Data), Error> { () -> Result<(Response, Data), Error> in
+                    guard response.statusCode != 404 else {
+                        return .failure(.doesNotExist)
                     }
-                    .map { JSON in
-                        return (Response(headerFields: headers), data)
+
+                    if response.statusCode >= 400 && response.statusCode < 600 {
+                        return decode(data)
+                            .mapError(Error.jsonDecodingError)
+                            .flatMap { error in
+                                .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
+                        }
+                    }
+
+                    return .success((Response(headerFields: headers), data))
                 }
         }
     }
@@ -231,8 +222,7 @@ public final class Client {
     ) -> SignalProducer<(Response, Resource), Error> {
         let s: SignalProducer<(Response, Data), Error> = execute(request, page: nil, perPage: nil)
 
-        return s.attemptMap({ (arg) -> Result<(Response, Resource), Client.Error> in
-            let (response, data) = arg
+        return s.attemptMap({ (response, data) -> Result<(Response, Resource), Client.Error> in
             return decode(data)
                 .map { (response, $0) }
                 .mapError { Error.jsonDecodingError($0) }
