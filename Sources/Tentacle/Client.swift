@@ -220,13 +220,12 @@ public final class Client {
     public func execute<Resource: ResourceType>(
         _ request: Request<Resource>
     ) -> SignalProducer<(Response, Resource), Error> {
-        let s: SignalProducer<(Response, Data), Error> = execute(request, page: nil, perPage: nil)
-
-        return s.attemptMap({ (response, data) -> Result<(Response, Resource), Client.Error> in
-            return decode(data)
-                .map { (response, $0) }
-                .mapError { Error.jsonDecodingError($0) }
-        })
+        return execute(request, page: nil, perPage: nil)
+            .attemptMap { (response, data) -> Result<(Response, Resource), Client.Error> in
+                return decode(data)
+                    .map { (response, $0) }
+                    .mapError { Error.jsonDecodingError($0) }
+            }
     }
 
     /// Fetch a list of objects from the API.
@@ -239,15 +238,13 @@ public final class Client {
         perPage: UInt? = 30
     ) -> SignalProducer<(Response, [Resource]), Error> {
         let nextPage = (page ?? 1) + 1
-        let s: SignalProducer<(Response, Data), Error> = execute(request, page: page, perPage: perPage)
 
-        return s
-            .attemptMap({ (arg) -> Result<(Response, [Resource]), Client.Error> in
-                let (response, data) = arg
+        return execute(request, page: page, perPage: perPage)
+            .attemptMap { (response, data) -> Result<(Response, [Resource]), Client.Error> in
                 return decodeList(data)
                     .map { (response, $0) }
                     .mapError { Error.jsonDecodingError($0) }
-            })
+            }
             .flatMap(.concat, { (arg) -> SignalProducer<(Response, [Resource]), Error> in
                 let (response, _) = arg
 
