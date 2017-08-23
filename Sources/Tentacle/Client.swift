@@ -245,16 +245,13 @@ public final class Client {
                     .map { (response, $0) }
                     .mapError { Error.jsonDecodingError($0) }
             }
-            .flatMap(.concat, { (arg) -> SignalProducer<(Response, [Resource]), Error> in
-                let (response, _) = arg
-
-                let current = SignalProducer<(Response, [Resource]), Error>(value: arg)
+            .flatMap(.concat, { (response, data) -> SignalProducer<(Response, [Resource]), Error> in
+                let current = SignalProducer<(Response, [Resource]), Error>(value: (response, data))
                 guard let _ = response.links["next"] else {
                     return current.concat(.empty)
                 }
 
-                let s = self.execute(request, page: nextPage, perPage: perPage)
-                return current.concat(s)
+                return current.concat(self.execute(request, page: nextPage, perPage: perPage))
             })
     }
 }
