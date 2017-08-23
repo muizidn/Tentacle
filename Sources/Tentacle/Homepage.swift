@@ -8,20 +8,21 @@
 
 import Foundation
 
-public struct Homepage: Decodable {
-    let raw: String
-
-    public var url: URL? {
-        return URL(string: raw)
-    }
+public enum Homepage: Decodable {
+    case url(URL)
+    case string(String)
 
     public init(from decoder: Decoder) throws {
-        raw = try decoder.singleValueContainer().decode(String.self)
+        do {
+            self = .url(try decoder.singleValueContainer().decode(URL.self))
+        } catch {
+            self = .string(try decoder.singleValueContainer().decode(String.self))
+        }
     }
 }
 
 extension Homepage: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) {
-        self.raw = value
+        self = .string(value)
     }
 }
