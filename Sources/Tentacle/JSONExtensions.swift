@@ -10,25 +10,25 @@ import Foundation
 import Result
 
 internal func decode<T: Decodable>(_ payload: Data) -> Result<T, DecodingError> {
-    return Result(attempt: { () -> T in
+    return Result { () -> T in
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
         return try decoder.decode(T.self, from: payload)
-    })
+    }
 }
 
 internal func decodeList<T: Decodable>(_ payload: Data) -> Result<[T], DecodingError> {
-    return Result(attempt: { () -> [T] in
+    return Result { () -> [T] in
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
         return try decoder.decode([T].self, from: payload)
-    })
+    }
 }
 
 extension DecodingError: Equatable {
     static public func ==(lhs: DecodingError, rhs: DecodingError) -> Bool {
         switch (lhs, rhs) {
-        default: return false
+        default: return false // FIXME
         }
     }
 }

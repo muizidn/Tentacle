@@ -1,0 +1,4 @@
+included:
+  - Sources
+whitelist_rules:
+  - trailing_closure
