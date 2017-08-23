@@ -26,6 +26,12 @@ public struct Label: CustomStringConvertible, ResourceType {
         self.name = name
         self.color = color
     }
+
+    // TODO: remove this, or replace `Color` with something (De)codable
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case color
+    }
 }
 
 extension Label: Hashable {
