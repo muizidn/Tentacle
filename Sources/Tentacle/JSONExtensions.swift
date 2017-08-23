@@ -1,5 +1,5 @@
 //
-//  ArgoExtensions.swift
+//  JSONExtensions.swift
 //  Tentacle
 //
 //  Created by Matt Diephouse on 3/10/16.
@@ -25,3 +25,10 @@ internal func decodeList<T: Decodable>(_ payload: Data) -> Result<[T], DecodingE
     })
 }
 
+extension DecodingError: Equatable {
+    static public func ==(lhs: DecodingError, rhs: DecodingError) -> Bool {
+        switch (lhs, rhs) {
+        default: return false
+        }
+    }
+}

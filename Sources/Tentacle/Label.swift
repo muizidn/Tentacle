@@ -26,11 +26,6 @@ public struct Label: CustomStringConvertible, ResourceType {
         self.name = name
         self.color = color
     }
-
-    private enum CodingKeys: String, CodingKey {
-        case name
-        case color
-    }
 }
 
 extension Label: Hashable {

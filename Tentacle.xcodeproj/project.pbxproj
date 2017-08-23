@@ -188,8 +188,8 @@
 		BECB8AA41CBDDF0F005D70A6 /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BECB8AA11CBDDF0F005D70A6 /* UserTests.swift */; };
 		BEEE47421C91B8DF000FFC21 /* ResourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47411C91B8DF000FFC21 /* ResourceType.swift */; };
 		BEEE47431C91B8DF000FFC21 /* ResourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47411C91B8DF000FFC21 /* ResourceType.swift */; };
-		BEEE47451C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47441C91BB3A000FFC21 /* ArgoExtensions.swift */; };
-		BEEE47461C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47441C91BB3A000FFC21 /* ArgoExtensions.swift */; };
+		BEEE47451C91BB3A000FFC21 /* JSONExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47441C91BB3A000FFC21 /* JSONExtensions.swift */; };
+		BEEE47461C91BB3A000FFC21 /* JSONExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE47441C91BB3A000FFC21 /* JSONExtensions.swift */; };
 		BEEE474E1C92623E000FFC21 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE474D1C92623E000FFC21 /* Response.swift */; };
 		BEEE474F1C92623E000FFC21 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEE474D1C92623E000FFC21 /* Response.swift */; };
 		BF01A25D1EAA5BEC0028ECFC /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF01A25C1EAA5BEB0028ECFC /* Tree.swift */; };
@@ -323,7 +323,7 @@
 		BECB8A8D1CBDD919005D70A6 /* FoundationExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
 		BECB8AA11CBDDF0F005D70A6 /* UserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTests.swift; sourceTree = "<group>"; };
 		BEEE47411C91B8DF000FFC21 /* ResourceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceType.swift; sourceTree = "<group>"; };
-		BEEE47441C91BB3A000FFC21 /* ArgoExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArgoExtensions.swift; sourceTree = "<group>"; };
+		BEEE47441C91BB3A000FFC21 /* JSONExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONExtensions.swift; sourceTree = "<group>"; };
 		BEEE474D1C92623E000FFC21 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		BF01A25C1EAA5BEB0028ECFC /* Tree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		BF01A2601EAA63100028ECFC /* TreeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TreeTests.swift; sourceTree = "<group>"; };
@@ -456,7 +456,7 @@
 		BE88E7F41C88C6B30034A112 /* Tentacle */ = {
 			isa = PBXGroup;
 			children = (
-				BEEE47441C91BB3A000FFC21 /* ArgoExtensions.swift */,
+				BEEE47441C91BB3A000FFC21 /* JSONExtensions.swift */,
 				927847FC1E0C78A4003B9EE6 /* Author.swift */,
 				CD83C7B91DCE379D00BC2608 /* Availability.swift */,
 				7A8A9D611E5546AC0009DA9E /* Branch.swift */,
@@ -839,7 +839,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				928DF23F1E11187C00E6DE35 /* Sha.swift in Sources */,
-				BEEE47461C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */,
+				BEEE47461C91BB3A000FFC21 /* JSONExtensions.swift in Sources */,
 				61377C791C8A2B760081FF24 /* Client.swift in Sources */,
 				7A571AD41EF93A43008A171B /* Homepage.swift in Sources */,
 				927847FB1E0C75B1003B9EE6 /* Commit.swift in Sources */,
@@ -903,7 +903,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				928DF23E1E1117D600E6DE35 /* Sha.swift in Sources */,
-				BEEE47451C91BB3A000FFC21 /* ArgoExtensions.swift in Sources */,
+				BEEE47451C91BB3A000FFC21 /* JSONExtensions.swift in Sources */,
 				BE88E82D1C88C94D0034A112 /* Server.swift in Sources */,
 				7A571AD31EF93A43008A171B /* Homepage.swift in Sources */,
 				927847FA1E0C74B2003B9EE6 /* Commit.swift in Sources */,

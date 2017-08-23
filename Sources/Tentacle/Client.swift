@@ -27,7 +27,7 @@ extension URL {
     
     internal init<Value>(_ server: Server, _ request: Request<Value>, page: UInt? = nil, perPage: UInt? = nil) {
         let queryItems = [ ("page", page), ("per_page", perPage) ]
-            .filter { arg -> Bool in let (_, value) = arg; return value != nil }
+            .filter { (_, value) -> Bool in value != nil }
             .map { arg -> URLQueryItem in let (name, value) = arg; return URLQueryItem(name: name, value: "\(value!)") }
 
         let url = URL(string: server.endpoint)!
@@ -194,7 +194,7 @@ public final class Client {
             .reactive
             .data(with: urlRequest(for: request, page: page, perPage: perPage))
             .mapError { Error.networkError($0.error) }
-            .flatMap(.concat) { data, response -> SignalProducer<(Response, Any), Error> in
+            .flatMap(.concat) { data, response -> SignalProducer<(Response, Data), Error> in
                 let response = response as! HTTPURLResponse
                 let headers = response.allHeaderFields as! [String:String]
 
@@ -204,43 +204,27 @@ public final class Client {
                 let producer: SignalProducer<Any, Error> = SignalProducer { () -> Result<Any, Error> in
                     return JSONSerialization.deserializeJSON(data).mapError { Error.jsonDeserializationError($0.error) }
                 }
+
                 return producer
                     .attemptMap { JSON in
                         if response.statusCode == 404 {
                             return .failure(.doesNotExist)
                         }
                         if response.statusCode >= 400 && response.statusCode < 600 {
-                            return decode(JSON)
+                            return decode(data)
                                 .mapError(Error.jsonDecodingError)
                                 .flatMap { error in
                                     .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
                             }
                         }
-                        return .success(JSON)
+                        return .success(data)
                     }
                     .map { JSON in
-                        return (Response(headerFields: headers), JSON)
+                        return (Response(headerFields: headers), data)
                 }
         }
     }
-    
-    /// Fetch an object from the API.
-    public func execute<Resource: ResourceType>(
-        _ request: Request<Resource>
-    ) -> SignalProducer<(Response, Resource), Error> {
-        return execute(request, page: nil, perPage: nil)
-            .attemptMap { response, JSON in
-                return decode(JSON)
-                    .map { resource in
-                        (response, resource)
-                    }
-                    .mapError(Error.jsonDecodingError)
-            }
 
-                return .success((githubResponse, data))
-        }
-    }
-    
     /// Fetch an object from the API.
     public func execute<Resource: ResourceType>(
         _ request: Request<Resource>
@@ -298,7 +282,7 @@ extension Client.Error: Hashable {
             return (error1 as NSError) == (error2 as NSError)
 
         case let (.jsonDecodingError(error1), .jsonDecodingError(error2)):
-            return error1.errorCode == error2.errorCode // FIXME
+            return error1 == error2 // FIXME
 
         case let (.apiError(statusCode1, response1, error1), .apiError(statusCode2, response2, error2)):
             return statusCode1 == statusCode2 && response1 == response2 && error1 == error2
@@ -320,7 +304,7 @@ extension Client.Error: Hashable {
             return (error as NSError).hashValue
 
         case let .jsonDecodingError(error):
-            return error.errorCode.hashValue
+            return (error as NSError).hashValue
 
         case let .apiError(statusCode, response, error):
             return statusCode.hashValue ^ response.hashValue ^ error.hashValue
