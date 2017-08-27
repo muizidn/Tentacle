@@ -10,8 +10,6 @@ import Foundation
 import ReactiveSwift
 import Result
 
-//extension Array where Element == ResourceType : ResourceType {}
-
 extension JSONSerialization {
     internal static func deserializeJSON(_ data: Data) -> Result<Any, AnyError> {
         return materialize(try JSONSerialization.jsonObject(with: data))
