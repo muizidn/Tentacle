@@ -266,7 +266,7 @@ extension Client.Error: Hashable {
             return (error1 as NSError) == (error2 as NSError)
 
         case let (.jsonDecodingError(error1), .jsonDecodingError(error2)):
-            return error1 == error2 // FIXME
+            return error1 == error2
 
         case let (.apiError(statusCode1, response1, error1), .apiError(statusCode2, response2, error2)):
             return statusCode1 == statusCode2 && response1 == response2 && error1 == error2
