@@ -37,9 +37,8 @@ extension JSON {
     }
 }
 
-internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<T, DecodeError> where T == T.DecodedType {
-    let decoded: Decoded<T> = decode(object)
-    switch decoded {
+internal func decode<T: Argo.Decodable>(_ json: JSON) -> Result<T, DecodeError> where T == T.DecodedType {
+    switch T.decode(json) {
     case let .success(object):
         return .success(object)
     case let .failure(error):
@@ -47,9 +46,8 @@ internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<T, DecodeError>
     }
 }
 
-internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<[T], DecodeError> where T == T.DecodedType {
-    let decoded: Decoded<[T]> = decode(object)
-    switch decoded {
+internal func decode<T: Argo.Decodable>(_ json: JSON) -> Result<[T], DecodeError> where T == T.DecodedType {
+    switch [T].decode(json) {
     case let .success(object):
         return .success(object)
     case let .failure(error):
@@ -59,6 +57,10 @@ internal func decode<T: Argo.Decodable>(_ object: Any) -> Result<[T], DecodeErro
 
 internal func toString(_ number: Int) -> Decoded<String> {
     return .success(number.description)
+}
+
+internal func toIdentifier<T: Identifiable>(_ number: Int) -> Decoded<ID<T>> {
+    return .success(ID<T>(rawValue: number))
 }
 
 internal func toInt(_ string: String) -> Decoded<Int> {

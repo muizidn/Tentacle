@@ -21,14 +21,14 @@ extension Repository {
 }
 
 /// An Issue on Github
-public struct Issue: CustomStringConvertible {
+public struct Issue: CustomStringConvertible, Identifiable {
     public enum State: String {
         case open = "open"
         case closed = "closed"
     }
 
     /// The id of the issue
-    public let id: String
+    public let id: ID<Issue>
 
     /// The URL to view this issue in a browser
     public let url: URL?
@@ -79,7 +79,7 @@ public struct Issue: CustomStringConvertible {
         return title
     }
 
-    public init(id: String, url: URL?, number: Int, state: State, title: String, body: String, user: UserInfo, labels: [Label], assignees: [UserInfo], milestone: Milestone?, isLocked: Bool, commentCount: Int, pullRequest: PullRequest?, closedAt: Date?, createdAt: Date, updatedAt: Date) {
+    public init(id: ID<Issue>, url: URL?, number: Int, state: State, title: String, body: String, user: UserInfo, labels: [Label], assignees: [UserInfo], milestone: Milestone?, isLocked: Bool, commentCount: Int, pullRequest: PullRequest?, closedAt: Date?, createdAt: Date, updatedAt: Date) {
         self.id = id
         self.url = url
         self.number = number
@@ -127,7 +127,7 @@ extension Issue: ResourceType {
         let f = curry(Issue.init)
 
         let ff = f
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> (j <| "html_url" >>- toURL)
             <*> j <| "number"
             <*> (j <| "state" >>- toIssueState)

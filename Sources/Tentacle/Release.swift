@@ -31,11 +31,11 @@ extension Repository {
 }
 
 /// A Release of a Repository.
-public struct Release: CustomStringConvertible {
+public struct Release: CustomStringConvertible, Identifiable {
     /// An Asset attached to a Release.
-    public struct Asset: CustomStringConvertible {
+    public struct Asset: CustomStringConvertible, Identifiable {
         /// The unique ID for this release asset.
-        public let id: String
+        public let id: ID<Asset>
 
         /// The filename of this asset.
         public let name: String
@@ -53,7 +53,7 @@ public struct Release: CustomStringConvertible {
             return "\(url)"
         }
 
-        public init(id: String, name: String, contentType: String, url: URL, apiURL: URL) {
+        public init(id: ID<Asset>, name: String, contentType: String, url: URL, apiURL: URL) {
             self.id = id
             self.name = name
             self.contentType = contentType
@@ -63,7 +63,7 @@ public struct Release: CustomStringConvertible {
     }
     
     /// The unique ID of the release.
-    public let id: String
+    public let id: ID<Release>
 
     /// Whether this release is a draft (only visible to the authenticted user).
     public let isDraft: Bool
@@ -87,7 +87,7 @@ public struct Release: CustomStringConvertible {
         return "\(url)"
     }
     
-    public init(id: String, tag: String, url: URL, name: String? = nil, isDraft: Bool = false, isPrerelease: Bool = false, assets: [Asset]) {
+    public init(id: ID<Release>, tag: String, url: URL, name: String? = nil, isDraft: Bool = false, isPrerelease: Bool = false, assets: [Asset]) {
         self.id = id
         self.tag = tag
         self.url = url
@@ -127,7 +127,7 @@ extension Release: Hashable {
 extension Release.Asset: ResourceType {
     public static func decode(_ j: JSON) -> Decoded<Release.Asset> {
         return curry(self.init)
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> j <| "name"
             <*> j <| "content_type"
             <*> j <| "browser_download_url"
@@ -139,7 +139,7 @@ extension Release: ResourceType {
     public static func decode(_ j: JSON) -> Decoded<Release> {
         let f = curry(Release.init)
         return f
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> j <| "tag_name"
             <*> j <| "html_url"
             <*> j <|? "name"

@@ -14,7 +14,7 @@ class UserTests: XCTestCase {
     func testDecodeMdiep() {
         let expected = UserProfile(
             user: UserInfo(
-                id: "1302",
+                id: 1302,
                 user: User("mdiep"),
                 url: URL(string: "https://github.com/mdiep")!,
                 avatarURL: URL(string: "https://avatars1.githubusercontent.com/u/1302?v=3")!,
@@ -32,7 +32,7 @@ class UserTests: XCTestCase {
     func testDecodeTest() {
         let expected = UserProfile(
             user: UserInfo(
-                id: "383316",
+                id: 383316,
                 user: User("test"),
                 url: URL(string: "https://github.com/test")!,
                 avatarURL: URL(string: "https://avatars0.githubusercontent.com/u/383316?v=3")!,
