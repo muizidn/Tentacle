@@ -11,14 +11,14 @@ import Argo
 import Curry
 import Runes
 
-public struct Milestone: CustomStringConvertible {
+public struct Milestone: CustomStringConvertible, Identifiable {
     public enum State: String {
         case open = "open"
         case closed = "closed"
     }
 
     /// The ID of the milestone
-    public let id: String
+    public let id: ID<Milestone>
 
     /// The number of the milestone in the repository it belongs to
     public let number: Int
@@ -84,7 +84,7 @@ extension Milestone: ResourceType {
         let f = curry(self.init)
 
         let ff = f
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> j <| "number"
             <*> (j <| "state" >>- toMilestoneState)
             <*> j <| "title"

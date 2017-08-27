@@ -61,6 +61,10 @@ internal func toString(_ number: Int) -> Decoded<String> {
     return .success(number.description)
 }
 
+internal func toIdentifier<T: Identifiable>(_ number: Int) -> Decoded<ID<T>> {
+    return .success(ID<T>(rawValue: number))
+}
+
 internal func toInt(_ string: String) -> Decoded<Int> {
     if let int = Int(string) {
         return .success(int)

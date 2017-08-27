@@ -20,10 +20,10 @@ extension Repository {
     }
 }
 
-public struct Comment: CustomStringConvertible {
+public struct Comment: CustomStringConvertible, Identifiable {
 
     /// The id of the issue
-    public let id: String
+    public let id: ID<Comment>
     /// The URL to view this comment in a browser
     public let url: URL
     /// The date this comment was created at
@@ -57,7 +57,7 @@ extension Comment: ResourceType {
         let f = curry(Comment.init)
 
         return f
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> (j <| "html_url" >>- toURL)
             <*> (j <| "created_at" >>- toDate)
             <*> (j <| "updated_at" >>- toDate)

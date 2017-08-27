@@ -14,7 +14,7 @@ class RepositoryInfoTests: XCTestCase {
 
     func testUserRepositoryInfoAreEquals() {
         let palleasOpensource = UserInfo(
-            id: "15802020",
+            id: 15802020,
             user: User("Palleas-opensource"),
             url: URL(string: "https://github.com/Palleas-opensource")!,
             avatarURL: URL(string: "https://avatars.githubusercontent.com/u/15802020?v=3")!,
@@ -49,7 +49,7 @@ class RepositoryInfoTests: XCTestCase {
 
     func testOrganizationRepositoryAreEqual() {
         let raccommunity = UserInfo(
-            id: "18710012",
+            id: 18710012,
             user: User("RACCommunity"),
             url: URL(string: "https://github.com/RACCommunity")!,
             avatarURL: URL(string: "https://avatars.githubusercontent.com/u/18710012?v=3")!,

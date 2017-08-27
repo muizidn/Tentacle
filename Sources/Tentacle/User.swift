@@ -82,14 +82,14 @@ extension User: Hashable {
 }
 
 /// Information about a user on GitHub.
-public struct UserInfo: CustomStringConvertible {
+public struct UserInfo: CustomStringConvertible, Identifiable {
     public enum UserType: String {
         case user = "User"
         case organization = "Organization"
     }
 
     /// The unique ID of the user.
-    public let id: String
+    public let id: ID<UserInfo>
     
     /// The user this information is about.
     public let user: User
@@ -124,7 +124,7 @@ extension UserInfo: Hashable {
 extension UserInfo: ResourceType {
     public static func decode(_ j: JSON) -> Decoded<UserInfo> {
         return curry(self.init)
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> (j <| "login").map(User.init)
             <*> j <| "html_url"
             <*> j <| "avatar_url"
