@@ -20,6 +20,14 @@ public struct Author: ResourceType {
     }
 }
 
+extension Author: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(email, forKey: .email)
+    }
+}
+
 extension Author: Hashable, Equatable {
     public var hashValue: Int {
         return name.hashValue ^ email.hashValue
