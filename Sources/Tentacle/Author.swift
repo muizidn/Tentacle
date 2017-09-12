@@ -18,6 +18,11 @@ public struct Author: ResourceType {
         self.name = name
         self.email = email
     }
+
+    public enum CodingKeys: CodingKey {
+        case name
+        case email
+    }
 }
 
 extension Author: Encodable {

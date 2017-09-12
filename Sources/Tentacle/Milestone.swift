@@ -83,37 +83,3 @@ extension Milestone: Hashable {
         return id.hashValue
     }
 }
-<<<<<<< HEAD
-
-internal func toMilestoneState(_ string: String) -> Decoded<Milestone.State> {
-    if let state = Milestone.State(rawValue: string) {
-        return .success(state)
-    } else {
-        return .failure(.custom("Milestone state is invalid"))
-    }
-}
-
-extension Milestone: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Milestone> {
-        let f = curry(self.init)
-
-        let ff = f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> j <| "number"
-            <*> (j <| "state" >>- toMilestoneState)
-            <*> j <| "title"
-            <*> j <| "description"
-        let fff = ff
-            <*> j <| "creator"
-            <*> j <| "open_issues"
-            <*> j <| "closed_issues"
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
-        return fff
-            <*> (j <|? "closed_at" >>- toOptionalDate)
-            <*> (j <|? "due_on" >>- toOptionalDate)
-            <*> (j <| "html_url" >>- toURL)
-    }
-}
-=======
->>>>>>> Remove Argo dependencies
