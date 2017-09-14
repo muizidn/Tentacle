@@ -9,8 +9,17 @@
 import Foundation
 
 public struct Commit: ResourceType {
+    public struct Hash: Decodable {
+        let raw: String
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            self.raw = try container.decode(String.self)
+        }
+    }
+
     /// SHA of the commit
-    public let sha: SHA
+    public let sha: Hash
 
     /// Author of the commit
     public let author: Author
@@ -32,7 +41,7 @@ public struct Commit: ResourceType {
         public let url: URL
 
         /// SHA of the parent commit
-        public let sha: SHA
+        public let sha: Hash
     }
 
     public struct Author: ResourceType {
@@ -78,3 +87,21 @@ extension Commit.Parent {
     }
 }
 
+extension Commit.Hash: Hashable {
+    public var hashValue: Int {
+        return self.raw.hashValue
+    }
+}
+
+extension Commit.Hash: Equatable {
+    public static func ==(lhs: Commit.Hash, rhs: Commit.Hash) -> Bool {
+        return lhs.raw == rhs.raw
+    }
+}
+
+extension Commit.Hash: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.raw = value
+    }
+
+}
