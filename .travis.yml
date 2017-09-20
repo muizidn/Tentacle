@@ -9,13 +9,33 @@ script: script/cibuild "$TRAVIS_XCODE_WORKSPACE" "$TRAVIS_XCODE_SCHEME" "$XCODE_
 xcode_workspace: Tentacle.xcworkspace
 matrix:
   include:
-    - xcode_scheme: Tentacle-OSX
+    - osx_image: xcode8.3
+      xcode_scheme: Tentacle-OSX
       env: XCODE_ACTION="build-for-testing test-without-building"
-    - xcode_scheme: Tentacle-iOS
+    - osx_image: xcode8.3
+      xcode_scheme: Tentacle-iOS
       env: XCODE_ACTION="build-for-testing test-without-building"
-    - xcode_scheme: update-test-fixtures
+    - osx_image: xcode8.3
+      xcode_scheme: update-test-fixtures
       env: XCODE_ACTION=build
-    - before_script: true
+    - osx_image: xcode8.3
+      before_script: true
+      script:
+        - swift build
+        - swift test
+      env:
+        - JOB=SWIFTPM_DARWIN
+    - osx_image: xcode9
+      xcode_scheme: Tentacle-OSX
+      env: XCODE_ACTION="build-for-testing test-without-building"
+    - osx_image: xcode9
+      xcode_scheme: Tentacle-iOS
+      env: XCODE_ACTION="build-for-testing test-without-building"
+    - osx_image: xcode9
+      xcode_scheme: update-test-fixtures
+      env: XCODE_ACTION=build
+    - osx_image: xcode9
+      before_script: true
       script:
         - swift build
         - swift test
