@@ -108,7 +108,7 @@ class ClientTests: XCTestCase {
     override func setUp() {
         HTTPStub.shared.stubRequests = { request in
             guard let fixture = Fixture.fixtureForURL(request.url!) else {
-                assert(false, "No Fixture found for url \(request.url!)")
+                fatalError("No Fixture found for url \(request.url!)")
             }
 
             return fixture
