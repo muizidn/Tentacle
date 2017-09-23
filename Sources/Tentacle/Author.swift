@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Author: ResourceType {
+public struct Author: ResourceType, Encodable {
     /// Name of the Author
     let name: String
     /// Email of the Author
@@ -19,13 +19,6 @@ public struct Author: ResourceType {
         self.email = email
     }
 
-    public enum CodingKeys: CodingKey {
-        case name
-        case email
-    }
-}
-
-extension Author: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
