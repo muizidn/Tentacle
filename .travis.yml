@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode9 
+osx_image: xcode9
 branches:
   only:
     - master
@@ -21,5 +21,6 @@ matrix:
         - swift test
       env:
         - JOB=SWIFTPM_DARWIN
+        - SWIFT_VERSION=4.0
 notifications:
   email: false
