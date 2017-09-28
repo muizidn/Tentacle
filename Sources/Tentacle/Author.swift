@@ -18,12 +18,6 @@ public struct Author: ResourceType, Encodable {
         self.name = name
         self.email = email
     }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(email, forKey: .email)
-    }
 }
 
 extension Author: Hashable, Equatable {
