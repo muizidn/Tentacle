@@ -21,6 +21,5 @@ matrix:
         - swift test
       env:
         - JOB=SWIFTPM_DARWIN
-        - SWIFT_VERSION=4.0
 notifications:
   email: false
