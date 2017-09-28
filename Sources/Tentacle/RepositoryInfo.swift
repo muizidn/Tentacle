@@ -11,9 +11,9 @@ import Argo
 import Curry
 import Runes
 
-public struct RepositoryInfo: CustomStringConvertible {
+public struct RepositoryInfo: CustomStringConvertible, Identifiable {
     /// The id of the repository
-    public let id: String
+    public let id: ID<RepositoryInfo>
     
     /// The basic informations about the owner of the repository, either an User or an Organization
     public let owner: UserInfo
@@ -82,7 +82,7 @@ extension RepositoryInfo: ResourceType {
         let f = curry(RepositoryInfo.init)
 
         let ff = f
-            <^> (j <| "id" >>- toString)
+            <^> (j <| "id" >>- toIdentifier)
             <*> j <| "owner"
             <*> j <| "name"
             <*> j <| "full_name"
