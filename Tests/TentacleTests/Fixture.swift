@@ -102,7 +102,7 @@ extension EndpointFixtureType {
     }
     
     /// The JSON from the Endpoint.
-    var JSON: Any {
+    var json: Any {
         return try! JSONSerialization.jsonObject(with: data)
     }
     
