@@ -92,4 +92,3 @@ extension RepositoryInfo: Hashable {
         return id.hashValue ^ nameWithOwner.hashValue
     }
 }
-
