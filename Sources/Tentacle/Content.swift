@@ -76,10 +76,11 @@ public enum Content: ResourceType {
                     let url = try container.decodeIfPresent(URL.self, forKey: .downloadURL)
                     self = .symlink(target: target, downloadURL: url)
                 default:
-                    throw DecodingError.dataCorrupted(DecodingError.Context(
-                        codingPath: container.codingPath + [CodingKeys.type],
+                    throw DecodingError.dataCorruptedError(
+                        forKey: CodingKeys.type,
+                        in: container,
                         debugDescription: "Invalid content-type \(type)"
-                    ))
+                    )
                 }
             }
 

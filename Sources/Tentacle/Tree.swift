@@ -95,10 +95,11 @@ public struct Tree: CustomStringConvertible, ResourceType {
                     let url = try container.decode(URL.self, forKey: .url)
                     self = .tree(url: url)
                 default:
-                    throw DecodingError.dataCorrupted(DecodingError.Context(
-                        codingPath: container.codingPath + [CodingKeys.type],
+                    throw DecodingError.dataCorruptedError(
+                        forKey: CodingKeys.type,
+                        in: container,
                         debugDescription: "Unexpected type \(type)"
-                    ))
+                    )
                 }
             }
 
