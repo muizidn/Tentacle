@@ -101,11 +101,6 @@ extension EndpointFixtureType {
         return URL(.dotCom, request, page: page, perPage: perPage)
     }
     
-    /// The JSON from the Endpoint.
-    var json: Any {
-        return try! JSONSerialization.jsonObject(with: data)
-    }
-    
     /// Decode the fixture's JSON as an object of the returned type.
     func decode<Object: Decodable>() -> Object? {
         let decoder = JSONDecoder()
