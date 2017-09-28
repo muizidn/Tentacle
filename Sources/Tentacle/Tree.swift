@@ -270,9 +270,6 @@ internal struct NewTree: Encodable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(entries, forKey: .entries)
-
-        if let base = base {
-            try container.encode(base, forKey: .base)
-        }
+        try container.encodeIfPresent(base, forKey: .base)
     }
 }
