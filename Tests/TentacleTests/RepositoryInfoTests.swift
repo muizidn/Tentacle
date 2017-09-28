@@ -23,7 +23,7 @@ class RepositoryInfoTests: XCTestCase {
 
         let expected = [
             RepositoryInfo(
-                id: "59615946",
+                id: 59615946,
                 owner: palleasOpensource,
                 name: "Sample-repository",
                 nameWithOwner: "Palleas-opensource/Sample-repository",
@@ -58,7 +58,7 @@ class RepositoryInfoTests: XCTestCase {
 
         let expected = [
             RepositoryInfo(
-                id: "35350514",
+                id: 35350514,
                 owner: raccommunity,
                 name: "Rex",
                 nameWithOwner: "RACCommunity/Rex",
@@ -76,7 +76,7 @@ class RepositoryInfoTests: XCTestCase {
                 updatedAt: DateFormatter.iso8601.date(from: "2016-07-31T12:12:36Z")!
             ),
             RepositoryInfo(
-                id: "49464897",
+                id: 49464897,
                 owner: raccommunity,
                 name: "RACNest",
                 nameWithOwner: "RACCommunity/RACNest",
@@ -94,7 +94,7 @@ class RepositoryInfoTests: XCTestCase {
                 updatedAt: DateFormatter.iso8601.date(from: "2016-08-02T16:07:39Z")!
             ),
             RepositoryInfo(
-                id: "57858100",
+                id: 57858100,
                 owner: raccommunity,
                 name: "contributors",
                 nameWithOwner: "RACCommunity/contributors",
@@ -112,7 +112,7 @@ class RepositoryInfoTests: XCTestCase {
                 updatedAt: DateFormatter.iso8601.date(from: "2016-07-27T11:39:23Z")!
             ),
             RepositoryInfo(
-                id: "59124784",
+                id: 59124784,
                 owner: raccommunity,
                 name: "racurated",
                 nameWithOwner: "RACCommunity/racurated",
@@ -130,7 +130,7 @@ class RepositoryInfoTests: XCTestCase {
                 updatedAt: DateFormatter.iso8601.date(from: "2016-07-27T11:39:11Z")!
             ),
             RepositoryInfo(
-                id: "75979247",
+                id: 75979247,
                 owner: raccommunity,
                 name: "ReactiveCollections",
                 nameWithOwner: "RACCommunity/ReactiveCollections",
@@ -147,7 +147,7 @@ class RepositoryInfoTests: XCTestCase {
                 createdAt: DateFormatter.iso8601.date(from: "2016-12-08T22:08:36Z")!,
                 updatedAt: DateFormatter.iso8601.date(from: "2016-12-21T17:53:43Z")!),
             RepositoryInfo(
-                id: "88407587",
+                id: 88407587,
                 owner: raccommunity,
                 name: "jazzy",
                 nameWithOwner: "RACCommunity/jazzy",
