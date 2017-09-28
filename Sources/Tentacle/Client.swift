@@ -213,10 +213,10 @@ public final class Client {
         _ request: Request<Resource>
     ) -> SignalProducer<(Response, Resource), Error> {
         return execute(request, page: nil, perPage: nil)
-            .attemptMap { (response, data) -> Result<(Response, Resource), Client.Error> in
+            .attemptMap { response, data -> Result<(Response, Resource), Client.Error> in
                 return decode(data)
                     .map { (response, $0) }
-                    .mapError { Error.jsonDecodingError($0) }
+                    .mapError(Error.jsonDecodingError)
             }
     }
 
@@ -232,12 +232,12 @@ public final class Client {
         let nextPage = (page ?? 1) + 1
 
         return execute(request, page: page, perPage: perPage)
-            .attemptMap { (response, data) -> Result<(Response, [Resource]), Client.Error> in
+            .attemptMap { response, data -> Result<(Response, [Resource]), Client.Error> in
                 return decodeList(data)
                     .map { (response, $0) }
-                    .mapError { Error.jsonDecodingError($0) }
+                    .mapError(Error.jsonDecodingError)
             }
-            .flatMap(.concat) { (response, data) -> SignalProducer<(Response, [Resource]), Error> in
+            .flatMap(.concat) { response, data -> SignalProducer<(Response, [Resource]), Error> in
                 let current = SignalProducer<(Response, [Resource]), Error>(value: (response, data))
                 guard let _ = response.links["next"] else {
                     return current.concat(.empty)
