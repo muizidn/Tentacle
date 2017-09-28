@@ -10,12 +10,6 @@ import Foundation
 import ReactiveSwift
 import Result
 
-extension JSONSerialization {
-    internal static func deserializeJSON(_ data: Data) -> Result<Any, AnyError> {
-        return materialize(try JSONSerialization.jsonObject(with: data))
-    }
-}
-
 extension URL {
     internal func url(with queryItems: [URLQueryItem]) -> URL {
         var components = URLComponents(url: self, resolvingAgainstBaseURL: true)!
