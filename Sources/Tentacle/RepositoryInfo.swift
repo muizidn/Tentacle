@@ -27,8 +27,8 @@ public struct RepositoryInfo: CustomStringConvertible, ResourceType, Identifiabl
     /// The URL of the repository to load in a browser
     public let url: URL
 
-    /// The homepage of the repository
-    public let homepage: Homepage?
+    /// The URL of the homepage for this repository
+    public let homepage: URL?
 
     /// Contains true if the repository is private
     public let isPrivate: Bool
@@ -59,6 +59,46 @@ public struct RepositoryInfo: CustomStringConvertible, ResourceType, Identifiabl
 
     public var description: String {
         return nameWithOwner
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(ID.self, forKey: .id)
+        self.owner = try container.decode(UserInfo.self, forKey: .owner)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.nameWithOwner = try container.decode(String.self, forKey: .nameWithOwner)
+        self.body = try? container.decode(String.self, forKey: .body)
+        self.url = try container.decode(URL.self, forKey: .url)
+        self.homepage = try? container.decode(URL.self, forKey: .homepage)
+        self.isPrivate = try container.decode(Bool.self, forKey: .isPrivate)
+        self.isFork = try container.decode(Bool.self, forKey: .isFork)
+        self.forksCount = try container.decode(Int.self, forKey: .forksCount)
+        self.stargazersCount = try container.decode(Int.self, forKey: .stargazersCount)
+        self.watchersCount = try container.decode(Int.self, forKey: .watchersCount)
+        self.openIssuesCount = try container.decode(Int.self, forKey: .openIssuesCount)
+        self.pushedAt = try container.decode(Date.self, forKey: .pushedAt)
+        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+    }
+
+    public init(id: ID<RepositoryInfo>, owner: UserInfo, name: String, nameWithOwner: String, body: String?, url: URL, homepage: URL?, isPrivate: Bool, isFork: Bool, forksCount: Int, stargazersCount: Int, watchersCount: Int, openIssuesCount: Int, pushedAt: Date, createdAt: Date, updatedAt: Date) {
+        self.id = id
+        self.owner = owner
+        self.name = name
+        self.nameWithOwner = nameWithOwner
+        self.body = body
+        self.url = url
+        self.homepage = homepage
+        self.isPrivate = isPrivate
+        self.isFork = isFork
+        self.forksCount = forksCount
+        self.stargazersCount = stargazersCount
+        self.watchersCount = watchersCount
+        self.openIssuesCount = openIssuesCount
+        self.pushedAt = pushedAt
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
 
     private enum CodingKeys: String, CodingKey {
