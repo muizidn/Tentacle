@@ -25,10 +25,25 @@ internal func decodeList<T: Decodable>(_ payload: Data) -> Result<[T], DecodingE
     }
 }
 
+extension DecodingError.Context: Equatable {
+    public static func ==(lhs: DecodingError.Context, rhs: DecodingError.Context) -> Bool {
+        return lhs.debugDescription == rhs.debugDescription
+    }
+}
+
 extension DecodingError: Equatable {
-    static public func ==(lhs: DecodingError, rhs: DecodingError) -> Bool {
+    public static func ==(lhs: DecodingError, rhs: DecodingError) -> Bool {
         switch (lhs, rhs) {
-        default: return false // FIXME
+        case (.dataCorrupted(let lContext), .dataCorrupted(let rContext)):
+            return lContext == rContext
+        case (.keyNotFound(let lKey, let lContext), .keyNotFound(let rKey, let rContext)):
+            return lKey.stringValue == rKey.stringValue && lContext == rContext
+        case (.typeMismatch(let lType, let lContext), .typeMismatch(let rType, let rContext)):
+            return lType == rType && lContext == rContext
+        case (.valueNotFound(let lType, let lContext), .valueNotFound(let rType, let rContext)):
+            return lType == rType && lContext == rContext
+        default:
+            return false
         }
     }
 }
