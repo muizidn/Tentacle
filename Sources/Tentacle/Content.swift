@@ -32,6 +32,13 @@ public enum Content: ResourceType {
     /// A file in a repository
     public struct File: CustomStringConvertible, Decodable {
 
+        public enum ContentTypeName: String, Decodable {
+            case file
+            case directory = "dir"
+            case symlink
+            case submodule
+        }
+
         /// Type of content in a repository
         ///
         /// - file: a file in a repository
@@ -57,30 +64,24 @@ public enum Content: ResourceType {
 
             public init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
-                let type = try container.decode(String.self, forKey: .type)
+                let type = try container.decode(ContentTypeName.self, forKey: .type)
                 switch type {
-                case "file":
+                case .file:
                     let size = try container.decode(Int.self, forKey: .size)
                     if let url = try container.decodeIfPresent(URL.self, forKey: .downloadURL) {
                         self = .file(size: size, downloadURL: url)
                     } else {
                         self = .submodule(url: nil)
                     }
-                case "dir":
+                case .directory:
                     self = .directory
-                case "submodule":
+                case .submodule:
                     let url = try container.decodeIfPresent(String.self, forKey: .submoduleURL)
                     self = .submodule(url: url)
-                case "symlink":
+                case .symlink:
                     let target = try container.decodeIfPresent(String.self, forKey: .target)
                     let url = try container.decodeIfPresent(URL.self, forKey: .downloadURL)
                     self = .symlink(target: target, downloadURL: url)
-                default:
-                    throw DecodingError.dataCorruptedError(
-                        forKey: CodingKeys.type,
-                        in: container,
-                        debugDescription: "Invalid content-type \(type)"
-                    )
                 }
             }
 
