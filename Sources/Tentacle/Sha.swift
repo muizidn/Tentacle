@@ -8,11 +8,12 @@
 
 import Foundation
 
-public struct SHA: ResourceType {
+public struct SHA: ResourceType, Encodable {
     public let hash: String
 
-    private enum CodingKeys: String, CodingKey {
-        case hash = "sha"
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.hash = try container.decode(String.self)
     }
 
 }
@@ -27,3 +28,8 @@ extension SHA {
     }
 }
 
+extension SHA: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.hash = value
+    }
+}

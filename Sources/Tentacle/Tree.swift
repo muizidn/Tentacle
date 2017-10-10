@@ -60,19 +60,6 @@ public struct Tree: CustomStringConvertible, ResourceType {
         case isTruncated = "truncated"
     }
 
-    public struct SHA: Codable {
-        public let hash: String
-
-        public init(from decoder: Decoder) throws {
-            self.hash = try decoder.singleValueContainer().decode(String.self)
-        }
-
-        public func encode(to encoder: Encoder) throws {
-            var container = encoder.singleValueContainer()
-            try container.encode(hash)
-        }
-    }
-
     public struct Entry: ResourceType, Encodable {
 
         public enum EntryType: ResourceType, Encodable {
@@ -237,23 +224,6 @@ extension Tree.Entry: Hashable {
     }
 }
 
-extension Tree.SHA: ExpressibleByStringLiteral {
-    public init(stringLiteral value: String) {
-        self.hash = value
-    }
-}
-
-extension Tree.SHA: Equatable {
-    public static func ==(lhs: Tree.SHA, rhs: Tree.SHA) -> Bool {
-        return lhs.hash == rhs.hash
-    }
-}
-
-extension Tree.SHA: Hashable {
-    public var hashValue: Int {
-        return hash.hashValue
-    }
-}
 
 internal struct NewTree: Encodable {
     /// The entries under this tree.

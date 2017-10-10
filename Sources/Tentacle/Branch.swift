@@ -19,30 +19,40 @@ extension Repository {
 
 public struct Branch: ResourceType {
 
+    public struct Commit: Decodable {
+        public let sha: SHA
+    }
+
     /// Name of the branch
     public let name: String
 
-    /// Sha of the commit the branch points to
-    public let sha: SHA
+    /// The commit the branch points to
+    public let commit: Commit
 
-    public init(name: String, sha: SHA) {
+    public init(name: String, commit: Commit) {
         self.name = name
-        self.sha = sha
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case name
-        case sha = "commit"
+        self.commit = commit
     }
 }
 
 extension Branch: Hashable {
     public static func ==(lhs: Branch, rhs: Branch) -> Bool {
-        return lhs.name == rhs.name && lhs.sha == rhs.sha
+        return lhs.name == rhs.name && lhs.commit == rhs.commit
     }
 
     public var hashValue: Int {
-        return name.hashValue ^ sha.hashValue
+        return name.hashValue ^ commit.hashValue
     }
 }
 
+extension Branch.Commit: Hashable {
+    public var hashValue: Int {
+        return sha.hashValue
+    }
+}
+
+extension Branch.Commit: Equatable {
+    public static func ==(lhs: Branch.Commit, rhs: Branch.Commit) -> Bool {
+        return lhs.sha == rhs.sha
+    }
+}
