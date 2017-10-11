@@ -16,6 +16,10 @@ public struct SHA: ResourceType, Encodable {
         self.hash = try container.decode(String.self)
     }
 
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(hash)
+    }
 }
 
 extension SHA {

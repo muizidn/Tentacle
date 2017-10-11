@@ -58,14 +58,14 @@ class TreeTests: XCTestCase {
         XCTAssertEqual(Fixture.TreeForRepository.TreeInSampleRepository.decode()!, expected)
     }
 
-    func testTreeEncoding() {
+    func testTreeEncoding() throws {
         let newTree = NewTree(entries: entries, base: "5bfad2b3f8e483b6b173d8aaff19597e84626f15")
 
         let encoder = JSONEncoder()
-        let encodedTree = try! encoder.encode(newTree)
+        let encodedTree = try encoder.encode(newTree)
 
         let decoder = JSONDecoder()
-        let decodedTree = try! decoder.decode(NewTree.self, from: encodedTree)
+        let decodedTree = try decoder.decode(NewTree.self, from: encodedTree)
 
         let expected = NewTree(entries: entries, base: "5bfad2b3f8e483b6b173d8aaff19597e84626f15")
         XCTAssertEqual(decodedTree, expected)
