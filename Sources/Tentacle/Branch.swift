@@ -33,6 +33,7 @@ public struct Branch: ResourceType {
         self.name = name
         self.commit = commit
     }
+
 }
 
 extension Branch: Hashable {
