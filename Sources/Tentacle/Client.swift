@@ -200,7 +200,7 @@ public final class Client {
                             .mapError(Error.jsonDecodingError)
                             .flatMap { error in
                                 .failure(Error.apiError(response.statusCode, Response(headerFields: headers), error))
-                        }
+                            }
                     }
 
                     return .success((Response(headerFields: headers), data))
