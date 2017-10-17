@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
 extension Repository {
     /// A request for a tree in the repository.
@@ -29,13 +26,15 @@ extension Repository {
     ///
     /// https://developer.github.com/v3/git/trees/#create-a-tree
     public func create(tree: [Tree.Entry], basedOn base: String?) -> Request<FileResponse> {
-        let object = NewTree(entries: tree, base: base).encode().JSONObject()
-        let payload = try? JSONSerialization.data(withJSONObject: object)
+        let object = NewTree(entries: tree, base: base)
+
+        let encoder = JSONEncoder()
+        let payload = try? encoder.encode(object)
         return Request(method: .post, path: "repos/\(owner)/\(name)/git/trees", body: payload)
     }
 }
 
-public struct Tree: CustomStringConvertible {
+public struct Tree: CustomStringConvertible, ResourceType {
 
     /// The SHA of the entry.
     public let sha: SHA
@@ -54,20 +53,71 @@ public struct Tree: CustomStringConvertible {
         return "\(url)"
     }
 
-    public struct Entry {
+    private enum CodingKeys: String, CodingKey {
+        case sha
+        case url
+        case entries = "tree"
+        case isTruncated = "truncated"
+    }
 
-        public enum EntryType {
+    public struct Entry: ResourceType, Encodable {
+
+        public enum EntryType: ResourceType, Encodable {
             case blob(url: URL, size: Int)
             case tree(url: URL)
             case commit
+
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                let type = try container.decode(String.self, forKey: .type)
+
+                switch type {
+                case "blob":
+                    let url = try container.decode(URL.self, forKey: .url)
+                    let size = try container.decode(Int.self, forKey: .size)
+                    self = .blob(url: url, size: size)
+                case "commit":
+                    self = .commit
+                case "tree":
+                    let url = try container.decode(URL.self, forKey: .url)
+                    self = .tree(url: url)
+                default:
+                    throw DecodingError.dataCorruptedError(
+                        forKey: CodingKeys.type,
+                        in: container,
+                        debugDescription: "Unexpected type \(type)"
+                    )
+                }
+            }
+
+            private enum CodingKeys: String, CodingKey {
+                case type
+                case url
+                case size
+            }
+
+            public func encode(to encoder: Encoder) throws {
+                var container = encoder.singleValueContainer()
+                switch self {
+                case .blob: try container.encode("blob")
+                case .tree: try container.encode("tree")
+                case .commit: try container.encode("commit")
+                }
+            }
         }
 
-        public enum Mode: String {
+        public enum Mode: String, ResourceType, Encodable {
             case file = "100644"
             case executable = "100755"
             case subdirectory = "040000"
             case submodule = "160000"
             case symlink = "120000"
+
+            public func encode(to encoder: Encoder) throws {
+                var container = encoder.singleValueContainer()
+                try container.encode(rawValue)
+            }
+
         }
 
         /// The type of the entry.
@@ -81,6 +131,47 @@ public struct Tree: CustomStringConvertible {
 
         /// The mode of the entry.
         public let mode: Mode
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.sha = try container.decode(SHA.self, forKey: .sha)
+            self.path = try container.decode(String.self, forKey: .path)
+            self.mode = try container.decode(Mode.self, forKey: .mode)
+            self.type = try EntryType(from: decoder)
+        }
+
+        public init(type: EntryType, sha: SHA, path: String, mode: Mode) {
+            self.type = type
+            self.sha = sha
+            self.path = path
+            self.mode = mode
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case type
+            case sha
+            case path
+            case mode
+            case url
+            case size
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(type, forKey: .type)
+            try container.encode(path, forKey: .path)
+            try container.encode(sha, forKey: .sha)
+            try container.encode(mode, forKey: .mode)
+
+            switch type {
+            case let .blob(url: url, size: size):
+                try container.encode(url, forKey: .url)
+                try container.encode(size, forKey: .size)
+            case let .tree(url: url):
+                try container.encode(url, forKey: .url)
+            default: break
+            }
+        }
     }
 }
 
@@ -97,23 +188,29 @@ extension Tree: Hashable {
     }
 }
 
-extension Tree: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Tree> {
-        return curry(self.init)
-            <^> (j <| "sha" >>- toSHA)
-            <*> (j <| "url" >>- toURL)
-            <*> j <|| "tree"
-            <*> j <| "truncated"
+extension Tree.Entry.EntryType: Hashable, Equatable {
+    public var hashValue: Int {
+        switch self {
+        case let .blob(url: url, size: size):
+            return "blob".hashValue ^ url.hashValue ^ size.hashValue
+        case let .tree(url):
+            return "tree".hashValue ^ url.hashValue
+        case .commit:
+            return "commit".hashValue
+        }
     }
-}
 
-extension Tree.Entry: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Tree.Entry> {
-        return curry(self.init)
-            <^> Tree.Entry.EntryType.decode(j)
-            <*> (j <| "sha" >>- toSHA)
-            <*> j <| "path"
-            <*> j <| "mode"
+    static public func ==(lhs: Tree.Entry.EntryType, rhs: Tree.Entry.EntryType) -> Bool {
+        switch (lhs, rhs) {
+        case let (.blob(url1, size1), .blob(url2, size2)):
+            return url1 == url2 && size1 == size2
+        case let (.tree(url1), .tree(url2)):
+            return url1 == url2
+        case (.commit, .commit):
+            return true
+        default:
+            return false
+        }
     }
 }
 
@@ -127,73 +224,6 @@ extension Tree.Entry: Hashable {
     }
 }
 
-func decodeBlob(_ j: JSON) -> Decoded<Tree.Entry.EntryType> {
-    return curry(Tree.Entry.EntryType.blob)
-        <^> j <| "url"
-        <*> j <| "size"
-}
-
-func decodeTree(_ j: JSON) -> Decoded<Tree.Entry.EntryType> {
-    return curry(Tree.Entry.EntryType.tree)
-        <^> j <| "url"
-}
-
-extension Tree.Entry.EntryType: Argo.Decodable {
-    public static func decode(_ json: JSON) -> Decoded<Tree.Entry.EntryType> {
-        guard case let .object(payload) = json else {
-            return .failure(.typeMismatch(expected: "object", actual: "\(json)"))
-        }
-
-        guard let type = payload["type"], case let .string(value) = type else {
-            return .failure(.custom("Content type is invalid"))
-        }
-
-        switch value {
-        case "blob":
-            return decodeBlob(json)
-        case "commit":
-            return .success(Tree.Entry.EntryType.commit)
-        case "tree":
-            return decodeTree(json)
-        default:
-            return .failure(.custom("Content type \(value) is invalid"))
-        }
-    }
-}
-
-extension Tree.Entry.Mode: Argo.Decodable {}
-
-extension Tree.Entry.EntryType: Encodable {
-    public func encode() -> JSON {
-        switch self {
-        case .blob:
-            return .string("blob")
-        case .tree:
-            return .string("tree")
-        case .commit:
-            return .string("commit")
-        }
-    }
-}
-
-extension Tree.Entry.Mode: Encodable {
-    public func encode() -> JSON {
-        return .string(rawValue)
-    }
-}
-
-extension Tree.Entry: Encodable {
-    public func encode() -> JSON {
-        let payload: [String: JSON] = [
-            "path": .string(path),
-            "mode": mode.encode(),
-            "type": type.encode(),
-            "sha": .string(sha.hash)
-        ]
-
-        return JSON.object(payload)
-    }
-}
 
 internal struct NewTree: Encodable {
     /// The entries under this tree.
@@ -202,15 +232,8 @@ internal struct NewTree: Encodable {
     /// The base for the new tree.
     internal let base: String?
 
-    internal func encode() -> JSON {
-        var payload: [String: JSON] = [
-            "tree": .array(entries.map { $0.encode() })
-        ]
-
-        if let base = base {
-            payload["base_tree"] = .string(base)
-        }
-
-        return JSON.object(payload)
+    internal enum CodingKeys: String, CodingKey {
+        case entries = "tree"
+        case base = "base_tree"
     }
 }

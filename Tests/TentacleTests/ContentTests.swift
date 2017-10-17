@@ -7,10 +7,15 @@
 //
 
 import XCTest
-import Argo
 @testable import Tentacle
 
 class ContentTests: XCTestCase {
+
+    override func setUp() {
+        super.setUp()
+
+        HTTPStub.shared.initialize()
+    }
 
     func testDecodedFile() {
         let expected: Content = .file(Content.File(
@@ -55,8 +60,9 @@ class ContentTests: XCTestCase {
                 url: URL(string: "https://github.com/Palleas-opensource/Sample-repository/blob/master/Tools/say")!
             )
         ])
+        let directory: Content = Fixture.FileForRepository.DirectoryInSampleRepository.decode()!
 
-        XCTAssertEqual(Fixture.FileForRepository.DirectoryInSampleRepository.decode()!, expected)
+        XCTAssertEqual(directory, expected)
     }
 
     func testDecodedSubmodule() {

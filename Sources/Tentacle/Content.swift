@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
 extension Repository {
     /// A request for the content at a given path in the repository.
@@ -31,9 +28,16 @@ extension Repository {
 ///
 /// - file: a file when queried directly in a repository
 /// - directory: a directory when queried directly in a repository (may contain multiple files)
-public enum Content {
+public enum Content: ResourceType {
     /// A file in a repository
-    public struct File: CustomStringConvertible {
+    public struct File: CustomStringConvertible, Decodable {
+
+        public enum ContentTypeName: String, Decodable {
+            case file
+            case directory = "dir"
+            case symlink
+            case submodule
+        }
 
         /// Type of content in a repository
         ///
@@ -41,7 +45,7 @@ public enum Content {
         /// - directory: a directory in a repository
         /// - symlink: a symlink in a repository not targeting a file inside the same repository
         /// - submodule: a submodule in a repository
-        public enum ContentType {
+        public enum ContentType: Decodable {
             /// A file a in a repository
             case file(size: Int, downloadURL: URL?)
 
@@ -57,6 +61,37 @@ public enum Content {
             /// when they are the result of a query for a directory
             /// See https://developer.github.com/v3/repos/contents/
             case submodule(url: String?)
+
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                let type = try container.decode(ContentTypeName.self, forKey: .type)
+                switch type {
+                case .file:
+                    let size = try container.decode(Int.self, forKey: .size)
+                    if let url = try container.decodeIfPresent(URL.self, forKey: .downloadURL) {
+                        self = .file(size: size, downloadURL: url)
+                    } else {
+                        self = .submodule(url: nil)
+                    }
+                case .directory:
+                    self = .directory
+                case .submodule:
+                    let url = try container.decodeIfPresent(String.self, forKey: .submoduleURL)
+                    self = .submodule(url: url)
+                case .symlink:
+                    let target = try container.decodeIfPresent(String.self, forKey: .target)
+                    let url = try container.decodeIfPresent(URL.self, forKey: .downloadURL)
+                    self = .symlink(target: target, downloadURL: url)
+                }
+            }
+
+            private enum CodingKeys: String, CodingKey {
+                case type
+                case size
+                case target
+                case downloadURL = "download_url"
+                case submoduleURL = "submodule_git_url"
+            }
         }
 
         /// The type of content
@@ -78,54 +113,50 @@ public enum Content {
             return name
         }
 
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            self.name = try container.decode(String.self, forKey: .name)
+            self.path = try container.decode(String.self, forKey: .path)
+            self.sha = try container.decode(String.self, forKey: .sha)
+            self.url = try container.decode(URL.self, forKey: .url)
+            self.content = try ContentType(from: decoder)
+        }
+
+        public init(content: ContentType, name: String, path: String, sha: String, url: URL) {
+            self.name = name
+            self.path = path
+            self.sha = sha
+            self.url = url
+            self.content = content
+        }
+
+        private enum CodingKeys: String, CodingKey {
+            case name
+            case path
+            case sha
+            case url = "html_url"
+            case content
+        }
+
     }
 
     case file(File)
     case directory([File])
-}
 
-func decodeFile(_ j: JSON) -> Decoded<Content.File.ContentType> {
-    return curry(Content.File.ContentType.file)
-        <^> j <| "size"
-        <*> (j <|? "download_url" >>- toOptionalURL)
-}
+    public init(from decoder: Decoder) throws {
 
-func decodeSymlink(_ j: JSON) -> Decoded<Content.File.ContentType> {
-    return curry(Content.File.ContentType.symlink)
-        <^> j <|? "target"
-        <*> (j <|? "download_url" >>- toOptionalURL)
-}
-
-func decodeSubmodule(_ j: JSON) -> Decoded<Content.File.ContentType> {
-    return curry(Content.File.ContentType.submodule)
-        <^> j <|? "submodule_git_url"
-}
-
-
-extension Content.File.ContentType: Argo.Decodable {
-    public static func decode(_ json: JSON) -> Decoded<Content.File.ContentType> {
-        guard case let .object(payload) = json else {
-            return .failure(.typeMismatch(expected: "object", actual: "\(json)"))
-        }
-
-        guard let type = payload["type"], case let .string(value) = type else {
-            return .failure(.custom("Content type is invalid"))
-        }
-
-        switch value {
-        case "file":
-            if payload["download_url"] == .null {
-                return decodeSubmodule(json)
+        do {
+            let file = try File(from: decoder)
+            self = .file(file)
+        } catch {
+            var container = try decoder.unkeyedContainer()
+            var files = [File]()
+            while !container.isAtEnd {
+                files.append(try container.decode(File.self))
             }
-            return decodeFile(json)
-        case "dir":
-            return .success(Content.File.ContentType.directory)
-        case "submodule":
-            return decodeSubmodule(json)
-        case "symlink":
-            return decodeSymlink(json)
-        default:
-            return .failure(.custom("Content type \(value) is invalid"))
+
+            self = .directory(files)
         }
     }
 }
@@ -169,20 +200,6 @@ extension Content.File.ContentType: Equatable {
     }
 }
 
-extension Content: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Content> {
-
-        switch j {
-        case .array(_):
-            return Array<Content.File>.decode(j).map(Content.directory)
-        case .object(_):
-            return Content.File.decode(j).map(Content.file)
-        default:
-            return .failure(.typeMismatch(expected: "Array or Object", actual: "\(j)"))
-        }
-    }
-}
-
 extension Content.File: Hashable {
     public static func ==(lhs: Content.File, rhs: Content.File) -> Bool {
         return lhs.name == rhs.name
@@ -196,15 +213,4 @@ extension Content.File: Hashable {
     }
 }
 
-extension Content.File: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Content.File> {
-        let f = curry(Content.File.init)
 
-        return f
-            <^> Content.File.ContentType.decode(j)
-            <*> j <| "name"
-            <*> j <| "path"
-            <*> j <| "sha"
-            <*> (j <| "html_url" >>- toURL)
-    }
-}

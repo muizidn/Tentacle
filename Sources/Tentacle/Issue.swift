@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
 extension Repository {
     /// A request for issues in the repository.
@@ -21,8 +18,8 @@ extension Repository {
 }
 
 /// An Issue on Github
-public struct Issue: CustomStringConvertible, Identifiable {
-    public enum State: String {
+public struct Issue: CustomStringConvertible, ResourceType, Identifiable {
+    public enum State: String, ResourceType {
         case open = "open"
         case closed = "closed"
     }
@@ -98,6 +95,24 @@ public struct Issue: CustomStringConvertible, Identifiable {
         self.updatedAt = updatedAt
     }
 
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case url = "html_url"
+        case number
+        case state
+        case title
+        case body
+        case user
+        case labels
+        case assignees
+        case milestone
+        case isLocked = "locked"
+        case commentCount = "comments"
+        case pullRequest = "pull_request"
+        case closedAt = "closed_at"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
 }
 
 extension Issue: Hashable {
@@ -122,28 +137,3 @@ extension Issue: Hashable {
     }
 }
 
-extension Issue: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Issue> {
-        let f = curry(Issue.init)
-
-        let ff = f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> (j <| "html_url" >>- toURL)
-            <*> j <| "number"
-            <*> (j <| "state" >>- toIssueState)
-            <*> j <| "title"
-        let fff = ff
-            <*> j <| "body"
-            <*> j <| "user"
-            <*> j <|| "labels"
-            <*> j <|| "assignees"
-            <*> j <|? "milestone"
-        return fff
-            <*> j <| "locked"
-            <*> j <| "comments"
-            <*> j <|? "pull_request"
-            <*> (j <|? "closed_at" >>- toOptionalDate)
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
-    }
-}

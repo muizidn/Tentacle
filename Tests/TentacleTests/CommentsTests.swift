@@ -6,7 +6,6 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
-import Argo
 @testable import Tentacle
 import XCTest
 

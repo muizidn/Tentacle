@@ -7,14 +7,11 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct Milestone: CustomStringConvertible, Identifiable {
-    public enum State: String {
-        case open = "open"
-        case closed = "closed"
+public struct Milestone: CustomStringConvertible, ResourceType, Identifiable {
+    public enum State: String, Decodable {
+        case open
+        case closed
     }
 
     /// The ID of the milestone
@@ -59,6 +56,22 @@ public struct Milestone: CustomStringConvertible, Identifiable {
     public var description: String {
         return title
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case number
+        case state
+        case title
+        case body = "description"
+        case creator
+        case openIssueCount = "open_issues"
+        case closedIssueCount = "closed_issues"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case closedAt = "closed_at"
+        case dueOn = "due_on"
+        case url = "html_url"
+    }
 }
 
 extension Milestone: Hashable {
@@ -68,36 +81,5 @@ extension Milestone: Hashable {
 
     public var hashValue: Int {
         return id.hashValue
-    }
-}
-
-internal func toMilestoneState(_ string: String) -> Decoded<Milestone.State> {
-    if let state = Milestone.State(rawValue: string) {
-        return .success(state)
-    } else {
-        return .failure(.custom("Milestone state is invalid"))
-    }
-}
-
-extension Milestone: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Milestone> {
-        let f = curry(self.init)
-
-        let ff = f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> j <| "number"
-            <*> (j <| "state" >>- toMilestoneState)
-            <*> j <| "title"
-            <*> j <| "description"
-        let fff = ff
-            <*> j <| "creator"
-            <*> j <| "open_issues"
-            <*> j <| "closed_issues"
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
-        return fff
-            <*> (j <|? "closed_at" >>- toOptionalDate)
-            <*> (j <|? "due_on" >>- toOptionalDate)
-            <*> (j <| "html_url" >>- toURL)
     }
 }

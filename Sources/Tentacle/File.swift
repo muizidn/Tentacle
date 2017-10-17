@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Runes
-import Curry
 
 extension Repository {
     /// A request to create a file at a given path in the repository.
@@ -30,7 +27,7 @@ extension Repository {
     }
 }
 
-public struct File {
+public struct File: ResourceType, Encodable {
     /// Commit message
     public let message: String
     /// The committer of the commit
@@ -49,32 +46,20 @@ public struct File {
         self.content = content
         self.branch = branch
     }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(message, forKey: .message)
+        try container.encode(committer, forKey: .committer)
+        try container.encode(author, forKey: .author)
+        try container.encode(content.base64EncodedString(), forKey: .content)
+        try container.encode(branch, forKey: .branch)
+    }
 }
 
-extension File: Encodable, Hashable {
+extension File: Hashable {
     public var hashValue: Int {
         return message.hashValue
-    }
-
-    public func encode() -> JSON {
-        var payload: [String: JSON] = [
-            "message": .string(message),
-            "content": .string(content.base64EncodedString())
-        ]
-
-        if let author = author {
-            payload["author"] = author.encode()
-        }
-
-        if let committer = committer {
-            payload["committer"] = committer.encode()
-        }
-
-        if let branch = branch {
-            payload["branch"] = .string(branch)
-        }
-
-        return JSON.object(payload)
     }
     
     public static func ==(lhs: File, rhs: File) -> Bool {

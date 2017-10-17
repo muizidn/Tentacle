@@ -2,17 +2,16 @@
 //  FileResponseTests.swift
 //  Tentacle
 //
-//  Created by POUCLET, Romain (MTL) on 2016-12-24.
+//  Created by Romain Pouclet on 2016-12-24.
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
 import XCTest
-import Argo
 @testable import Tentacle
 
 class FileResponseTests: XCTestCase {
 
-    func testDecodedFileResponse() {
+    func testDecodedFileResponse() throws {
         #if SWIFT_PACKAGE
             let url = URL(fileURLWithPath: #file)
                 .deletingLastPathComponent()
@@ -21,8 +20,6 @@ class FileResponseTests: XCTestCase {
         #else
             let url = Bundle(for: type(of: self)).url(forResource: "create-file-sample-response", withExtension: "data")!
         #endif
-        let data = try! Data(contentsOf: url)
-        let json = JSON(try! JSONSerialization.jsonObject(with: data, options: []))
 
         let content = Content.file(Content.File(
             content: .file(size: 9, downloadURL: URL(string: "https://raw.githubusercontent.com/octocat/HelloWorld/master/notes/hello.txt")!),
@@ -38,7 +35,7 @@ class FileResponseTests: XCTestCase {
         )
 
         let commit = Commit(
-            sha: SHA(hash: "7638417db6d59f3c431d3e1f261cc637155684cd"),
+            sha: "7638417db6d59f3c431d3e1f261cc637155684cd",
             author: author,
             committer: author,
             message: "my commit message",
@@ -46,18 +43,16 @@ class FileResponseTests: XCTestCase {
             parents: [
                 Commit.Parent(
                     url: URL(string: "https://github.com/octocat/Hello-World/git/commit/1acc419d4d6a9ce985db7be48c6349a0475975b5")!,
-                    sha: SHA(hash: "1acc419d4d6a9ce985db7be48c6349a0475975b5")
+                    sha: "1acc419d4d6a9ce985db7be48c6349a0475975b5"
                 )
             ]
         )
-
         let expected = FileResponse(content: content, commit: commit)
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.iso8601)
 
-        guard case let .success(decoded) = FileResponse.decode(json) else {
-            XCTFail()
-            return
-        }
-
+        let decoded = try decoder.decode(FileResponse.self, from: data)
         XCTAssertEqual(expected, decoded)
     }
 }

@@ -18,7 +18,7 @@ extension Organization {
 }
 
 /// An organization on GitHub or GitHub Enterprise.
-public struct Organization: CustomStringConvertible {
+public struct Organization: CustomStringConvertible, ResourceType {
     /// The organization's name.
     public let name: String
     

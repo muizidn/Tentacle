@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct FileResponse {
+public struct FileResponse: ResourceType {
     /// Created file
     public let content: Content
     
@@ -19,13 +16,7 @@ public struct FileResponse {
     public let commit: Commit
 }
 
-extension FileResponse: ResourceType {
-    static public func decode(_ j: JSON) -> Decoded<FileResponse> {
-        return curry(FileResponse.init)
-            <^> j <| "content"
-            <*> j <| "commit"
-    }
-
+extension FileResponse {
     public var hashValue: Int {
         return content.hashValue ^ commit.hashValue
     }

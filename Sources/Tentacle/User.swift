@@ -7,9 +7,6 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
 extension User {
     /// A request for issues assigned to the authenticated user.
@@ -58,7 +55,7 @@ extension User {
 }
 
 /// A user on GitHub or GitHub Enterprise.
-public struct User: CustomStringConvertible {
+public struct User: CustomStringConvertible, Decodable {
     /// The user's login/username.
     public let login: String
     
@@ -82,8 +79,8 @@ extension User: Hashable {
 }
 
 /// Information about a user on GitHub.
-public struct UserInfo: CustomStringConvertible, Identifiable {
-    public enum UserType: String {
+public struct UserInfo: CustomStringConvertible, ResourceType, Identifiable {
+    public enum UserType: String, Decodable {
         case user = "User"
         case organization = "Organization"
     }
@@ -106,6 +103,31 @@ public struct UserInfo: CustomStringConvertible, Identifiable {
     public var description: String {
         return user.description
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case user = "login"
+        case url = "html_url"
+        case avatarURL = "avatar_url"
+        case type
+    }
+
+    public init(id: ID<UserInfo>, user: User, url: URL, avatarURL: URL, type: UserType) {
+        self.id = id
+        self.user = user
+        self.url = url
+        self.avatarURL = avatarURL
+        self.type = type
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(ID.self, forKey: .id)
+        self.user = try User(from: decoder)
+        self.url = try container.decode(URL.self, forKey: .url)
+        self.avatarURL = try container.decode(URL.self, forKey: .avatarURL)
+        self.type = try container.decode(UserType.self, forKey: .type)
+    }
 }
 
 extension UserInfo: Hashable {
@@ -121,19 +143,8 @@ extension UserInfo: Hashable {
     }
 }
 
-extension UserInfo: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<UserInfo> {
-        return curry(self.init)
-            <^> (j <| "id" >>- toIdentifier)
-            <*> (j <| "login").map(User.init)
-            <*> j <| "html_url"
-            <*> j <| "avatar_url"
-            <*> (j <| "type" >>- toUserType)
-    }
-}
-
 /// Extended information about a user on GitHub.
-public struct UserProfile {
+public struct UserProfile: ResourceType {
     /// The user that this information refers to.
     public let user: UserInfo
     
@@ -166,6 +177,26 @@ public struct UserProfile {
         self.websiteURL = websiteURL
         self.company = company
     }
+
+    public init(from decoder: Decoder) throws {
+        self.user = try UserInfo(from: decoder)
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.joinedDate = try container.decode(Date.self, forKey: .joinedDate)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        self.email = try container.decodeIfPresent(String.self, forKey: .email)
+        self.websiteURL = try container.decodeIfPresent(String.self, forKey: .websiteURL)
+        self.company = try container.decodeIfPresent(String.self, forKey: .company)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case user
+        case joinedDate = "created_at"
+        case name
+        case email
+        case websiteURL = "blog"
+        case company
+    }
 }
 
 extension UserProfile: Hashable {
@@ -183,14 +214,3 @@ extension UserProfile: Hashable {
     }
 }
 
-extension UserProfile: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<UserProfile> {
-        return curry(self.init)
-            <^> j <| []
-            <*> (j <| "created_at" >>- toDate)
-            <*> j <|? "name"
-            <*> j <|? "email"
-            <*> j <|? "blog"
-            <*> j <|? "company"
-    }
-}

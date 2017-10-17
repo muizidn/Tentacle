@@ -1,10 +1,17 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
     name: "Tentacle",
+    products: [
+        .library(name: "Tentacle", targets: ["Tentacle"]),
+    ],
     dependencies: [
-        .Package(url: "https://github.com/thoughtbot/Argo.git", versions: Version(4, 1, 2)..<Version(4, .max, .max)),
-        .Package(url: "https://github.com/thoughtbot/Curry.git", majorVersion: 3),
-        .Package(url: "https://github.com/ReactiveCocoa/ReactiveSwift.git", majorVersion: 2),
-    ]
+        .package(url: "https://github.com/ReactiveCocoa/ReactiveSwift.git", from: "2.0.0"),
+    ],
+    targets: [
+        .target(name: "Tentacle", dependencies: ["ReactiveSwift"]),
+        .testTarget(name: "TentacleTests", dependencies: ["Tentacle"]),
+    ],
+    swiftLanguageVersions: [4]
 )

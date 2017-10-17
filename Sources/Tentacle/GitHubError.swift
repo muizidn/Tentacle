@@ -6,14 +6,10 @@
 //  Copyright © 2016 Matt Diephouse. All rights reserved.
 //
 
-import Argo
-import Curry
-import Runes
 import Foundation
 
-
 /// An error from the GitHub API.
-public struct GitHubError: CustomStringConvertible, Error {
+public struct GitHubError: CustomStringConvertible, Error, Decodable {
     /// The error message from the API.
     public let message: String
     
@@ -33,11 +29,5 @@ extension GitHubError: Hashable {
 
     public var hashValue: Int {
         return message.hashValue
-    }
-}
-
-extension GitHubError: Argo.Decodable {
-    public static func decode(_ j: JSON) -> Decoded<GitHubError> {
-        return curry(self.init) <^> j <| "message"
     }
 }

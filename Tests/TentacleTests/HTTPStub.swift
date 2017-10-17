@@ -3,15 +3,18 @@ import Foundation
 
 // Based on https://github.com/ishkawa/APIKit/blob/3.0.0/Tests/APIKitTests/TestComponents/HTTPStub.swift.
 class HTTPStub: NSObject {
-    static let shared: HTTPStub = HTTPStub()
+    static let shared: HTTPStub = {
+        let s = HTTPStub()
+        s.initialize()
+
+        return s
+    }()
 
     var stubRequests: ((URLRequest) -> FixtureType)!
     private var fixture: FixtureType!
 
-    override static func initialize() {
-        if self == HTTPStub.self {
-            URLProtocol.registerClass(StubProtocol.self)
-        }
+    func initialize() {
+        URLProtocol.registerClass(StubProtocol.self)
     }
 
     private override init() {

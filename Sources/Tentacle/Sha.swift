@@ -7,20 +7,22 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct SHA {
+public struct SHA: ResourceType, Encodable {
     public let hash: String
-}
 
-extension SHA: ResourceType {
-    public static func decode(_ json: JSON) -> Decoded<SHA> {
-        return curry(SHA.init)
-            <^> json <| "sha"
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        self.hash = try container.decode(String.self)
     }
 
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(hash)
+    }
+}
+
+extension SHA {
     public var hashValue: Int {
         return hash.hashValue
     }
@@ -30,3 +32,8 @@ extension SHA: ResourceType {
     }
 }
 
+extension SHA: ExpressibleByStringLiteral {
+    public init(stringLiteral value: String) {
+        self.hash = value
+    }
+}

@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct Commit {
+public struct Commit: ResourceType {
     /// SHA of the commit
     public let sha: SHA
 
@@ -30,7 +27,7 @@ public struct Commit {
     /// Parents commits
     public let parents: [Parent]
 
-    public struct Parent {
+    public struct Parent: ResourceType {
         /// URL to see the parent commit in a browser
         public let url: URL
 
@@ -38,7 +35,7 @@ public struct Commit {
         public let sha: SHA
     }
 
-    public struct Author {
+    public struct Author: ResourceType {
         /// Date the author made the commit
         public let date: Date
         /// Name of the author
@@ -48,7 +45,7 @@ public struct Commit {
     }
 }
 
-extension Commit: ResourceType {
+extension Commit {
     public var hashValue: Int {
         return sha.hashValue
     }
@@ -56,26 +53,9 @@ extension Commit: ResourceType {
     public static func ==(lhs: Commit, rhs: Commit) -> Bool {
         return lhs.sha == rhs.sha
     }
-
-    public static func decode(_ j: JSON) -> Decoded<Commit> {
-        return curry(Commit.init)
-            <^> (j <| "sha" >>- toSHA)
-            <*> j <| "author"
-            <*> j <| "committer"
-            <*> j <| "message"
-            <*> (j <| "url" >>- toURL)
-            <*> j <|| "parents"
-    }
 }
 
-extension Commit.Author: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Commit.Author> {
-        return curry(Commit.Author.init)
-            <^> (j <| "date" >>- toDate)
-            <*> j <| "name"
-            <*> j <| "email"
-    }
-
+extension Commit.Author {
     public var hashValue: Int {
         return date.hashValue ^ name.hashValue ^ email.hashValue
     }
@@ -87,13 +67,7 @@ extension Commit.Author: ResourceType {
     }
 }
 
-extension Commit.Parent: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<Commit.Parent> {
-        return curry(Commit.Parent.init)
-            <^> (j <| "url" >>- toURL)
-            <*> (j <| "sha" >>- toSHA)
-    }
-
+extension Commit.Parent {
     public var hashValue: Int {
         return sha.hashValue ^ url.hashValue
     }
@@ -103,4 +77,3 @@ extension Commit.Parent: ResourceType {
             && lhs.url == rhs.url
     }
 }
-

@@ -7,11 +7,8 @@
 //
 
 import Foundation
-import Argo
-import Curry
-import Runes
 
-public struct RepositoryInfo: CustomStringConvertible, Identifiable {
+public struct RepositoryInfo: CustomStringConvertible, ResourceType, Identifiable {
     /// The id of the repository
     public let id: ID<RepositoryInfo>
     
@@ -30,7 +27,7 @@ public struct RepositoryInfo: CustomStringConvertible, Identifiable {
     /// The URL of the repository to load in a browser
     public let url: URL
 
-    /// The homepage of the repository
+    /// The URL of the homepage for this repository
     public let homepage: URL?
 
     /// Contains true if the repository is private
@@ -63,6 +60,65 @@ public struct RepositoryInfo: CustomStringConvertible, Identifiable {
     public var description: String {
         return nameWithOwner
     }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(ID.self, forKey: .id)
+        self.owner = try container.decode(UserInfo.self, forKey: .owner)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.nameWithOwner = try container.decode(String.self, forKey: .nameWithOwner)
+        self.body = try container.decodeIfPresent(String.self, forKey: .body)
+        self.url = try container.decode(URL.self, forKey: .url)
+        self.homepage = try? container.decode(URL.self, forKey: .homepage)
+        self.isPrivate = try container.decode(Bool.self, forKey: .isPrivate)
+        self.isFork = try container.decode(Bool.self, forKey: .isFork)
+        self.forksCount = try container.decode(Int.self, forKey: .forksCount)
+        self.stargazersCount = try container.decode(Int.self, forKey: .stargazersCount)
+        self.watchersCount = try container.decode(Int.self, forKey: .watchersCount)
+        self.openIssuesCount = try container.decode(Int.self, forKey: .openIssuesCount)
+        self.pushedAt = try container.decode(Date.self, forKey: .pushedAt)
+        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+    }
+
+    public init(id: ID<RepositoryInfo>, owner: UserInfo, name: String, nameWithOwner: String, body: String?, url: URL, homepage: URL?, isPrivate: Bool, isFork: Bool, forksCount: Int, stargazersCount: Int, watchersCount: Int, openIssuesCount: Int, pushedAt: Date, createdAt: Date, updatedAt: Date) {
+        self.id = id
+        self.owner = owner
+        self.name = name
+        self.nameWithOwner = nameWithOwner
+        self.body = body
+        self.url = url
+        self.homepage = homepage
+        self.isPrivate = isPrivate
+        self.isFork = isFork
+        self.forksCount = forksCount
+        self.stargazersCount = stargazersCount
+        self.watchersCount = watchersCount
+        self.openIssuesCount = openIssuesCount
+        self.pushedAt = pushedAt
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case owner
+        case name
+        case nameWithOwner = "full_name"
+        case body = "description"
+        case url = "html_url"
+        case homepage
+        case isPrivate = "private"
+        case isFork = "fork"
+        case forksCount = "forks_count"
+        case stargazersCount = "stargazers_count"
+        case watchersCount = "watchers_count"
+        case openIssuesCount = "open_issues_count"
+        case pushedAt = "pushed_at"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
 }
 
 extension RepositoryInfo: Hashable {
@@ -74,31 +130,5 @@ extension RepositoryInfo: Hashable {
 
     public var hashValue: Int {
         return id.hashValue ^ nameWithOwner.hashValue
-    }
-}
-
-extension RepositoryInfo: ResourceType {
-    public static func decode(_ j: JSON) -> Decoded<RepositoryInfo> {
-        let f = curry(RepositoryInfo.init)
-
-        let ff = f
-            <^> (j <| "id" >>- toIdentifier)
-            <*> j <| "owner"
-            <*> j <| "name"
-            <*> j <| "full_name"
-            <*> j <|? "description"
-        let fff = ff
-            <*> (j <| "html_url" >>- toURL)
-            <*> (j <|? "homepage" >>- toOptionalURL)
-            <*> j <| "private"
-            <*> j <| "fork"
-            <*> j <| "forks_count"
-        return fff
-            <*> j <| "stargazers_count"
-            <*> j <| "watchers_count"
-            <*> j <| "open_issues_count"
-            <*> (j <| "pushed_at" >>- toDate)
-            <*> (j <| "created_at" >>- toDate)
-            <*> (j <| "updated_at" >>- toDate)
     }
 }
