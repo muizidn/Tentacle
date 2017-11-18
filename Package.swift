@@ -7,7 +7,7 @@ let package = Package(
         .library(name: "Tentacle", targets: ["Tentacle"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveCocoa/ReactiveSwift.git", from: "2.0.0"),
+        .package(url: "https://github.com/ReactiveCocoa/ReactiveSwift.git", from: "3.0.0"),
     ],
     targets: [
         .target(name: "Tentacle", dependencies: ["ReactiveSwift"]),
