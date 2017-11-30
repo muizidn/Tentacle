@@ -116,7 +116,7 @@ class RepositoryInfoTests: XCTestCase {
                 name: "racurated",
                 nameWithOwner: "RACCommunity/racurated",
                 body: "Curated list of ReactiveCocoa projects.",
-                url: URL(string:     "https://github.com/RACCommunity/racurated")!,
+                url: URL(string: "https://github.com/RACCommunity/racurated")!,
                 homepage: URL(string: "https://raccommunity.github.io/racurated/"),
                 isPrivate: false,
                 isFork: false,
