@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public struct RepositoryInfo: CustomStringConvertible, ResourceType, Identifiable {
     /// The id of the repository
     public let id: ID<RepositoryInfo>

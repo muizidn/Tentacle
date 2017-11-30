@@ -8,6 +8,17 @@
 
 import Foundation
 
+extension Repository {
+    
+    /// A request for the repository's Info
+    ///
+    /// https://developer.github.com/v3/repos/#get
+    public var info: Request<RepositoryInfo> {
+        return Request(method: .get, path: "/repos/\(owner)/\(name)")
+    }
+
+}
+
 
 /// A GitHub.com or GitHub Enterprise repository.
 public struct Repository: CustomStringConvertible {
