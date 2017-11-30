@@ -141,6 +141,7 @@ struct Fixture {
     fileprivate static let ResponseExtension = "response"
     
     static var allFixtures: [FixtureType] = [
+        Repositories.Tentacle,
         Release.Carthage0_15,
         Release.MDPSplitView1_0_2,
         Release.Nonexistent,
@@ -184,7 +185,11 @@ struct Fixture {
             }
         }
     }
-    
+
+    struct Repositories {
+        static let Tentacle = Repository(owner: "mdiep", name: "Tentacle").info
+    }
+
     struct Releases: EndpointFixtureType {
         static let Carthage = [
             Releases(Repository(owner: "Carthage", name: "Carthage").releases, 1, 30),

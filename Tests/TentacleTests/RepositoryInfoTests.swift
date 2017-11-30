@@ -169,4 +169,36 @@ class RepositoryInfoTests: XCTestCase {
         XCTAssertEqual(decoded, expected)
     }
 
+    func testDecodedRepositoryInfo() {
+        let mdiep = UserInfo(
+            id: 18710012,
+            user: User("mdiep"),
+            url: URL(string: "https://github.com/mdiep")!,
+            avatarURL: URL(string: "https://avatars2.githubusercontent.com/u/1302?v=4")!,
+            type: .user
+        )
+
+        let expected = RepositoryInfo(
+            id: 53076616,
+            owner: mdiep,
+            name: "Tentacle",
+            nameWithOwner: "mdiep/Tentacle",
+            body: "A Swift framework for the GitHub API",
+            url: URL(string: "https://github.com/mdiep/Tentacle")!,
+            homepage: nil,
+            isPrivate: false,
+            isFork: false,
+            forksCount: 16,
+            stargazersCount: 189,
+            watchersCount: 189,
+            openIssuesCount: 1,
+            pushedAt: DateFormatter.iso8601.date(from: "2017-11-25T06:36:01Z")!,
+            createdAt: DateFormatter.iso8601.date(from: "2016-03-03T19:20:49Z")!,
+            updatedAt: DateFormatter.iso8601.date(from: "2017-11-26T16:01:50Z")!
+        )
+
+        let decoded: RepositoryInfo = Fixture.Repositories.Tentacle.decode()!
+
+        XCTAssertEqual(decoded, expected)
+    }
 }
