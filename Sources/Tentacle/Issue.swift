@@ -18,7 +18,7 @@ extension Repository {
 
     /// A request for an issue in the repository
     ///
-    ///
+    /// https://developer.github.com/v3/issues/#get-a-single-issue
     public func issue(id: ID<Issue>) -> Request<Issue> {
         return Request(method: .get, path: "/repos/\(owner)/\(name)/issues/\(id.string)")
     }
