@@ -138,6 +138,6 @@ extension Milestone {
         closedAt: nil,
         dueOn: DateFormatter.iso8601.date(from: "2016-07-25T04:00:00Z")!,
         url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/milestones/1")!
-        )
-
+    )
+    
 }
