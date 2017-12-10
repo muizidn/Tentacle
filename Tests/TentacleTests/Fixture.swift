@@ -152,6 +152,7 @@ struct Fixture {
         UserProfile.mdiep,
         UserProfile.test,
         IssuesInRepository.PalleasOpensource,
+        IssueInRepository.Issue1InSampleRepository,
         CommentsOnIssue.CommentsOnIssueInSampleRepository,
         RepositoriesForUser.RepositoriesForPalleasOpensource,
         RepositoriesForOrganization.RepositoriesForRACCommunity,
@@ -215,6 +216,10 @@ struct Fixture {
 
     struct IssuesInRepository {
         static let PalleasOpensource = Repository(owner: "Palleas-opensource", name: "Sample-repository").issues
+    }
+
+    struct IssueInRepository {
+        static let Issue1InSampleRepository = Repository(owner: "Palleas-opensource", name: "Sample-repository").issue(id: 1)
     }
 
     struct CommentsOnIssue {

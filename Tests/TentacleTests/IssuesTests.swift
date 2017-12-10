@@ -10,32 +10,10 @@
 import XCTest
 
 class IssuesTests: XCTestCase {
-    
+
+
+
     func testDecodedPalleasOpensourceIssues() {
-        let palleasOpensource = UserInfo(
-            id: 15802020,
-            user: User("Palleas-opensource"),
-            url: URL(string: "https://github.com/Palleas-opensource")!,
-            avatarURL: URL(string: "https://avatars.githubusercontent.com/u/15802020?v=3")!,
-            type: .user
-        )
-
-        let shipItMilestone = Milestone(
-            id: 1881390,
-            number: 1,
-            state: .open,
-            title: "Release this app",
-            body: "That'd be cool",
-            creator: palleasOpensource,
-            openIssueCount: 1,
-            closedIssueCount: 0,
-            createdAt: DateFormatter.iso8601.date(from: "2016-07-13T16:56:48Z")!,
-            updatedAt: DateFormatter.iso8601.date(from: "2016-07-13T16:56:57Z")!,
-            closedAt: nil,
-            dueOn: DateFormatter.iso8601.date(from: "2016-07-25T04:00:00Z")!,
-            url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/milestones/1")!
-        )
-
         let updateReadmePullRequest = PullRequest(
             url: URL(string: "https://github.com/Palleas-opensource/Sample-repository/pull/3")!,
             diffURL: URL(string: "https://github.com/Palleas-opensource/Sample-repository/pull/3.diff")!,
@@ -49,7 +27,7 @@ class IssuesTests: XCTestCase {
                 state: .open,
                 title: "Add informations in Readme",
                 body: "![Giphy](http://media2.giphy.com/media/jxhJ8ylaYIPbG/giphy.gif)\n",
-                user: palleasOpensource,
+                user: .palleasOpensource,
                 labels: [],
                 assignees: [],
                 milestone: nil,
@@ -65,7 +43,7 @@ class IssuesTests: XCTestCase {
                 state: .open,
                 title: "This issue is open",
                 body: "Issues are pretty cool.\n",
-                user: palleasOpensource,
+                user: .palleasOpensource,
                 labels: [
                     Label(
                         name: "bug",
@@ -80,8 +58,8 @@ class IssuesTests: XCTestCase {
                         color: Color(hex: "84b6eb")
                     )
                 ],
-                assignees: [palleasOpensource],
-                milestone: shipItMilestone,
+                assignees: [.palleasOpensource],
+                milestone: .shipIt,
                 isLocked: false,
                 commentCount: 2,
                 pullRequest: nil,
@@ -95,4 +73,71 @@ class IssuesTests: XCTestCase {
 
         XCTAssertEqual(issues!, expected)
     }
+
+    func testDecodedSingleIssue() {
+        let expected = Issue(
+            id: 156633109,
+            url: URL(string: "https://github.com/Palleas-opensource/Sample-repository/issues/1")!,
+            number: 1,
+            state: .open,
+            title: "This issue is open",
+            body: "Issues are pretty cool.\n",
+            user: .palleasOpensource,
+            labels: [
+                Label(
+                    name: "bug",
+                    color: Color(hex: "ee0701")
+                ),
+                Label(
+                    name: "duplicate",
+                    color: Color(hex: "cccccc")
+                ),
+                Label(
+                    name: "enhancement",
+                    color: Color(hex: "84b6eb")
+                )
+            ],
+            assignees: [.palleasOpensource],
+            milestone: .shipIt,
+            isLocked: false,
+            commentCount: 2,
+            pullRequest: nil,
+            closedAt: nil,
+            createdAt: DateFormatter.iso8601.date(from: "2016-05-24T23:38:39Z")!,
+            updatedAt: DateFormatter.iso8601.date(from: "2016-07-27T01:29:31Z")!
+        )
+
+        let issues: Issue? = Fixture.IssueInRepository.Issue1InSampleRepository.decode()
+
+        XCTAssertEqual(issues!, expected)
+    }
+}
+
+extension UserInfo {
+    static let palleasOpensource = UserInfo(
+        id: 15802020,
+        user: User("Palleas-opensource"),
+        url: URL(string: "https://github.com/Palleas-opensource")!,
+        avatarURL: URL(string: "https://avatars.githubusercontent.com/u/15802020?v=3")!,
+        type: .user
+    )
+}
+
+extension Milestone {
+    static let shipIt = Milestone(
+        id: 1881390,
+        number: 1,
+        state: .open,
+        title: "Release this app",
+        body: "That'd be cool",
+        creator: .palleasOpensource,
+        openIssueCount: 1,
+        closedIssueCount: 0,
+        createdAt: DateFormatter.iso8601.date(from: "2016-07-13T16:56:48Z")!,
+        updatedAt: DateFormatter.iso8601.date(from: "2016-07-13T16:56:57Z")!,
+        closedAt: nil,
+        dueOn: DateFormatter.iso8601.date(from: "2016-07-25T04:00:00Z")!,
+        url: URL(string: "https://api.github.com/repos/Palleas-opensource/Sample-repository/milestones/1")!
+    )
+    
 }

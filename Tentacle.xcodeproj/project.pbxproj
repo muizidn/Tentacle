@@ -135,6 +135,10 @@
 		7ABFB4DE1D515A350067B500 /* RepositoryInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABFB4DC1D5159F50067B500 /* RepositoryInfoTests.swift */; };
 		7AC92F691EF72F18002ADBB5 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC92F681EF72F18002ADBB5 /* Identifiable.swift */; };
 		7AC92F6A1EF72FA0002ADBB5 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AC92F681EF72F18002ADBB5 /* Identifiable.swift */; };
+		7AFB05661FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data in Resources */ = {isa = PBXBuildFile; fileRef = 7AFB05641FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data */; };
+		7AFB05671FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data in Resources */ = {isa = PBXBuildFile; fileRef = 7AFB05641FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data */; };
+		7AFB05681FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response in Resources */ = {isa = PBXBuildFile; fileRef = 7AFB05651FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response */; };
+		7AFB05691FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response in Resources */ = {isa = PBXBuildFile; fileRef = 7AFB05651FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response */; };
 		927847F71E0B28CF003B9EE6 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927847F61E0B28CF003B9EE6 /* File.swift */; };
 		927847F81E0B28FB003B9EE6 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927847F61E0B28CF003B9EE6 /* File.swift */; };
 		927847FA1E0C74B2003B9EE6 /* Commit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927847F91E0C74B2003B9EE6 /* Commit.swift */; };
@@ -285,6 +289,8 @@
 		7ABFB4D61D51519B0067B500 /* RepositoryInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepositoryInfo.swift; sourceTree = "<group>"; };
 		7ABFB4DC1D5159F50067B500 /* RepositoryInfoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepositoryInfoTests.swift; sourceTree = "<group>"; };
 		7AC92F681EF72F18002ADBB5 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
+		7AFB05641FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "repos-Palleas-opensource-Sample-repository-issues-1.data"; sourceTree = "<group>"; };
+		7AFB05651FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "repos-Palleas-opensource-Sample-repository-issues-1.response"; sourceTree = "<group>"; };
 		927847F61E0B28CF003B9EE6 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		927847F91E0C74B2003B9EE6 /* Commit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Commit.swift; sourceTree = "<group>"; };
 		927847FC1E0C78A4003B9EE6 /* Author.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Author.swift; sourceTree = "<group>"; };
@@ -382,6 +388,8 @@
 		BE0F40961C8908CB00E3B11A /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				7AFB05641FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data */,
+				7AFB05651FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response */,
 				7A8BA1531FCF765A003241C7 /* repos-mdiep-Tentacle.data */,
 				7A8BA1521FCF7659003241C7 /* repos-mdiep-Tentacle.response */,
 				7A8A9D671E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data */,
@@ -754,6 +762,7 @@
 				7A3CC6951E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-say.response in Resources */,
 				7A8BA15B1FCF7941003241C7 /* repos-mdiep-Tentacle.response in Resources */,
 				7A3CC6651E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.data in Resources */,
+				7AFB05671FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data in Resources */,
 				7A8A9D6C1E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.response in Resources */,
 				7A3CC6911E01BC200025E711 /* users-test.data in Resources */,
 				7A3CC68F1E01BC200025E711 /* users-Palleas-Opensource-repos.response in Resources */,
@@ -765,6 +774,7 @@
 				7A3CC6871E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.response in Resources */,
 				7A3CC67D1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-tags-1.0.2.data in Resources */,
 				7A3CC6671E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.response in Resources */,
+				7AFB05691FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response in Resources */,
 				7A3CC65D1E01BC200025E711 /* repos-mdiep-Tentacle-contents-Carthage-Checkouts-ReactiveSwift.data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -813,6 +823,7 @@
 				7A3CC6941E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-say.response in Resources */,
 				7A8BA1591FCF7941003241C7 /* repos-mdiep-Tentacle.response in Resources */,
 				7A3CC6641E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.data in Resources */,
+				7AFB05661FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data in Resources */,
 				7A8A9D6B1E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.response in Resources */,
 				7A3CC6901E01BC200025E711 /* users-test.data in Resources */,
 				7A3CC68E1E01BC200025E711 /* users-Palleas-Opensource-repos.response in Resources */,
@@ -824,6 +835,7 @@
 				7A3CC6861E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.response in Resources */,
 				7A3CC67C1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-tags-1.0.2.data in Resources */,
 				7A3CC6661E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.response in Resources */,
+				7AFB05681FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response in Resources */,
 				7A3CC65C1E01BC200025E711 /* repos-mdiep-Tentacle-contents-Carthage-Checkouts-ReactiveSwift.data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
