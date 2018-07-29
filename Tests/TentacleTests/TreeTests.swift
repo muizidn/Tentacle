@@ -94,7 +94,8 @@ extension NewTree: Equatable {
 extension NewTree: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: NewTree.CodingKeys.self)
-        self.entries = try container.decode([Tree.Entry].self, forKey: .entries)
-        self.base = try container.decodeIfPresent(String.self, forKey: .base)
+        let entries = try container.decode([Tree.Entry].self, forKey: .entries)
+        let base = try container.decodeIfPresent(String.self, forKey: .base)
+        self.init(entries: entries, base: base)
     }
 }
