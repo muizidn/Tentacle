@@ -113,17 +113,13 @@ public struct Release: CustomStringConvertible, ResourceType, Identifiable {
     }
 }
 
-extension Release.Asset: Hashable {
+extension Release.Asset: Equatable {
     public static func ==(lhs: Release.Asset, rhs: Release.Asset) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url
     }
-
-    public var hashValue: Int {
-        return id.hashValue
-    }
 }
 
-extension Release: Hashable {
+extension Release: Equatable {
     public static func ==(lhs: Release, rhs: Release) -> Bool {
         return lhs.id == rhs.id
             && lhs.tag == rhs.tag
@@ -132,9 +128,5 @@ extension Release: Hashable {
             && lhs.isDraft == rhs.isDraft
             && lhs.isPrerelease == rhs.isPrerelease
             && lhs.assets == rhs.assets
-    }
-
-    public var hashValue: Int {
-        return id.hashValue
     }
 }

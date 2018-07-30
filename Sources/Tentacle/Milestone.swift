@@ -74,12 +74,8 @@ public struct Milestone: CustomStringConvertible, ResourceType, Identifiable {
     }
 }
 
-extension Milestone: Hashable {
+extension Milestone: Equatable {
     public static func ==(lhs: Milestone, rhs: Milestone) -> Bool {
         return lhs.id == rhs.id
-    }
-
-    public var hashValue: Int {
-        return id.hashValue
     }
 }

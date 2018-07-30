@@ -8,8 +8,14 @@
 
 import Foundation
 
-public protocol Identifiable {
+public protocol Identifiable: Hashable {
     var id: ID<Self> { get }
+}
+
+extension Identifiable {
+    public var hashValue: Int {
+        return id.hashValue
+    }
 }
 
 public struct ID<Of: Identifiable>: Decodable {

@@ -130,16 +130,12 @@ public struct UserInfo: CustomStringConvertible, ResourceType, Identifiable {
     }
 }
 
-extension UserInfo: Hashable {
+extension UserInfo: Equatable {
     public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
         return lhs.id == rhs.id
             && lhs.user == rhs.user
             && lhs.url == rhs.url
             && lhs.avatarURL == rhs.avatarURL
-    }
-
-    public var hashValue: Int {
-        return id.hashValue
     }
 }
 

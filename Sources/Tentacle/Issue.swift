@@ -122,7 +122,7 @@ public struct Issue: CustomStringConvertible, ResourceType, Identifiable {
     }
 }
 
-extension Issue: Hashable {
+extension Issue: Equatable {
     public static func ==(lhs: Issue, rhs: Issue) -> Bool {
         return lhs.id == rhs.id
             && lhs.url == rhs.url
@@ -138,9 +138,4 @@ extension Issue: Hashable {
             && lhs.milestone == rhs.milestone
             && lhs.pullRequest == rhs.pullRequest
     }
-
-    public var hashValue: Int {
-        return id.hashValue
-    }
 }
-

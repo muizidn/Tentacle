@@ -48,15 +48,10 @@ public struct Comment: CustomStringConvertible, ResourceType, Identifiable {
     }
 }
 
-extension Comment: Hashable {
+extension Comment: Equatable {
     public static func ==(lhs: Comment, rhs: Comment) -> Bool {
         return lhs.id == rhs.id
             && lhs.url == rhs.url
             && lhs.body == rhs.body
     }
-
-    public var hashValue: Int {
-        return id.hashValue
-    }
 }
-
