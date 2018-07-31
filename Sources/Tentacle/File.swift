@@ -55,18 +55,9 @@ public struct File: ResourceType, Encodable {
         try container.encode(content.base64EncodedString(), forKey: .content)
         try container.encode(branch, forKey: .branch)
     }
-}
 
-extension File: Hashable {
+    // Hashable
     public var hashValue: Int {
         return message.hashValue
-    }
-    
-    public static func ==(lhs: File, rhs: File) -> Bool {
-        return lhs.message == rhs.message
-            && lhs.committer == rhs.committer
-            && lhs.author == rhs.committer
-            && lhs.content == rhs.content
-            && lhs.branch == rhs.branch
     }
 }

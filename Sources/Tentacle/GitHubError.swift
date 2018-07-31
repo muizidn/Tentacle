@@ -9,7 +9,7 @@
 import Foundation
 
 /// An error from the GitHub API.
-public struct GitHubError: CustomStringConvertible, Error, Decodable {
+public struct GitHubError: CustomStringConvertible, Error, ResourceType {
     /// The error message from the API.
     public let message: String
     
@@ -19,15 +19,5 @@ public struct GitHubError: CustomStringConvertible, Error, Decodable {
     
     public init(message: String) {
         self.message = message
-    }
-}
-
-extension GitHubError: Hashable {
-    public static func ==(lhs: GitHubError, rhs: GitHubError) -> Bool {
-        return lhs.message == rhs.message
-    }
-
-    public var hashValue: Int {
-        return message.hashValue
     }
 }

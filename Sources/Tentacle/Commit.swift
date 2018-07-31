@@ -45,35 +45,12 @@ public struct Commit: ResourceType {
     }
 }
 
-extension Commit {
+extension Commit: Hashable {
     public var hashValue: Int {
         return sha.hashValue
     }
 
     public static func ==(lhs: Commit, rhs: Commit) -> Bool {
         return lhs.sha == rhs.sha
-    }
-}
-
-extension Commit.Author {
-    public var hashValue: Int {
-        return date.hashValue ^ name.hashValue ^ email.hashValue
-    }
-
-    public static func ==(lhs: Commit.Author, rhs: Commit.Author) -> Bool {
-        return lhs.date == rhs.date
-            && lhs.name == rhs.name
-            && lhs.email == rhs.email
-    }
-}
-
-extension Commit.Parent {
-    public var hashValue: Int {
-        return sha.hashValue ^ url.hashValue
-    }
-
-    public static func ==(lhs: Commit.Parent, rhs: Commit.Parent) -> Bool {
-        return lhs.sha == rhs.sha
-            && lhs.url == rhs.url
     }
 }

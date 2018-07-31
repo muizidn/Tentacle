@@ -30,7 +30,7 @@ extension Repository {
 /// - directory: a directory when queried directly in a repository (may contain multiple files)
 public enum Content: ResourceType {
     /// A file in a repository
-    public struct File: CustomStringConvertible, Decodable {
+    public struct File: CustomStringConvertible, ResourceType {
 
         public enum ContentTypeName: String, Decodable {
             case file
@@ -45,7 +45,7 @@ public enum Content: ResourceType {
         /// - directory: a directory in a repository
         /// - symlink: a symlink in a repository not targeting a file inside the same repository
         /// - submodule: a submodule in a repository
-        public enum ContentType: Decodable {
+        public enum ContentType: Decodable, Equatable {
             /// A file a in a repository
             case file(size: Int, downloadURL: URL?)
 
@@ -139,6 +139,10 @@ public enum Content: ResourceType {
             case content
         }
 
+        // Hashable
+        public var hashValue: Int {
+            return name.hashValue
+        }
     }
 
     case file(File)
@@ -182,35 +186,3 @@ extension Content: Hashable {
         }
     }
 }
-
-extension Content.File.ContentType: Equatable {
-    public static func ==(lhs: Content.File.ContentType, rhs: Content.File.ContentType) -> Bool {
-        switch (lhs, rhs) {
-        case let (.file(size, url), .file(size2, url2)):
-            return size == size2 && url == url2
-        case (.directory, .directory):
-            return true
-        case let (.submodule(url), .submodule(url2)):
-            return url == url2
-        case let (.symlink(target, url), .symlink(target2, url2)):
-            return target == target2 && url == url2
-        default:
-            return false
-        }
-    }
-}
-
-extension Content.File: Hashable {
-    public static func ==(lhs: Content.File, rhs: Content.File) -> Bool {
-        return lhs.name == rhs.name
-            && lhs.path == rhs.path
-            && lhs.sha == rhs.sha
-            && lhs.content == rhs.content
-    }
-
-    public var hashValue: Int {
-        return name.hashValue
-    }
-}
-
-

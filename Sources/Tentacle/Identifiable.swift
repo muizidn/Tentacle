@@ -18,7 +18,7 @@ extension Identifiable {
     }
 }
 
-public struct ID<Of: Identifiable>: Decodable {
+public struct ID<Of: Identifiable>: Decodable, Hashable {
     var rawValue: Int
 
     public var string: String {
@@ -36,20 +36,4 @@ extension ID: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) {
         self.rawValue = value
     }
-}
-
-extension ID: Hashable {
-
-    public var hashValue: Int {
-        return rawValue.hashValue
-    }
-
-}
-
-extension ID: Equatable {
-
-    static public func == (lhs: ID, rhs: ID) -> Bool {
-        return lhs.rawValue == rhs.rawValue
-    }
-
 }
