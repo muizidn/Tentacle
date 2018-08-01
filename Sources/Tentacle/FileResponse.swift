@@ -15,13 +15,3 @@ public struct FileResponse: ResourceType {
     /// Commit associated with the file that was created
     public let commit: Commit
 }
-
-extension FileResponse {
-    public var hashValue: Int {
-        return content.hashValue ^ commit.hashValue
-    }
-
-    public static func ==(lhs: FileResponse, rhs: FileResponse) -> Bool {
-        return true
-    }
-}

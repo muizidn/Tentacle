@@ -28,13 +28,3 @@ public struct PullRequest: CustomStringConvertible, ResourceType {
         case patchURL = "patch_url"
     }
 }
-
-extension PullRequest: Hashable {
-    public static func ==(lhs: PullRequest, rhs: PullRequest) -> Bool {
-        return lhs.url == rhs.url
-    }
-
-    public var hashValue: Int {
-        return url.hashValue
-    }
-}

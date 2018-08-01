@@ -173,44 +173,10 @@ public struct Tree: CustomStringConvertible, ResourceType {
             }
         }
     }
-}
 
-extension Tree: Hashable {
-    public static func ==(lhs: Tree, rhs: Tree) -> Bool {
-        return lhs.sha == rhs.sha
-            && lhs.url == rhs.url
-            && lhs.entries == rhs.entries
-            && lhs.isTruncated == rhs.isTruncated
-    }
-
+    // Hashable
     public var hashValue: Int {
         return sha.hashValue
-    }
-}
-
-extension Tree.Entry.EntryType: Hashable, Equatable {
-    public var hashValue: Int {
-        switch self {
-        case let .blob(url: url, size: size):
-            return "blob".hashValue ^ url.hashValue ^ size.hashValue
-        case let .tree(url):
-            return "tree".hashValue ^ url.hashValue
-        case .commit:
-            return "commit".hashValue
-        }
-    }
-
-    static public func ==(lhs: Tree.Entry.EntryType, rhs: Tree.Entry.EntryType) -> Bool {
-        switch (lhs, rhs) {
-        case let (.blob(url1, size1), .blob(url2, size2)):
-            return url1 == url2 && size1 == size2
-        case let (.tree(url1), .tree(url2)):
-            return url1 == url2
-        case (.commit, .commit):
-            return true
-        default:
-            return false
-        }
     }
 }
 

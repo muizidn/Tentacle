@@ -19,14 +19,3 @@ public struct Author: ResourceType, Encodable {
         self.email = email
     }
 }
-
-extension Author: Hashable, Equatable {
-    public var hashValue: Int {
-        return name.hashValue ^ email.hashValue
-    }
-
-    static public func ==(lhs: Author, rhs: Author) -> Bool {
-        return lhs.name == rhs.name
-            && lhs.email == rhs.email
-    }
-}

@@ -17,7 +17,7 @@ internal enum Method: String {
 }
 
 /// An opaque value representing a request to be made.
-public struct Request<Value> {
+public struct Request<Value>: Hashable {
     internal var method: Method
     internal var path: String
     internal var queryItems: [URLQueryItem]
@@ -29,20 +29,12 @@ public struct Request<Value> {
         self.queryItems = queryItems
         self.body = body
     }
-}
 
-extension Request: Hashable {
+    // Hashable
     public var hashValue: Int {
         return method.hashValue
             ^ path.hashValue
             ^ queryItems.map { $0.hashValue }.reduce(0, ^)
-            ^ (self.body?.hashValue ?? 0)
-    }
-    
-    public static func == (lhs: Request, rhs: Request) -> Bool {
-        return lhs.method == rhs.method
-            && lhs.path == rhs.path
-            && lhs.queryItems == rhs.queryItems
-            && lhs.body == rhs.body
+            ^ (body?.hashValue ?? 0)
     }
 }

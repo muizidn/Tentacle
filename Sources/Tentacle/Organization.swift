@@ -30,13 +30,3 @@ public struct Organization: CustomStringConvertible, ResourceType {
         return name
     }
 }
-
-extension Organization: Hashable {
-    public static func ==(lhs: Organization, rhs: Organization) -> Bool {
-        return lhs.name == rhs.name
-    }
-    
-    public var hashValue: Int {
-        return name.hashValue
-    }
-}

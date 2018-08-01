@@ -55,7 +55,7 @@ extension User {
 }
 
 /// A user on GitHub or GitHub Enterprise.
-public struct User: CustomStringConvertible, Decodable {
+public struct User: CustomStringConvertible, ResourceType {
     /// The user's login/username.
     public let login: String
     
@@ -65,16 +65,6 @@ public struct User: CustomStringConvertible, Decodable {
     
     public var description: String {
         return login
-    }
-}
-
-extension User: Hashable {
-    public static func ==(lhs: User, rhs: User) -> Bool {
-        return lhs.login == rhs.login
-    }
-    
-    public var hashValue: Int {
-        return login.hashValue
     }
 }
 
@@ -127,15 +117,6 @@ public struct UserInfo: CustomStringConvertible, ResourceType, Identifiable {
         self.url = try container.decode(URL.self, forKey: .url)
         self.avatarURL = try container.decode(URL.self, forKey: .avatarURL)
         self.type = try container.decode(UserType.self, forKey: .type)
-    }
-}
-
-extension UserInfo: Equatable {
-    public static func ==(lhs: UserInfo, rhs: UserInfo) -> Bool {
-        return lhs.id == rhs.id
-            && lhs.user == rhs.user
-            && lhs.url == rhs.url
-            && lhs.avatarURL == rhs.avatarURL
     }
 }
 
@@ -193,20 +174,9 @@ public struct UserProfile: ResourceType {
         case websiteURL = "blog"
         case company
     }
-}
 
-extension UserProfile: Hashable {
-    public static func ==(lhs: UserProfile, rhs: UserProfile) -> Bool {
-        return lhs.user == rhs.user
-            && lhs.joinedDate == rhs.joinedDate
-            && lhs.name == rhs.name
-            && lhs.email == rhs.email
-            && lhs.websiteURL == rhs.websiteURL
-            && lhs.company == rhs.company
-    }
-
+    // Hashable
     public var hashValue: Int {
         return user.hashValue
     }
 }
-
