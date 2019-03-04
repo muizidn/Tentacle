@@ -9,10 +9,19 @@
 import Foundation
 
 extension Repository {
+    /// A request to get the latest release for the repository.
+    ///
+    /// If the repository doesn't have any releases, this will result in a `.doesNotExist` error.
+    ///
+    /// https://developer.github.com/v3/repos/releases/#get-the-latest-release
+    public var latestRelease: Request<Release> {
+        return Request(method: .get, path: "/repos/\(owner)/\(name)/releases/latest")
+    }
+
     /// A request for the release corresponding to the given tag.
     ///
     /// If the tag exists, but there's not a correspoding GitHub Release, this will result in a
-    /// `.DoesNotExist` error. This is indistinguishable from a nonexistent tag.
+    /// `.doesNotExist` error. This is indistinguishable from a nonexistent tag.
     ///
     /// https://developer.github.com/v3/repos/releases/#get-a-release-by-tag-name
     public func release(forTag tag: String) -> Request<Release> {

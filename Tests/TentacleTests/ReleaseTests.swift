@@ -35,4 +35,23 @@ class ReleaseTests: XCTestCase {
         )
         XCTAssertEqual(Fixture.Release.Carthage0_15.decode(), expected)
     }
+
+    func testDecodeLatestRelease() {
+        let expected = Release(
+            id: 961251,
+            tag: "1.0.2",
+            url: URL(string: "https://github.com/mdiep/MDPSplitView/releases/tag/1.0.2")!,
+            name: "1.0.2",
+            assets: [
+                Release.Asset(
+                    id: 433845,
+                    name: "MDPSplitView.framework.zip",
+                    contentType: "application/zip",
+                    url: URL(string: "https://github.com/mdiep/MDPSplitView/releases/download/1.0.2/MDPSplitView.framework.zip")!,
+                    apiURL: URL(string: "https://api.github.com/repos/mdiep/MDPSplitView/releases/assets/433845")!
+                ),
+            ]
+        )
+        XCTAssertEqual(Fixture.LatestRelease.release.decode(), expected)
+    }
 }

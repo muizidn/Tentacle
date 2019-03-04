@@ -142,6 +142,7 @@ struct Fixture {
     
     static var allFixtures: [FixtureType] = [
         Repositories.Tentacle,
+        LatestRelease.release,
         Release.Carthage0_15,
         Release.MDPSplitView1_0_2,
         Release.Nonexistent,
@@ -167,6 +168,10 @@ struct Fixture {
     /// Returns the fixture for the given URL, or nil if no such fixture exists.
     static func fixtureForURL(_ url: URL) -> FixtureType? {
         return allFixtures.first { $0.url == url }
+    }
+
+    struct LatestRelease {
+        static let release = Repository(owner: "mdiep", name: "MDPSplitView").latestRelease
     }
     
     struct Release {
