@@ -167,6 +167,10 @@
 		BE1E036C1C9AD87F001296C2 /* ResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE1E036A1C9AD87F001296C2 /* ResponseTests.swift */; };
 		BE2B6A6C1C8B854F0080BFEB /* ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2B6A6B1C8B854F0080BFEB /* ClientTests.swift */; };
 		BE2B6A6D1C8B854F0080BFEB /* ClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE2B6A6B1C8B854F0080BFEB /* ClientTests.swift */; };
+		BE424662222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data in Resources */ = {isa = PBXBuildFile; fileRef = BE424660222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data */; };
+		BE424663222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data in Resources */ = {isa = PBXBuildFile; fileRef = BE424660222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data */; };
+		BE424664222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response in Resources */ = {isa = PBXBuildFile; fileRef = BE424661222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response */; };
+		BE424665222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response in Resources */ = {isa = PBXBuildFile; fileRef = BE424661222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response */; };
 		BE88E7F61C88C6B30034A112 /* Tentacle.h in Headers */ = {isa = PBXBuildFile; fileRef = BE88E7F51C88C6B30034A112 /* Tentacle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE88E7FD1C88C6B30034A112 /* Tentacle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE88E7F21C88C6B30034A112 /* Tentacle.framework */; };
 		BE88E80D1C88C72B0034A112 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE88E80C1C88C72B0034A112 /* Client.swift */; };
@@ -307,6 +311,8 @@
 		BE0F40A11C8909EB00E3B11A /* ReleaseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleaseTests.swift; sourceTree = "<group>"; };
 		BE1E036A1C9AD87F001296C2 /* ResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponseTests.swift; sourceTree = "<group>"; };
 		BE2B6A6B1C8B854F0080BFEB /* ClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientTests.swift; sourceTree = "<group>"; };
+		BE424660222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "repos-mdiep-MDPSplitView-releases-latest.data"; sourceTree = "<group>"; };
+		BE424661222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "repos-mdiep-MDPSplitView-releases-latest.response"; sourceTree = "<group>"; };
 		BE88E7F21C88C6B30034A112 /* Tentacle.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Tentacle.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE88E7F51C88C6B30034A112 /* Tentacle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tentacle.h; sourceTree = "<group>"; };
 		BE88E7F71C88C6B30034A112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -388,21 +394,7 @@
 		BE0F40961C8908CB00E3B11A /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
-				7AFB05641FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data */,
-				7AFB05651FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response */,
-				7A8BA1531FCF765A003241C7 /* repos-mdiep-Tentacle.data */,
-				7A8BA1521FCF7659003241C7 /* repos-mdiep-Tentacle.response */,
-				7A8A9D671E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data */,
-				7A8A9D681E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.response */,
 				928DF21D1E0E692600E6DE35 /* create-file-sample-response.data */,
-				7A3CC6361E01BC200025E711 /* repos-mdiep-Tentacle-contents-Carthage-Checkouts-ReactiveSwift.data */,
-				7A3CC6371E01BC200025E711 /* repos-mdiep-Tentacle-contents-Carthage-Checkouts-ReactiveSwift.response */,
-				7A3CC6381E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-README.md.data */,
-				7A3CC6391E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-README.md.response */,
-				7A3CC63A1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.data */,
-				7A3CC63B1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.response */,
-				7A3CC63C1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools.data */,
-				7A3CC63D1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools.response */,
 				7A3CC63E1E01BC200025E711 /* orgs-raccommunity-repos.data */,
 				7A3CC63F1E01BC200025E711 /* orgs-raccommunity-repos.response */,
 				7A3CC6401E01BC200025E711 /* repos-Carthage-Carthage-releases-tags-0.15.data */,
@@ -411,30 +403,46 @@
 				7A3CC6431E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.response */,
 				7A3CC6441E01BC200025E711 /* repos-Carthage-Carthage-releases.page-2-per_page-30.data */,
 				7A3CC6451E01BC200025E711 /* repos-Carthage-Carthage-releases.page-2-per_page-30.response */,
+				7A8A9D671E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data */,
+				7A8A9D681E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.response */,
+				7A3CC6561E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.data */,
+				7A3CC6571E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.response */,
+				BE424660222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data */,
+				BE424661222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response */,
 				7A3CC6461E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-tags-1.0.2.data */,
 				7A3CC6471E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-tags-1.0.2.response */,
+				7A3CC6581E01BC200025E711 /* repos-mdiep-NonExistent-releases-tags-tag.data */,
+				7A3CC6591E01BC200025E711 /* repos-mdiep-NonExistent-releases-tags-tag.response */,
+				7A3CC6361E01BC200025E711 /* repos-mdiep-Tentacle-contents-Carthage-Checkouts-ReactiveSwift.data */,
+				7A3CC6371E01BC200025E711 /* repos-mdiep-Tentacle-contents-Carthage-Checkouts-ReactiveSwift.response */,
+				7A3CC6541E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.data */,
+				7A3CC6551E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.response */,
+				7A8BA1531FCF765A003241C7 /* repos-mdiep-Tentacle.data */,
+				7A8BA1521FCF7659003241C7 /* repos-mdiep-Tentacle.response */,
+				7A3CC6381E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-README.md.data */,
+				7A3CC6391E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-README.md.response */,
+				7A3CC6531E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-say.data */,
+				7A3CC6521E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-say.response */,
+				7A3CC63A1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.data */,
+				7A3CC63B1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.response */,
+				7A3CC63C1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools.data */,
+				7A3CC63D1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools.response */,
+				BF5691C21EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data */,
+				BF5691C31EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response */,
 				7A3CC6481E01BC200025E711 /* repos-Palleas-Opensource-Sample-repository-issues-1-comments.data */,
 				7A3CC6491E01BC200025E711 /* repos-Palleas-Opensource-Sample-repository-issues-1-comments.response */,
+				7AFB05641FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.data */,
+				7AFB05651FDCAB4F00C3414D /* repos-Palleas-opensource-Sample-repository-issues-1.response */,
 				7A3CC64A1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.data */,
 				7A3CC64B1E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.response */,
+				7A3CC65A1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.data */,
+				7A3CC65B1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response */,
 				7A3CC64C1E01BC200025E711 /* users-mdiep.data */,
 				7A3CC64D1E01BC200025E711 /* users-mdiep.response */,
 				7A3CC64E1E01BC200025E711 /* users-Palleas-Opensource-repos.data */,
 				7A3CC64F1E01BC200025E711 /* users-Palleas-Opensource-repos.response */,
 				7A3CC6501E01BC200025E711 /* users-test.data */,
 				7A3CC6511E01BC200025E711 /* users-test.response */,
-				7A3CC6521E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-say.response */,
-				7A3CC6531E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-say.data */,
-				7A3CC6541E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.data */,
-				7A3CC6551E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.response */,
-				7A3CC6561E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.data */,
-				7A3CC6571E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.response */,
-				7A3CC6581E01BC200025E711 /* repos-mdiep-NonExistent-releases-tags-tag.data */,
-				7A3CC6591E01BC200025E711 /* repos-mdiep-NonExistent-releases-tags-tag.response */,
-				7A3CC65A1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.data */,
-				7A3CC65B1E01BC200025E711 /* repos-torvalds-linux-releases-tags-v4.4.response */,
-				BF5691C21EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.data */,
-				BF5691C31EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -735,6 +743,7 @@
 				7A3CC69F1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.response in Resources */,
 				7A8A9D6A1E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data in Resources */,
 				BF5691C71EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response in Resources */,
+				BE424665222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response in Resources */,
 				7A3CC6771E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.response in Resources */,
 				7A3CC6751E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.data in Resources */,
 				7A3CC66F1E01BC200025E711 /* orgs-raccommunity-repos.response in Resources */,
@@ -771,6 +780,7 @@
 				7A3CC69B1E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.response in Resources */,
 				7A3CC6851E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.data in Resources */,
 				7A3CC6831E01BC200025E711 /* repos-Palleas-Opensource-Sample-repository-issues-1-comments.response in Resources */,
+				BE424663222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data in Resources */,
 				7A3CC6871E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.response in Resources */,
 				7A3CC67D1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-tags-1.0.2.data in Resources */,
 				7A3CC6671E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.response in Resources */,
@@ -796,6 +806,7 @@
 				7A3CC69E1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-assets-433845.response in Resources */,
 				7A8A9D691E5548070009DA9E /* repos-Carthage-ReactiveTask-branches.data in Resources */,
 				BF5691C61EAE6F9600A92D3E /* repos-Palleas-opensource-Sample-repository-git-trees-0c0dfafa361836e11aedcbb95c1f05d3f654aef0.response in Resources */,
+				BE424664222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.response in Resources */,
 				7A3CC6761E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.response in Resources */,
 				7A3CC6741E01BC200025E711 /* repos-Carthage-Carthage-releases.page-1-per_page-30.data in Resources */,
 				7A3CC66E1E01BC200025E711 /* orgs-raccommunity-repos.response in Resources */,
@@ -832,6 +843,7 @@
 				7A3CC69A1E01BC200025E711 /* repos-mdiep-Tentacle-contents-update-test-fixtures.response in Resources */,
 				7A3CC6841E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.data in Resources */,
 				7A3CC6821E01BC200025E711 /* repos-Palleas-Opensource-Sample-repository-issues-1-comments.response in Resources */,
+				BE424662222D5FDB0033D475 /* repos-mdiep-MDPSplitView-releases-latest.data in Resources */,
 				7A3CC6861E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-issues.response in Resources */,
 				7A3CC67C1E01BC200025E711 /* repos-mdiep-MDPSplitView-releases-tags-1.0.2.data in Resources */,
 				7A3CC6661E01BC200025E711 /* repos-Palleas-opensource-Sample-repository-contents-Tools-say.response in Resources */,
