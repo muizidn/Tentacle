@@ -13,8 +13,8 @@ public protocol Identifiable: Hashable {
 }
 
 extension Identifiable {
-    public var hashValue: Int {
-        return id.hashValue
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
     }
 }
 

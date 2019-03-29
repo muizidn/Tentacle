@@ -56,8 +56,7 @@ public struct File: ResourceType, Encodable {
         try container.encode(branch, forKey: .branch)
     }
 
-    // Hashable
-    public var hashValue: Int {
-        return message.hashValue
+    public func hash(into hasher: inout Hasher) {
+        message.hash(into: &hasher)
     }
 }

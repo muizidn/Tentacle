@@ -175,8 +175,7 @@ public struct UserProfile: ResourceType {
         case company
     }
 
-    // Hashable
-    public var hashValue: Int {
-        return user.hashValue
+    public func hash(into hasher: inout Hasher) {
+        user.hash(into: &hasher)
     }
 }

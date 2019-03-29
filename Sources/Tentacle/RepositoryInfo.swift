@@ -128,7 +128,8 @@ extension RepositoryInfo: Hashable {
             && lhs.nameWithOwner == rhs.nameWithOwner
     }
 
-    public var hashValue: Int {
-        return id.hashValue ^ nameWithOwner.hashValue
+    public func hash(into hasher: inout Hasher) {
+        id.hash(into: &hasher)
+        nameWithOwner.hash(into: &hasher)
     }
 }

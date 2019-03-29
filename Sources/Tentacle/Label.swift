@@ -37,9 +37,5 @@ extension Label: Hashable {
     public static func ==(lhs: Label, rhs: Label) -> Bool {
         return lhs.name == rhs.name
     }
-
-    public var hashValue: Int {
-        return name.hashValue
-    }
 }
 

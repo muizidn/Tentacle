@@ -61,11 +61,4 @@ public struct Response: Hashable {
             .map { Date(timeIntervalSince1970: $0) }
         self.links = linksInLinkHeader(headerFields["Link"] as String? ?? "")
     }
-
-    // Hashable
-    public var hashValue: Int {
-        return (rateLimitRemaining?.hashValue ?? 0)
-            ^ (rateLimitReset?.hashValue ?? 0)
-            ^ Array(links.values).reduce(0) { $0 ^ $1.hashValue }
-    }
 }

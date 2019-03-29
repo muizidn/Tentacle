@@ -174,9 +174,8 @@ public struct Tree: CustomStringConvertible, ResourceType {
         }
     }
 
-    // Hashable
-    public var hashValue: Int {
-        return sha.hashValue
+    public func hash(into hasher: inout Hasher) {
+        sha.hash(into: &hasher)
     }
 }
 
@@ -185,8 +184,8 @@ extension Tree.Entry: Hashable {
         return lhs.sha == rhs.sha
     }
 
-    public var hashValue: Int {
-        return sha.hashValue
+    public func hash(into hasher: inout Hasher) {
+        sha.hash(into: &hasher)
     }
 }
 

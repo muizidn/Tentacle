@@ -64,7 +64,7 @@ extension Server: Hashable {
         }
     }
 
-    public var hashValue: Int {
-        return endpoint.lowercased().hashValue
+    public func hash(into hasher: inout Hasher) {
+        endpoint.lowercased().hash(into: &hasher)
     }
 }

@@ -46,8 +46,8 @@ public struct Commit: ResourceType {
 }
 
 extension Commit: Hashable {
-    public var hashValue: Int {
-        return sha.hashValue
+    public func hash(into hasher: inout Hasher) {
+        sha.hash(into: &hasher)
     }
 
     public static func ==(lhs: Commit, rhs: Commit) -> Bool {
