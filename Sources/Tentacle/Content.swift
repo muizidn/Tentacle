@@ -28,7 +28,7 @@ extension Repository {
 ///
 /// - file: a file when queried directly in a repository
 /// - directory: a directory when queried directly in a repository (may contain multiple files)
-public enum Content: ResourceType {
+public enum Content: ResourceType, Hashable {
     /// A file in a repository
     public struct File: CustomStringConvertible, ResourceType {
 
@@ -139,9 +139,8 @@ public enum Content: ResourceType {
             case content
         }
 
-        // Hashable
-        public var hashValue: Int {
-            return name.hashValue
+        public func hash(into hasher: inout Hasher) {
+            name.hash(into: &hasher)
         }
     }
 
@@ -161,28 +160,6 @@ public enum Content: ResourceType {
             }
 
             self = .directory(files)
-        }
-    }
-}
-
-extension Content: Hashable {
-    public static func ==(lhs: Content, rhs: Content) -> Bool {
-        switch (lhs, rhs) {
-        case let (.file(file1), .file(file2)):
-            return file1 == file2
-        case let (.directory(dir1), .directory(dir2)):
-            return dir1 == dir2
-        default:
-            return false
-        }
-    }
-
-    public var hashValue: Int {
-        switch self {
-        case .file(let file):
-            return "file".hashValue ^ file.hashValue
-        case .directory(let files):
-            return files.reduce("directory".hashValue) { $0.hashValue ^ $1.hashValue }
         }
     }
 }

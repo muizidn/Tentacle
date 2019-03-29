@@ -29,12 +29,4 @@ public struct Request<Value>: Hashable {
         self.queryItems = queryItems
         self.body = body
     }
-
-    // Hashable
-    public var hashValue: Int {
-        return method.hashValue
-            ^ path.hashValue
-            ^ queryItems.map { $0.hashValue }.reduce(0, ^)
-            ^ (body?.hashValue ?? 0)
-    }
 }

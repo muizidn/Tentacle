@@ -271,22 +271,24 @@ extension Client.Error: Hashable {
         }
     }
 
-    public var hashValue: Int {
+    public func hash(into hasher: inout Hasher) {
         switch self {
         case let .networkError(error):
-            return (error as NSError).hashValue
+            (error as NSError).hash(into: &hasher)
 
         case let .jsonDeserializationError(error):
-            return (error as NSError).hashValue
+            (error as NSError).hash(into: &hasher)
 
         case let .jsonDecodingError(error):
-            return (error as NSError).hashValue
+            (error as NSError).hash(into: &hasher)
 
         case let .apiError(statusCode, response, error):
-            return statusCode.hashValue ^ response.hashValue ^ error.hashValue
+            statusCode.hash(into: &hasher)
+            response.hash(into: &hasher)
+            error.hash(into: &hasher)
 
         case .doesNotExist:
-            return 4
+            4.hash(into: &hasher)
         }
     }
 }

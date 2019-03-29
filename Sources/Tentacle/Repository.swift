@@ -41,7 +41,7 @@ extension Repository: Hashable {
             && lhs.name.caseInsensitiveCompare(rhs.name) == .orderedSame
     }
 
-    public var hashValue: Int {
-        return description.lowercased().hashValue
+    public func hash(into hasher: inout Hasher) {
+        description.lowercased().hash(into: &hasher)
     }
 }
