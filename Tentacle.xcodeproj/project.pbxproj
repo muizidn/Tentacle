@@ -691,11 +691,11 @@
 					};
 					BE88E7F11C88C6B30034A112 = {
 						CreatedOnToolsVersion = 7.2.1;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 1020;
 					};
 					BE88E7FB1C88C6B30034A112 = {
 						CreatedOnToolsVersion = 7.2.1;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 1020;
 					};
 					BE88E8661C88F0990034A112 = {
 						CreatedOnToolsVersion = 7.2.1;
