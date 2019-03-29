@@ -11,14 +11,14 @@ matrix:
       name: Xcode 10.1 / macOS
       env: XCODE_ACTION="build-for-testing test-without-building"
     - xcode_scheme: Tentacle-iOS
-      name: Xcode 10.1 / macOS
+      name: Xcode 10.1 / iOS
       env: XCODE_ACTION="build-for-testing test-without-building"
     - xcode_scheme: Tentacle-OSX
       name: Xcode 10.2 / macOS
       env: XCODE_ACTION="build-for-testing test-without-building"
       osx_image: xcode10.2
     - xcode_scheme: Tentacle-iOS
-      name: Xcode 10.2 / macOS
+      name: Xcode 10.2 / iOS
       env: XCODE_ACTION="build-for-testing test-without-building"
       osx_image: xcode10.2
     - xcode_scheme: update-test-fixtures
