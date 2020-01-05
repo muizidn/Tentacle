@@ -7,8 +7,7 @@
 //
 
 import ReactiveSwift
-import Result
-import Tentacle
+//import Tentacle
 import XCTest
 
 public func == <T: Equatable, Error: Equatable> (left: Result<[T], Error>, right: Result<[T], Error>) -> Bool {

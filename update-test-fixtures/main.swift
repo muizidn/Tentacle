@@ -11,16 +11,15 @@
 
 import Foundation
 import ReactiveSwift
-import Result
-@testable import Tentacle
+//@testable import Tentacle
 
 let baseURL = URL(fileURLWithPath: CommandLine.arguments[1])
 
 let fileManager = FileManager.default
 let client = Client(.dotCom)
 let session = URLSession.shared
-let result = SignalProducer<FixtureType, AnyError>(Fixture.allFixtures)
-    .flatMap(.concat) { fixture -> SignalProducer<(), AnyError> in
+let result = SignalProducer<FixtureType, Error>(Fixture.allFixtures)
+    .flatMap(.concat) { fixture -> SignalProducer<(), Error> in
         let request = client.urlRequest(for: fixture.url, contentType: fixture.contentType)
         let dataURL = baseURL.appendingPathComponent(fixture.dataFilename)
         let responseURL = baseURL.appendingPathComponent(fixture.responseFilename)
